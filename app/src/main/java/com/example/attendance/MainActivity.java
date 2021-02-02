@@ -9,6 +9,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "incorrect username or password", Toast.LENGTH_SHORT).show();
                         }else {
                             //TODO open another activity and persist
-                            username.setText(test.name);
+                            startActivity(new Intent(MainActivity.this, Home.class));
                         }
                     }
 

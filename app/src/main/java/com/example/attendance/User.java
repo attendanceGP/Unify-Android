@@ -1,24 +1,24 @@
 package com.example.attendance;
 
 public class User {
-    Long id;
-    String type;    // "TA", "student", "professor"
-    String name;
-    String token;
+    private Integer id;
+    private String type;    // "TA", "student", "professor"
+    private String name;
+    private String token;
 
 
     //only if a student
-    Double GPA;
-    Integer level;
+    private Float GPA;
+    private Integer level;
 
     //for error codes
-    int errorCode;
+    private int errorCode;
 
     public User(){
 
     }
 
-    public User(Long id, String type, String name) {
+    public User(Integer id, String type, String name) {
         this.id = id;
         this.type = type;
         this.name = name;
@@ -27,7 +27,7 @@ public class User {
         this.level = null;
     }
 
-    public User(Long id, String type, String name, String token, Double GPA, Integer level) {
+    public User(Integer id, String type, String name, String token, Float GPA, Integer level) {
         this.id = id;
         this.type = type;
         this.name = name;
@@ -40,11 +40,11 @@ public class User {
         this.errorCode = errorCode;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -64,11 +64,11 @@ public class User {
         this.name = name;
     }
 
-    public Double getGPA() {
+    public Float getGPA() {
         return GPA;
     }
 
-    public void setGPA(Double GPA) {
+    public void setGPA(Float GPA) {
         this.GPA = GPA;
     }
 

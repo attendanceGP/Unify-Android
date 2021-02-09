@@ -1,11 +1,9 @@
 package com.example.attendance;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -13,10 +11,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -30,8 +24,9 @@ public class ta_attendanceConfirmationList extends AppCompatActivity {
     private Button buttonConfirm;
     private RecyclerView rv_studentsList;
     private recyclerView_studentsList_adapter rv_adapter;
-    private List<User> List_students;
+    private List<Attendance> List_Attendance;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,23 +38,24 @@ public class ta_attendanceConfirmationList extends AppCompatActivity {
 
         /// todo delete this
         Date date = new Date("29-2-120");
+
         // -------------  Calling the API to get Students List ----------------------
         UserAPI userAPI = APIClient.getClient().create(UserAPI.class);
 
 
-        Call<List<User>> call = userAPI.getStudentsList(CourseID, Group, date);
-        call.enqueue(new Callback<List<User>>() {
+        Call<List<Attendance>> call = userAPI.getStudentsList(CourseID, Group, date);
+        call.enqueue(new Callback<List<Attendance>>() {
             @Override
-            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                List<User> std_List = response.body();
+            public void onResponse(Call<List<Attendance>> call, Response<List<Attendance>> response) {
+                List<Attendance> std_List = response.body();
                 if(response.code() != 200){
                     Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
                 }else {
-                    List_students = std_List;
+                    List_Attendance = std_List;
                 }
             }
             @Override
-            public void onFailure(Call<List<User>> call, Throwable t) {
+            public void onFailure(Call<List<Attendance>> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "wrong data provided", Toast.LENGTH_SHORT).show();
             }
         });
@@ -70,7 +66,7 @@ public class ta_attendanceConfirmationList extends AppCompatActivity {
         rv_studentsList = findViewById(R.id.rv_studentsList);
 
 //                    rv_studentsList.setLayoutManager(new LinearLayoutManager(this));
-        rv_adapter = new recyclerView_studentsList_adapter(getApplicationContext(),List_students);
+        rv_adapter = new recyclerView_studentsList_adapter(getApplicationContext(), List_Attendance);
         rv_studentsList.setAdapter(rv_adapter);
 
         attendanceDetails.setText(CourseID+"-"+Group+"\n"+date);

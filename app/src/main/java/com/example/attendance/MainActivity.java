@@ -59,7 +59,12 @@ public class MainActivity extends AppCompatActivity {
                         }else {
                             //TODO open another activity and persist
                             sessionManager.login(response.body());
-                            startActivity(new Intent(MainActivity.this, Home.class));
+                            if(sessionManager.getType().equals("student")) {
+                                startActivity(new Intent(MainActivity.this, Home.class));
+                            }
+                            else{
+                                startActivity(new Intent(MainActivity.this, TA_home.class));
+                            }
                         }
                     }
 

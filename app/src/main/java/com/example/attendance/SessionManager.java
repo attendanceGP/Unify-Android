@@ -32,15 +32,16 @@ public class SessionManager {
         return sharedPreferences.getBoolean(IS_LOGIN, false);
     }
 
-    // saves the user info in shared prefere    nces
+    // saves the user info in shared preferences
     public void login(User user){
         editor.putString(KEY_NAME, user.getName());
         editor.putInt(KEY_ID, user.getId());
         editor.putString(KEY_TYPE, user.getType());
         editor.putString(KEY_TOKEN, user.getToken());
-        editor.putInt(KEY_LEVEL, user.getLevel());
-        editor.putFloat(KEY_GPA, user.getGPA());
-
+        if(user.getType().equals("student")) {
+            editor.putInt(KEY_LEVEL, user.getLevel());
+            editor.putFloat(KEY_GPA, user.getGPA());
+        }
         editor.putBoolean(IS_LOGIN, true);
 
         editor.commit();
@@ -62,8 +63,8 @@ public class SessionManager {
         return sharedPreferences.getInt(KEY_ID, 0);
     }
 
-    public Long getLevel(){
-        return sharedPreferences.getLong(KEY_LEVEL, 0);
+    public Integer getLevel(){
+        return sharedPreferences.getInt(KEY_LEVEL, 0);
     }
 
     public Float getGPA(){

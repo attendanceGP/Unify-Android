@@ -2,7 +2,7 @@ package com.example.attendance;
 
 public class User {
     private Integer id;
-    private String type;    // "TA", "student", "professor"
+    private String type;    // "TeachingAssistant", "student", "professor"
     private String name;
     private String token;
 

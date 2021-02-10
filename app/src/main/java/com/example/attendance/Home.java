@@ -10,8 +10,6 @@ public class Home extends AppCompatActivity {
     TextView level;
     TextView id;
     TextView gpa;
-    TextView token;
-    TextView type;
 
     SessionManager sessionManager;
 
@@ -25,12 +23,11 @@ public class Home extends AppCompatActivity {
         name = findViewById(R.id.name);
         level = findViewById(R.id.level);
         gpa = findViewById(R.id.gpa);
-        token = findViewById(R.id.token);
         id = findViewById(R.id.id);
-        type = findViewById(R.id.type);
 
-        name.setText(sessionManager.getName());
-        token.setText(sessionManager.getToken());
-        type.setText(sessionManager.getType());
+        name.setText("Name: "+sessionManager.getName());
+        id.setText("ID: "+sessionManager.getId().toString());
+        gpa.setText("GPA: "+sessionManager.getGPA().toString());
+        level.setText("Level: "+sessionManager.getLevel().toString());
     }
 }

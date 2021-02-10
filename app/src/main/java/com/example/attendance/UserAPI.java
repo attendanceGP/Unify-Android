@@ -1,8 +1,11 @@
 package com.example.attendance;
 
+import java.util.Date;
+
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface UserAPI {
@@ -11,4 +14,8 @@ public interface UserAPI {
 
     @GET("user/gettoken")
     Call<String> getToken(@Query("id") Integer id);
+
+    @POST("ta/postattendance")
+    Call<String> taStartAttendance(@Query("date") String date,
+                          @Query("userGroup") String userGroup, @Query("courseId") String courseId, @Query("userId") Integer userId);
 }

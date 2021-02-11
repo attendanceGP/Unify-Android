@@ -17,14 +17,11 @@
         app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_editor_absoluteX="145dp" />
 
-    <Button
+    <Spinner
         android:id="@+id/Courses"
-        android:layout_width="199dp"
-        android:layout_height="55dp"
-        android:background="#00BFFF"
-        android:text="Select Course"
-        android:textColor="#F5F5F5"
-        android:textSize="18sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:spinnerMode="dropdown"
         app:layout_constraintBottom_toTopOf="@+id/RecordAttendance"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -35,7 +32,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginEnd="4dp"
         android:layout_marginRight="4dp"
-        android:layout_marginBottom="4dp"
+        android:layout_marginBottom="8dp"
         android:hint="groups"
         android:inputType="text"
         android:textSize="20sp"

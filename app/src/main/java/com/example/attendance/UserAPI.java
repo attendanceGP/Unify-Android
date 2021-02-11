@@ -1,6 +1,8 @@
 package com.example.attendance;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -18,4 +20,8 @@ public interface UserAPI {
     @POST("ta/postattendance")
     Call<String> taStartAttendance(@Query("date") String date,
                           @Query("userGroup") String userGroup, @Query("courseId") String courseId, @Query("userId") Integer userId);
+
+    @GET("ta/getTaughtCourses")
+    Call<ArrayList<String>> getTaughtCourses(@Query("userId") Integer userId);
+
 }

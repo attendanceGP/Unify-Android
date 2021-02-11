@@ -38,9 +38,10 @@ public class SessionManager {
         editor.putInt(KEY_ID, user.getId());
         editor.putString(KEY_TYPE, user.getType());
         editor.putString(KEY_TOKEN, user.getToken());
-        editor.putInt(KEY_LEVEL, user.getLevel());
-        editor.putFloat(KEY_GPA, user.getGPA());
-
+        if(user.getType().equals("student")) {
+            editor.putInt(KEY_LEVEL, user.getLevel());
+            editor.putFloat(KEY_GPA, user.getGPA());
+        }
         editor.putBoolean(IS_LOGIN, true);
 
         editor.commit();

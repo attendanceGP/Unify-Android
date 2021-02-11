@@ -17,5 +17,5 @@ public interface UserAPI {
     Call<String> getToken(@Query("id") Integer id);
 
     @GET("attendance/getStudentsAttendanceList")
-    Call<List<Attendance>> getStudentsList(@Query("courseID") String courseID, @Query("group") String Group, @Query("date") Date date);
+    Call<List<Attendance>> getStudentsList(@Query("courseID") String courseID, @Query("group") String Group, @Query("date") String date);
 }

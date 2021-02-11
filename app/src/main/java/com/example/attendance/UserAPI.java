@@ -11,4 +11,10 @@ public interface UserAPI {
 
     @GET("user/gettoken")
     Call<String> getToken(@Query("id") Integer id);
+
+    @GET("student/getStudentCourses")
+    Call<String[]> getStudentCourses(@Query("studentID")Integer studentID);
+
+    @GET("student/attend")
+    Call<String> attend(@Query("studentID")Integer studentID, @Query("courseName")String courseName, @Query("date")String date);
 }

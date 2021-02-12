@@ -16,5 +16,8 @@ public interface UserAPI {
     Call<String[]> getStudentCourses(@Query("studentID")Integer studentID);
 
     @GET("student/attend")
-    Call<String> attend(@Query("studentID")Integer studentID, @Query("courseName")String courseName, @Query("date")String date);
+    Call<Void> attend(@Query("studentID")Integer studentID, @Query("courseName")String courseName, @Query("date")String date);
+
+    @GET("student/checkAttendance")
+    Call<Attendance> checkAttendance(@Query("studentID")Integer studentID, @Query("courses")String[] courses, @Query("date")String date);
 }

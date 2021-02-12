@@ -1,3 +1,4 @@
+/*
 package com.example.attendance;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -73,4 +74,4 @@ public class AttendanceActivity extends AppCompatActivity {
             }
         });
     }
-}
+}*/

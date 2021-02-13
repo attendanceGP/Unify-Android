@@ -3,38 +3,44 @@ package com.example.attendance;
 import java.util.Date;
 
 public class Attendance {
-    private User user;
-    private Course course;
+    private Integer userId;
+    private String courseCode;
+    private String name;
     private String userGroup;
-    private boolean absent;
-    private Date date;
 
     Attendance() {
 
     }
 
-    public Attendance(User user, Course course, String userGroup, Date date, boolean absent) {
-        this.user = user;
-        this.course = course;
+    public Attendance(Integer userId, String courseCode, String name, String userGroup) {
+        this.userId = userId;
+        this.courseCode = courseCode;
+        this.name = name;
         this.userGroup = userGroup;
-        this.date = date;
-        this.absent = absent;
     }
 
-    public User getUser() {
-        return user;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
-    public Course getCourse() {
-        return course;
+    public String getCourseCode() {
+        return courseCode;
     }
 
-    public void setCourse(Course course) {
-        this.course = course;
+    public void setCourseCode(String courseCode) {
+        this.courseCode = courseCode;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getUserGroup() {
@@ -43,21 +49,5 @@ public class Attendance {
 
     public void setUserGroup(String userGroup) {
         this.userGroup = userGroup;
-    }
-
-    public boolean isAbsent() {
-        return absent;
-    }
-
-    public void setAbsent(boolean absent) {
-        this.absent = absent;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
     }
 }

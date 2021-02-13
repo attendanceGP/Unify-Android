@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -47,26 +48,26 @@ public class recyclerView_studentsList_adapter extends RecyclerView.Adapter<recy
 
     // to set the view attributes based on the data
     // binds the data to the TextView in each row
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "ResourceAsColor"})
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Attendance attendance = attendeesData.get(position);
-        User student = attendeesData.get(position).getUser();
 
 
         // Set item views based on your views and data model
-        holder.myTextView.setText(student.getId()+'\n'+student.getName());
+        holder.myTextView.setText(attendance.getUserId()+'\n'+attendance.getName());
         Button button = holder.buttonAction;
-        if(attendance.isAbsent()){
-            button.setText("Add");
-            button.setBackgroundColor(Color.GREEN);
-        }
-        else{
-            button.setText("Remove");
-            button.setBackgroundColor(Color.RED);
-        }
+        button.setText("Remove");
+        button.setBackgroundColor(Color.RED);
 //        button.setText(attendance.isAbsent() ? "Add" : "Remove");
         button.setEnabled(true);
+//        button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Toast.makeText(, "clicked", Toast.LENGTH_SHORT).show();
+//            }
+//
+//        });
     }
 
     // total number of rows
@@ -78,7 +79,7 @@ public class recyclerView_studentsList_adapter extends RecyclerView.Adapter<recy
 
     // convenience method for getting data at click position
     String getItem(int id) {
-        return attendeesData.get(id).getUser().getName();
+        return attendeesData.get(id).getName();
     }
 
 

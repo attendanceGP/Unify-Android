@@ -18,7 +18,7 @@ public interface UserAPI {
     Call<String> getToken(@Query("id") Integer id);
 
     @POST("ta/postattendance")
-    Call<String> taStartAttendance(@Query("date") String date,
+    Call<Void> taStartAttendance(@Query("date") String date,
                           @Query("userGroup") String userGroup, @Query("courseId") String courseId, @Query("userId") Integer userId);
 
     @GET("ta/getTaughtCourses")

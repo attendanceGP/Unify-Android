@@ -2,6 +2,7 @@ package com.example.attendance;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -30,7 +31,6 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
     Spinner selectCourse;
     ArrayAdapter<String> adapter;
     ArrayList<String> givenCourses = new ArrayList<String>();
-    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +52,8 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
                 }
                 else{
                     for(int i=0; i<response.body().size(); i++){
-                        String balf = response.body().get(i);
-                        givenCourses.add(balf);
+                        String courseId = response.body().get(i);
+                        givenCourses.add(courseId);
                     }
                 }
             }
@@ -91,18 +91,21 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
                 UserAPI userAPI = APIClient.getClient().create(UserAPI.class);
 
                 java.util.Date date=new java.util.Date();
-
-                Call<String> call = userAPI.taStartAttendance(new SimpleDateFormat("dd-MM-yyyy").format(date),groups.getText().toString(),selectCourse.getSelectedItem().toString(),sessionManager.getId());
-                call.enqueue(new Callback<String>() {
+                String currDate = new SimpleDateFormat("dd-MM-yyyy").format(date);
+                Call<Void> call = userAPI.taStartAttendance(currDate,groups.getText().toString(),selectCourse.getSelectedItem().toString(),sessionManager.getId());
+                call.enqueue(new Callback<Void>() {
                     @Override
-                    public void onResponse(Call<String> call, Response<String> response) {
+                    public void onResponse(Call<Void> call, Response<Void> response) {
                         if (response.code() != 200) {
                             Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            startActivity(new Intent(TA_home.this, MainActivity.class));
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<String> call, Throwable t) {
+                    public void onFailure(Call<Void> call, Throwable t) {
                         Toast.makeText(getApplicationContext(), "please check your internet connection", Toast.LENGTH_SHORT).show();
                     }
                 });

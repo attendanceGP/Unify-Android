@@ -17,6 +17,7 @@ public interface UserAPI {
     @GET("user/gettoken")
     Call<String> getToken(@Query("id") Integer id);
 
+
     @POST("ta/postattendance")
     Call<Void> taStartAttendance(@Query("date") String date,
                           @Query("userGroup") String userGroup, @Query("courseId") String courseId, @Query("userId") Integer userId);
@@ -24,4 +25,12 @@ public interface UserAPI {
     @GET("ta/getTaughtCourses")
     Call<ArrayList<String>> getTaughtCourses(@Query("userId") Integer userId);
 
+    @GET("student/getStudentCourses")
+    Call<String[]> getStudentCourses(@Query("studentID")Integer studentID);
+
+    @GET("student/attend")
+    Call<Void> attend(@Query("studentID")Integer studentID, @Query("courseName")String courseName, @Query("date")String date,@Query("TAAttendanceID") long attendanceID);
+
+    @GET("student/checkAttendance")
+    Call<Attendance> checkAttendance(@Query("studentID")Integer studentID, @Query("courses")String[] courses, @Query("date")String date);
 }

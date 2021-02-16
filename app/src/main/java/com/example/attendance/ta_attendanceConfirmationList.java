@@ -98,46 +98,25 @@ public class ta_attendanceConfirmationList extends AppCompatActivity {
                             }
                             else {
                                 Integer studentID = Integer.parseInt(studentID_input);
-                                Call<ResponseBody> call_add = userAPI.setPresent(CourseID, Group, str_date, studentID);
-                                call_add.enqueue(new Callback<ResponseBody>() {
+                                Call<Attendance> call_add = userAPI.setAbsence(CourseID, Group, str_date, studentID, false);
+                                call_add.enqueue(new Callback<Attendance>() {
                                     @Override
-                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                        String response_body = null;
-                                        try {
-                                            response_body = response.body().string();
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
+                                    public void onResponse(Call<Attendance> call, Response<Attendance> response) {
+                                        Attendance test = response.body();
                                         if (response.code() != 200) {
                                             Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
+                                        } else if(test.getError_code() == 2) {
+                                            Toast.makeText(getApplicationContext(), "wrong ID provided", Toast.LENGTH_SHORT).show();
+                                        } else if (test.getError_code() == 4) {
+                                            Toast.makeText(getApplicationContext(), "this student is already present", Toast.LENGTH_SHORT).show();
                                         } else {
-                                            if (response_body.equals("No such ID")) {
-                                                Toast.makeText(getApplicationContext(), "wrong ID provided", Toast.LENGTH_SHORT).show();
-                                            } else if (response_body.equals("Student is already present")) {
-                                                Toast.makeText(getApplicationContext(), "this student is already present", Toast.LENGTH_SHORT).show();
-                                            } else if (response_body.equals("Done")) {
-                                                Toast.makeText(getApplicationContext(), studentID+" is added", Toast.LENGTH_SHORT).show();
-                                                Call<Attendance> addstudent_call = userAPI.getStudent(CourseID, Group, str_date, studentID);
-                                                addstudent_call.enqueue(new Callback<Attendance>(){
-                                                    @Override
-                                                    public void onResponse(Call<Attendance> call, Response<Attendance> response){
-                                                        Attendance att = response.body();
-                                                        rv_adapter.addItem(att);
-                                                        attendanceCount.setText("attendees = " + rv_adapter.getItemCount());
-                                                    }
-                                                    @Override
-                                                    public void onFailure(Call<Attendance> call, Throwable t){
-                                                        Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
-                                                    }
-                                                });
-                                            }
-                                            else{
-                                                Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
-                                            }
+                                            Toast.makeText(getApplicationContext(), studentID+" is added", Toast.LENGTH_SHORT).show();
+                                            rv_adapter.addItem(test);
+                                            attendanceCount.setText("attendees = " + rv_adapter.getItemCount());
                                         }
                                     }
                                     @Override
-                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                    public void onFailure(Call<Attendance> call, Throwable t) {
                                         Toast.makeText(getApplicationContext(), "wrong data provided", Toast.LENGTH_SHORT).show();
                                     }
                                 });

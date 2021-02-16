@@ -76,29 +76,23 @@ public class recyclerView_studentsList_adapter extends RecyclerView.Adapter<recy
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(applicationContext, "removed", Toast.LENGTH_SHORT).show();
                 UserAPI userAPI = APIClient.getClient().create(UserAPI.class);
 
-                Call<ResponseBody> call = userAPI.setAbsent(attendance.getCourseCode(), attendance.getUserGroup(), date, attendance.getUserId());
-                call.enqueue(new Callback<ResponseBody>() {
+                Call<Attendance> call = userAPI.setAbsence(attendance.getCourseCode(), attendance.getUserGroup(), date, attendance.getUserId(), true);
+                call.enqueue(new Callback<Attendance>() {
                     @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        String response_body = null;
-                        try {
-                            response_body = response.body().string();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                    public void onResponse(Call<Attendance> call, Response<Attendance> response) {
+                        Attendance test = response.body();
                         if (response.code() != 200) {
                             Toast.makeText(applicationContext, "an error occurred", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(applicationContext, "done", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(applicationContext, test.getUserId()+" removed", Toast.LENGTH_SHORT).show();
                             removeItem(position);
                         }
                     }
                     @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Toast.makeText(applicationContext, "wrong data provided", Toast.LENGTH_SHORT).show();
+                    public void onFailure(Call<Attendance> call, Throwable t) {
+                        Toast.makeText(applicationContext, "An error occurred", Toast.LENGTH_SHORT).show();
                     }
                 });
                 }

@@ -23,17 +23,9 @@ public interface UserAPI {
     @GET("attendance/getStudentsAttendanceList")
     Call<List<Attendance>> getStudentsList(@Query("courseID") String courseID, @Query("group") String Group, @Query("date") String date);
 
-    @FormUrlEncoded
-    @POST("attendance/SetStudentAbsent")
-    Call<ResponseBody> setAbsent(@Field("courseID") String courseID, @Field("group") String group,
-                           @Field("date") String date, @Field("studentID") Integer studentID);
 
-    @FormUrlEncoded
-    @POST("attendance/SetStudentPresent")
-    Call<ResponseBody> setPresent(@Field("courseID") String courseID,
-                                  @Field("group") String group, @Field("date") String date, @Field("studentID") Integer studentID);
-
-    @GET("attendance/getStudent")
-    Call<Attendance> getStudent(@Query("courseID") String courseID, @Query("group") String Group,
-                                @Query("date") String date, @Query("studentID") Integer studentID);
+    @GET("attendance/setStudentAbsence")
+    Call<Attendance> setAbsence(@Query("courseID") String courseID, @Query("group") String Group,
+                                @Query("date") String date, @Query("studentID") Integer studentID,
+                                @Query("absent") boolean absent);
 }

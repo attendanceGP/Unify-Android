@@ -13,9 +13,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -70,29 +72,78 @@ public class ta_attendanceConfirmationList extends AppCompatActivity {
                     List_Attendance = std_List;
 
                     rv_studentsList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                    rv_adapter = new recyclerView_studentsList_adapter(getApplicationContext(), List_Attendance);
+                    rv_adapter = new recyclerView_studentsList_adapter(getApplicationContext(), List_Attendance, str_date);
                     rv_studentsList.setAdapter(rv_adapter);
-                    attendanceCount.setText("attendees = ");
+                    attendanceCount.setText("attendees = " + rv_adapter.getItemCount());
                     et_inputID.setEnabled(true);
 
                     buttonConfirm.setClickable(true);
                     buttonConfirm.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Toast.makeText(getApplicationContext(), "clicked", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "confirmed", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(ta_attendanceConfirmationList.this, Home.class));
                         }
 
                     });
 
                     buttonAdd.setClickable(true);
+                    buttonAdd.setText("Add");
                     buttonAdd.setOnClickListener(new View.OnClickListener(){
                         @Override
                         public void onClick(View view){
-                            Toast.makeText(getApplicationContext(), "clicked", Toast.LENGTH_SHORT).show();
+                            String studentID_input = et_inputID.getText().toString();
+                            if(studentID_input.equals("")){
+                                Toast.makeText(getApplicationContext(), "You did not enter an ID", Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                Integer studentID = Integer.parseInt(studentID_input);
+                                Call<ResponseBody> call_add = userAPI.setPresent(CourseID, Group, str_date, studentID);
+                                call_add.enqueue(new Callback<ResponseBody>() {
+                                    @Override
+                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                        String response_body = null;
+                                        try {
+                                            response_body = response.body().string();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                        if (response.code() != 200) {
+                                            Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            if (response_body.equals("No such ID")) {
+                                                Toast.makeText(getApplicationContext(), "wrong ID provided", Toast.LENGTH_SHORT).show();
+                                            } else if (response_body.equals("Student is already present")) {
+                                                Toast.makeText(getApplicationContext(), "this student is already present", Toast.LENGTH_SHORT).show();
+                                            } else if (response_body.equals("Done")) {
+                                                Toast.makeText(getApplicationContext(), studentID+" is added", Toast.LENGTH_SHORT).show();
+                                                Call<Attendance> addstudent_call = userAPI.getStudent(CourseID, Group, str_date, studentID);
+                                                addstudent_call.enqueue(new Callback<Attendance>(){
+                                                    @Override
+                                                    public void onResponse(Call<Attendance> call, Response<Attendance> response){
+                                                        Attendance att = response.body();
+                                                        rv_adapter.addItem(att);
+                                                        attendanceCount.setText("attendees = " + rv_adapter.getItemCount());
+                                                    }
+                                                    @Override
+                                                    public void onFailure(Call<Attendance> call, Throwable t){
+                                                        Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+                                            }
+                                            else{
+                                                Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    }
+                                    @Override
+                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                        Toast.makeText(getApplicationContext(), "wrong data provided", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
                         }
                     });
-
-
                 }
             }
             @Override
@@ -102,5 +153,9 @@ public class ta_attendanceConfirmationList extends AppCompatActivity {
             }
         });
 
+    }
+
+    void setAttendanceCount(int count){
+        attendanceCount.setText("attendees = " + rv_adapter.getItemCount());
     }
 }

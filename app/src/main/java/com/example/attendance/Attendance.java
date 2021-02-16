@@ -8,6 +8,7 @@ public class Attendance {
     private String name;
     private String userGroup;
 
+    private int error_code;
     Attendance() {
 
     }
@@ -17,6 +18,10 @@ public class Attendance {
         this.courseCode = courseCode;
         this.name = name;
         this.userGroup = userGroup;
+    }
+
+    public Attendance(int errorCode){
+        this.error_code = errorCode;
     }
 
     public Integer getUserId() {
@@ -49,5 +54,13 @@ public class Attendance {
 
     public void setUserGroup(String userGroup) {
         this.userGroup = userGroup;
+    }
+
+    public int getError_code() {
+        return error_code;
+    }
+
+    public void setError_code(int error_code) {
+        this.error_code = error_code;
     }
 }

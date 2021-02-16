@@ -106,6 +106,7 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
                             ta_page_2.putExtra("currDate",currDate);
                             ta_page_2.putExtra("courseCode",courseCode);
                             ta_page_2.putExtra("group",group);
+                            startActivity(ta_page_2);
                         }
                     }
 

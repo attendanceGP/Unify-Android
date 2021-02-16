@@ -92,7 +92,9 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
 
                 java.util.Date date=new java.util.Date();
                 String currDate = new SimpleDateFormat("dd-MM-yyyy").format(date);
-                Call<Void> call = userAPI.taStartAttendance(currDate,groups.getText().toString(),selectCourse.getSelectedItem().toString(),sessionManager.getId());
+                String courseCode =selectCourse.getSelectedItem().toString();
+                String group = groups.getText().toString();
+                Call<Void> call = userAPI.taStartAttendance(currDate,group,courseCode,sessionManager.getId());
                 call.enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
@@ -100,7 +102,11 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
                             Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
                         }
                         else{
-                            startActivity(new Intent(TA_home.this, MainActivity.class));
+                            //will replace with the button class or lamya's class
+                            Intent ta_page_2 = new Intent(TA_home.this, MainActivity.class);
+                            ta_page_2.putExtra("currDate",currDate);
+                            ta_page_2.putExtra("courseCode",courseCode);
+                            ta_page_2.putExtra("group",group);
                         }
                     }
 

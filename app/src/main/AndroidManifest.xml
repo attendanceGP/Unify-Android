@@ -13,7 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".TA_home"></activity>
+        <activity android:name=".TA_closes_attendance"></activity>
+        <activity android:name=".TA_home" />
         <activity android:name=".Home" />
         <activity android:name=".MainActivity">
             <intent-filter>

@@ -102,8 +102,7 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
                             Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
                         }
                         else{
-                            //will replace with the button class or lamya's class
-                            Intent ta_page_2 = new Intent(TA_home.this, MainActivity.class);
+                            Intent ta_page_2 = new Intent(TA_home.this, TA_closes_attendance.class);
                             ta_page_2.putExtra("currDate",currDate);
                             ta_page_2.putExtra("courseCode",courseCode);
                             ta_page_2.putExtra("group",group);

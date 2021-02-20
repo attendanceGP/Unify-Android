@@ -58,6 +58,7 @@ public class ta_attendanceConfirmationList extends AppCompatActivity {
         attendanceDetails.setText(CourseID+"-"+Group+"\n"+str_date);
 
 
+
         // -------------  Calling the API to get Students List ----------------------
         UserAPI userAPI = APIClient.getClient().create(UserAPI.class);
 
@@ -70,7 +71,7 @@ public class ta_attendanceConfirmationList extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
                 }else {
                     List_Attendance = std_List;
-
+                    System.out.println(std_List.size());
                     rv_studentsList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                     rv_adapter = new recyclerView_studentsList_adapter(getApplicationContext(), List_Attendance, str_date);
                     rv_studentsList.setAdapter(rv_adapter);

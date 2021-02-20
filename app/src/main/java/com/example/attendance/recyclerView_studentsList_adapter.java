@@ -62,11 +62,11 @@ public class recyclerView_studentsList_adapter extends RecyclerView.Adapter<recy
     @SuppressLint({"SetTextI18n", "ResourceAsColor"})
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+
         Attendance attendance = attendeesData.get(position);
 
-
         // Set item views based on your views and data model
-        holder.ID_TextView.setText(String.valueOf(attendance.getUserId()));
+        holder.ID_TextView.setText(String.valueOf(attendance.getUserId())+" - "+ attendance.getUserGroup());
         holder.name_TextView.setText(attendance.getName());
         Button button = holder.buttonAction;
         button.setText("Remove");
@@ -116,6 +116,8 @@ public class recyclerView_studentsList_adapter extends RecyclerView.Adapter<recy
     public void removeItem(int position) {
         attendeesData.remove(position);
         notifyItemRemoved(position);
+        notifyItemRangeChanged(position, attendeesData.size());
+        notifyDataSetChanged();
     }
 
     public void addItem(Attendance newList) {

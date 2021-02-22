@@ -44,10 +44,13 @@ public class TA_closes_attendance extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
                         }
                         else{
-                            Intent ta_page_3 = new Intent(TA_closes_attendance.this, MainActivity.class);
-                            ta_page_3.putExtra("currDate",currDate);
-                            ta_page_3.putExtra("courseCode",courseCode);
-                            ta_page_3.putExtra("group",group);
+                            /// todo put in the appropriate activity
+                            Intent dataIntent = getIntent();
+                            Intent intent = new Intent(TA_closes_attendance.this, ta_attendanceConfirmationList.class);
+                            intent.putExtra("CoureID_Key", dataIntent.getStringExtra("courseCode"));
+                            intent.putExtra("Group_Key", dataIntent.getStringExtra("group"));
+                            intent.putExtra("Date_Key", dataIntent.getStringExtra("currDate"));
+                            startActivity(intent);
                         }
                     }
 

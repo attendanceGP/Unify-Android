@@ -56,8 +56,8 @@ public class Attendance {
         this.absent = absent;
     }
 
-    public Attendance(Integer userId, String courseCode, String name, String userGroup) {
-        this.userID = userId;
+    public Attendance(Integer userID, String courseCode, String name, String userGroup) {
+        this.userID = userID;
         this.courseCode = courseCode;
         this.name = name;
         this.userGroup = userGroup;

@@ -57,7 +57,7 @@ public class Home extends AppCompatActivity {
         swipeRefreshLayout =(SwipeRefreshLayout) findViewById(R.id.swipe);
         button = (Button)findViewById(R.id.attendButton);
         button.setVisibility(View.INVISIBLE);
-
+        // call the get student courses API and store them in courses variable
         Call<String[]> call = APIClient.getClient().create(UserAPI.class).getStudentCourses(sessionManager.getId());
         call.enqueue(new Callback<String[]>() {
             @Override
@@ -71,7 +71,6 @@ public class Home extends AppCompatActivity {
 
             }
         });
-
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -80,11 +79,14 @@ public class Home extends AppCompatActivity {
                 attendance=null;
 
                 Date date = new Date();
-
+                //call the check attendance API to check if there is any attendance available at the
+                //time the student refreshes the page
                 Call<Attendance>call2 = APIClient.getClient().create(UserAPI.class).checkAttendance(sessionManager.getId(),courses,new SimpleDateFormat("dd-MM-yyyy").format(date));
                 call2.enqueue(new Callback<Attendance>() {
                     @Override
                     public void onResponse(Call<Attendance> call, Response<Attendance> response) {
+                        //if there is an attendance available it gets the course name and save the
+                        //store the row of the TA from the DB in the variable attendance
                         attendance = response.body();
                         if(attendance != null){
                             found = true;
@@ -100,13 +102,15 @@ public class Home extends AppCompatActivity {
                         Toast.makeText(Home.this, t.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
-
+                // if there is an attendance available make the attend button appear
                 if (found){
                     button.setVisibility(View.VISIBLE);
 
                     button.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            // on clicking the button it calls the attend API which checks again if the attendance is available
+                            // and if so it records the student attendance
                             Call<Void>call3 = APIClient.getClient().create(UserAPI.class).attend(sessionManager.getId(),course,new SimpleDateFormat("dd-MM-yyyy").format(date),attendance.getId());
                             call3.enqueue(new Callback<Void>() {
                                 @Override

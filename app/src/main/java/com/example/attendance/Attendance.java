@@ -2,15 +2,15 @@ package com.example.attendance;
 
 public class Attendance {
     private Long id;
-
+    private int error_code;
     private Integer userID;
     private String courseName;
-
+    private String name;
     private String userGroup;
+    private String courseCode;
 
     public Attendance() {
     }
-//    private Date date;
 
     private boolean absent;
 
@@ -22,13 +22,15 @@ public class Attendance {
         this.id = id;
     }
 
-    public Integer getUserID() {
+    public Integer getUserId() {
         return userID;
     }
+
 
     public void setUserID(Integer userID) {
         this.userID = userID;
     }
+
 
     public String getCourseName() {
         return courseName;
@@ -54,6 +56,17 @@ public class Attendance {
         this.absent = absent;
     }
 
+    public Attendance(Integer userId, String courseCode, String name, String userGroup) {
+        this.userID = userId;
+        this.courseCode = courseCode;
+        this.name = name;
+        this.userGroup = userGroup;
+    }
+
+    public Attendance(int errorCode){
+        this.error_code = errorCode;
+    }
+
 
     public boolean isAbsent() {
         return absent;
@@ -61,6 +74,31 @@ public class Attendance {
 
     public void setAbsent(boolean absent) {
         this.absent = absent;
+    }
+
+    public int getError_code() {
+        return error_code;
+    }
+
+    public void setError_code(int error_code) {
+        this.error_code = error_code;
+    }
+
+
+    public String getCourseCode() {
+        return courseCode;
+    }
+
+    public void setCourseCode(String courseCode) {
+        this.courseCode = courseCode;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     /*public Attendance() {
@@ -111,7 +149,29 @@ public class Attendance {
 
     public void setCourse(Course course) {
         this.course = course;
+        }
+import java.util.Date;
+
+public class Attendance {
+    private Integer userId;
+    private String courseCode;
+    private String name;
+    private String userGroup;
+
+
+    Attendance() {
+
     }
+
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
 
     public String getUserGroup() {
         return userGroup;
@@ -121,6 +181,7 @@ public class Attendance {
         this.userGroup = userGroup;
     }
 
+
     *//*public Date getDate() {
         return date;
     }
@@ -128,4 +189,6 @@ public class Attendance {
     public void setDate(Date date) {
         this.date = date;
     }*/
+
+
 }

@@ -15,6 +15,8 @@
         android:usesCleartextTraffic="true">
         <activity android:name=".TA_closes_attendance"></activity>
         <activity android:name=".TA_home" />
+
+        <activity android:name=".ta_attendanceConfirmationList"></activity>
         <activity android:name=".Home" />
         <activity android:name=".MainActivity">
             <intent-filter>

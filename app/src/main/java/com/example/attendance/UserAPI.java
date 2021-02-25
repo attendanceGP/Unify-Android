@@ -30,6 +30,10 @@ public interface UserAPI {
     @GET("ta/getTaughtCourses")
     Call<ArrayList<String>> getTaughtCourses(@Query("userId") Integer userId);
 
+    @POST("ta/closeTAattendance")
+    Call<Void> closeTAattendance(@Query("date") String date,
+                                 @Query("userGroup") String userGroup, @Query("courseId") String courseId, @Query("userId") Integer userId);
+
     @GET("student/getStudentCourses")
     Call<String[]> getStudentCourses(@Query("studentID")Integer studentID);
 

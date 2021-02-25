@@ -36,10 +36,10 @@ public class TA_closes_attendance extends AppCompatActivity {
                 String group = intent.getStringExtra("group");
                 String courseCode = intent.getStringExtra("courseCode");
 
-                Call<Attendance> call = userAPI.setAbsence(courseCode,group,currDate,sessionManager.getId(),true);
-                call.enqueue(new Callback<Attendance>() {
+                Call<Void> call = userAPI.closeTAattendance(currDate,group,courseCode,sessionManager.getId());
+                call.enqueue(new Callback<Void>() {
                     @Override
-                    public void onResponse(Call<Attendance> call, Response<Attendance> response) {
+                    public void onResponse(Call<Void> call, Response<Void> response) {
                         if (response.code() != 200) {
                             Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
                         }
@@ -55,7 +55,7 @@ public class TA_closes_attendance extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<Attendance> call, Throwable t) {
+                    public void onFailure(Call<Void> call, Throwable t) {
                         Toast.makeText(getApplicationContext(), "please check your internet connection", Toast.LENGTH_SHORT).show();
                     }
                 });

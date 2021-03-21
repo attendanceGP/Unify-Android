@@ -83,7 +83,7 @@ public class ta_attendanceConfirmationList extends AppCompatActivity {
                         @Override
                         public void onClick(View view) {
                             Toast.makeText(getApplicationContext(), "confirmed", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(ta_attendanceConfirmationList.this, Home.class));
+                            startActivity(new Intent(ta_attendanceConfirmationList.this, TA_home.class));
                         }
 
                     });

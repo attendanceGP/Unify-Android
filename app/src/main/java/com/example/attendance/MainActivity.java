@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         sessionManager = new SessionManager(getApplicationContext());
         if (sessionManager.isLoggedIn()) startActivity(new Intent(MainActivity.this, Home.class));
 
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.login);
 
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);

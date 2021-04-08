@@ -32,4 +32,17 @@
 
     </style>
 
+    <style name="attend">
+
+        <item name="android:textSize">
+            36sp
+        </item>
+
+        <item name="android:textColor">
+            #FFFFFF
+        </item>
+
+    </style>
+
+
 </resources>

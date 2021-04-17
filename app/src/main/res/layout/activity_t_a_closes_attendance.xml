@@ -4,15 +4,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TA_closes_attendance">
+    tools:context=".TA_closes_attendance"
+    android:background="@drawable/home_ta">
 
     <Button
         android:id="@+id/showAttendeesList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Show attendees List"
+        android:background="@drawable/curved_rectangle_button"
+        android:text="End Attendance"
+        android:textAppearance="@style/record_attendance"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.499" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="243dp"
+        android:layout_height="40dp"
+        android:gravity="center_horizontal"
+        android:text="Click to end the attendance recording process and view attendees list"
+        android:textAppearance="@style/attendees_list_button_instructions"
+        app:layout_constraintBottom_toTopOf="@+id/showAttendeesList"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.95" />
 </androidx.constraintlayout.widget.ConstraintLayout>

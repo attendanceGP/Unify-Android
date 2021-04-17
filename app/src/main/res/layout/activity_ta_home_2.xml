@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/home_ta"
+    android:clipChildren="false"
+    >
+
+    <Spinner
+        android:id="@+id/Courses"
+        android:layout_width="292dp"
+        android:layout_height="48dp"
+        android:autofillHints="Groups"
+        android:background="@drawable/curved_rectangle_text_holder"
+        android:elevation="4dp"
+        android:translationZ="4dp"
+        android:stateListAnimator="@null"
+        android:spinnerMode="dropdown"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.357" />
+
+    <EditText
+        android:id="@+id/Groups"
+        android:layout_width="292dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="36dp"
+        android:background="@drawable/curved_rectangle_text_holder"
+        android:elevation="4dp"
+        android:translationZ="4dp"
+        android:stateListAnimator="@null"
+        android:ems="10"
+        android:hint="Groups"
+        android:textColor="#000000"
+        android:textColorHint="#000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Courses" />
+
+    <Button
+        android:id="@+id/RecordAttendance"
+        android:layout_width="130dp"
+        android:layout_height="47dp"
+        android:layout_marginBottom="292dp"
+        android:background="@drawable/curved_rectangle_button"
+        android:textAppearance="@style/record_attendance"
+        android:text="Start Attendance"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Groups"
+        app:layout_constraintVertical_bias="1.0" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

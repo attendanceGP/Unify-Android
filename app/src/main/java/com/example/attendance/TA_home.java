@@ -23,8 +23,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class TA_home extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    TextView TA_name;
-    TextView TA_id;
     SessionManager sessionManager;
     EditText groups;
     Button recordAttendance;
@@ -35,7 +33,7 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_t_a_home);
+        setContentView(R.layout.activity_ta_home_2);
 
         sessionManager = new SessionManager(getApplicationContext());
         groups = findViewById(R.id.Groups);
@@ -71,18 +69,10 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, givenCourses);
         selectCourse.setAdapter(adapter);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        selectCourse.setPrompt("Courses");
         selectCourse.setOnItemSelectedListener(this);
 
-
-
-
-        //TA name and id shown-------------------------------------------------------------------------------------------------------------------------
-        TA_name = findViewById(R.id.TAname);
-        TA_id = findViewById(R.id.TAid);
         recordAttendance = findViewById(R.id.RecordAttendance);
-
-        TA_name.setText(sessionManager.getName());
-        TA_id.setText(sessionManager.getId().toString());
 
         //Record attendance button------------------------------------------------------------------------------------------------------------------------
         recordAttendance.setOnClickListener(new View.OnClickListener(){

@@ -27,7 +27,8 @@ public class MainActivity extends AppCompatActivity {
 
         // if logged in go to home page
         sessionManager = new SessionManager(getApplicationContext());
-        if (sessionManager.isLoggedIn()) startActivity(new Intent(MainActivity.this, Home.class));
+        //if (sessionManager.isLoggedIn()) startActivity(new Intent(MainActivity.this, Home.class));
+        if (true) startActivity(new Intent(MainActivity.this, DeadlineStudentActivity.class));
 
         setContentView(R.layout.login);
 

@@ -10,5 +10,30 @@ Unify
 
     <string name="attend">Attend</string>
 
+    <string name="upcoming">
+
+Upcoming
+</string>
+
+    <string name="assignment_">
+
+Assignment One
+</string>
+
+    <string name="cs402">
+
+CS402
+</string>
+
+    <string name="due_27_03_2">
+
+Due 27-03-2021 at 11:59 pm
+</string>
+
+    <string name="done">
+
+Done
+</string>
+
 
 </resources>

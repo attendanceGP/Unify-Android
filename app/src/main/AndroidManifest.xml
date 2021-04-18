@@ -19,6 +19,8 @@
         <activity android:name=".ta_attendanceConfirmationList"></activity>
         <activity android:name=".Home" />
 
+        <activity android:name=".DeadlineStudentActivity"/>
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

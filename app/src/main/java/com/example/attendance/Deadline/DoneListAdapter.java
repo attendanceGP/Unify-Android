@@ -43,7 +43,7 @@ public class DoneListAdapter extends RecyclerView.Adapter<DoneListAdapter.ViewHo
         Deadline deadline = deadlines.get(position);
         holder.assignmentName.setText(deadline.getAssignmentName());
         holder.courseCode.setText(deadline.getCourseCode());
-        holder.dueDate.setText(deadline.getDueDate());
+        holder.dueDate.setText(deadline.getDueDate().toString());
     }
 
     @Override

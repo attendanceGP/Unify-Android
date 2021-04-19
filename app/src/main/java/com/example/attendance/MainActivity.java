@@ -1,6 +1,7 @@
 package com.example.attendance;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.attendance.Database.AppDatabase;
 import com.example.attendance.Deadline.DeadlineStudentActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -29,7 +31,9 @@ public class MainActivity extends AppCompatActivity {
         // if logged in go to home page
         sessionManager = new SessionManager(getApplicationContext());
         //if (sessionManager.isLoggedIn()) startActivity(new Intent(MainActivity.this, Home.class));
-        if (true) startActivity(new Intent(MainActivity.this, DeadlineStudentActivity.class));
+        if (true) {
+            startActivity(new Intent(MainActivity.this, DeadlineStudentActivity.class));
+        }
 
         setContentView(R.layout.login);
 

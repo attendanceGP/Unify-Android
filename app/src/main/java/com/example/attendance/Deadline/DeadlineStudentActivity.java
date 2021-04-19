@@ -1,16 +1,21 @@
 package com.example.attendance.Deadline;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 
+import com.example.attendance.Database.AppDatabase;
 import com.example.attendance.R;
+import com.example.attendance.User;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 public class DeadlineStudentActivity extends AppCompatActivity {
     private List<Deadline> deadlineList = new ArrayList<>();
@@ -45,36 +50,19 @@ public class DeadlineStudentActivity extends AppCompatActivity {
     }
 
     void prepareData(){
-        Deadline deadline = new Deadline("assignment ", "CS402", "Due 27-7-2012");
-        deadlineList.add(deadline);
+//        Deadline deadline = new Deadline(1, "assignment ", "CS402", new Date(), false);
+//        deadlineList.add(deadline);
 
-        deadline = new Deadline("assignment ", "CS402", "Due 27-7-2012");
-        deadlineList.add(deadline);
+        //TODO remove
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                // Insert Data
+                deadlineList.add(Room.databaseBuilder(getApplicationContext(),
+                        AppDatabase.class, "attendance").build().deadlineDao().findById(1));
 
-        deadline = new Deadline("assignment ", "CS402", "Due 27-7-2012");
-        deadlineList.add(deadline);
-
-        deadline = new Deadline("assignment ", "CS402", "Due 27-7-2012");
-        deadlineList.add(deadline);
-
-        deadline = new Deadline("assignment ", "CS402", "Due 27-7-2012");
-        deadlineList.add(deadline);
-
-        deadline = new Deadline("assignment ", "CS402", "Due 27-7-2012");
-        deadlineList.add(deadline);
-
-        deadline = new Deadline("assignment ", "CS402", "Due 27-7-2012");
-        deadlineList.add(deadline);
-
-        deadline = new Deadline("assignment ", "CS402", "Due 27-7-2012");
-        deadlineList.add(deadline);
-
-        deadline = new Deadline("assignment ", "CS402", "Due 27-7-2012");
-        deadlineList.add(deadline);
-
-        deadline = new Deadline("assignment ", "CS402", "Due 27-7-2012");
-        deadlineList.add(deadline);
-
-        upcomingListAdapter.notifyDataSetChanged();
+                upcomingListAdapter.notifyDataSetChanged();
+            }
+        });
     }
 }

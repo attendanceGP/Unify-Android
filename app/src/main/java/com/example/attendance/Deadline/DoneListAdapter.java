@@ -1,19 +1,21 @@
-package com.example.attendance;
+package com.example.attendance.Deadline;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.attendance.R;
+
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class UpcomingListAdapter extends RecyclerView.Adapter<UpcomingListAdapter.ViewHolder>{
+public class DoneListAdapter extends RecyclerView.Adapter<DoneListAdapter.ViewHolder>{
     private List<Deadline> deadlines;
 
-    public UpcomingListAdapter(List<Deadline> deadlines) {
+    public DoneListAdapter(List<Deadline> deadlines) {
         this.deadlines = deadlines;
     }
 
@@ -31,13 +33,13 @@ public class UpcomingListAdapter extends RecyclerView.Adapter<UpcomingListAdapte
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View listItem= layoutInflater.inflate(R.layout.upcoming_item, parent, false);
+        View listItem= layoutInflater.inflate(R.layout.done_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(listItem);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull UpcomingListAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull DoneListAdapter.ViewHolder holder, int position) {
         Deadline deadline = deadlines.get(position);
         holder.assignmentName.setText(deadline.getAssignmentName());
         holder.courseCode.setText(deadline.getCourseCode());

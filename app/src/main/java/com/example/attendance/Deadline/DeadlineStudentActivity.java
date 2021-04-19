@@ -1,6 +1,8 @@
-package com.example.attendance;
+package com.example.attendance.Deadline;
 
 import android.os.Bundle;
+
+import com.example.attendance.R;
 
 import java.util.ArrayList;
 import java.util.List;

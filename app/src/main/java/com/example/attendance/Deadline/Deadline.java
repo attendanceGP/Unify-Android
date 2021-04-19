@@ -1,4 +1,4 @@
-package com.example.attendance;
+package com.example.attendance.Deadline;
 
 public class Deadline {
     String assignmentName;

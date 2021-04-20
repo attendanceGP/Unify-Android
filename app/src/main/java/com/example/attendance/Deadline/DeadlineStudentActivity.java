@@ -62,8 +62,8 @@ public class DeadlineStudentActivity extends AppCompatActivity {
         refreshDeadlines();
     }
 
+    // refreshes the data from the Room db
     void updateData(){
-        //TODO remove
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {

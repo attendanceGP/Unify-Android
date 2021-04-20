@@ -1,5 +1,6 @@
 package com.example.attendance.Deadline;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,13 +21,27 @@ public class UpcomingListAdapter extends RecyclerView.Adapter<UpcomingListAdapte
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        public TextView assignmentName, courseCode, dueDate;
+        public TextView assignmentName;
+        public TextView courseCode;
+        public TextView dueDate;
+
+        public Deadline deadline;
 
         public ViewHolder(View view){
             super(view);
             assignmentName = (TextView) view.findViewById(R.id.assignment_name);
             courseCode = (TextView) view.findViewById(R.id.course_code);
             dueDate = (TextView) view.findViewById(R.id.due_date);
+
+            // logic off the buttons in each row of the recycler view
+            view.findViewById(R.id.deadline_done).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // logs the deadline id
+                    Log.d("test", "" + deadline.getId());
+
+                }
+            });
         }
     }
 
@@ -44,6 +59,7 @@ public class UpcomingListAdapter extends RecyclerView.Adapter<UpcomingListAdapte
         holder.assignmentName.setText(deadline.getAssignmentName());
         holder.courseCode.setText(deadline.getCourseCode());
         holder.dueDate.setText(deadline.getDueDate().toString());
+        holder.deadline = deadline;
     }
 
     @Override

@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -25,6 +26,8 @@ import retrofit2.Response;
 public class DeadlineStudentActivity extends AppCompatActivity {
     private List<Deadline> upcomingList = new ArrayList<>();
     private List<Deadline> doneList = new ArrayList<>();
+
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     private RecyclerView upcomingRecyclerView;
     private RecyclerView doneRecyclerView;
@@ -36,6 +39,16 @@ public class DeadlineStudentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_deadline_student);
+
+        // binding to the swipe layout to refesh the page
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Log.d("test", "sss");
+                refreshDeadlines();
+            }
+        });
 
         // binding to the recycler views
         upcomingRecyclerView = (RecyclerView) findViewById(R.id.upcoming_deadlines);
@@ -126,7 +139,7 @@ public class DeadlineStudentActivity extends AppCompatActivity {
                             AppDatabase.class, "attendance").build().deadlineDao().isExists(deadline.getId())){
 
                         Room.databaseBuilder(getApplicationContext(),
-                                AppDatabase.class, "attendance").build().deadlineDao().update(deadline);
+                                AppDatabase.class, "attendance").build().deadlineDao().updateDate(deadline.getId(), deadline.getDueDate());
                     }else{
                         Room.databaseBuilder(getApplicationContext(),
                                 AppDatabase.class, "attendance").build().deadlineDao().insertAll(deadline);
@@ -134,6 +147,12 @@ public class DeadlineStudentActivity extends AppCompatActivity {
                 }
 
                 updateData();
+
+                Log.d("test", "sss");
+
+                if (swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
             }
         });
     }

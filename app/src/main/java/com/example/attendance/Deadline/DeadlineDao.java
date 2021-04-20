@@ -2,6 +2,7 @@ package com.example.attendance.Deadline;
 
 import com.example.attendance.User;
 
+import java.util.Date;
 import java.util.List;
 
 import androidx.room.Dao;
@@ -35,6 +36,9 @@ public interface DeadlineDao {
 
     @Update
     void update(Deadline deadline);
+
+    @Query("UPDATE deadline SET due_date = :date WHERE id = :id")
+    void updateDate(int id, Date date);
 
     @Query("UPDATE deadline SET is_done = 1 WHERE id = :id")
     void changeToDone(int id);

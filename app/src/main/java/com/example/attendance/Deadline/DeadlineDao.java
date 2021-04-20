@@ -11,13 +11,19 @@ import androidx.room.Query;
 
 @Dao
 public interface DeadlineDao {
-    @Query("SELECT * FROM deadline")
+    @Query("SELECT * FROM Deadline")
     List<Deadline> getAll();
 
-    @Query("SELECT * FROM deadline WHERE id IN (:ids)")
+    @Query("SELECT * FROM Deadline WHERE is_done = 0")
+    List<Deadline> getAllUpcoming();
+
+    @Query("SELECT * FROM Deadline WHERE is_done = 1")
+    List<Deadline> getAllDone();
+
+    @Query("SELECT * FROM Deadline WHERE id IN (:ids)")
     List<Deadline> loadAllByIds(int[] ids);
 
-    @Query("SELECT * FROM deadline WHERE id = :id")
+    @Query("SELECT * FROM Deadline WHERE id = :id")
     Deadline findById(int id);
 
     @Insert

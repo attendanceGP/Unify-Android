@@ -45,4 +45,7 @@ public interface DeadlineDao {
 
     @Delete
     void delete(Deadline deadline);
+
+    @Query("DELETE FROM deadline")
+    void nukeTable();
 }

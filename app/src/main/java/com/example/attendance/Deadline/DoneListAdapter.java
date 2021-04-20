@@ -7,6 +7,9 @@ import android.widget.TextView;
 
 import com.example.attendance.R;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -43,11 +46,25 @@ public class DoneListAdapter extends RecyclerView.Adapter<DoneListAdapter.ViewHo
         Deadline deadline = deadlines.get(position);
         holder.assignmentName.setText(deadline.getAssignmentName());
         holder.courseCode.setText(deadline.getCourseCode());
-        holder.dueDate.setText(deadline.getDueDate().toString());
+        holder.dueDate.setText(getDueDateStringFromDate(deadline.getDueDate()));
     }
 
     @Override
     public int getItemCount() {
         return deadlines.size();
+    }
+
+    private String getDueDateStringFromDate(Date date){
+        String result = "";
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        String strDate = dateFormat.format(date);
+
+        result = "Was due on " + strDate;
+
+        dateFormat = new SimpleDateFormat("hh:mm a");
+        strDate = dateFormat.format(date);
+
+        result = result + " at " + strDate;
+        return result;
     }
 }

@@ -1,9 +1,6 @@
 package com.example.attendance.Deadline;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +8,9 @@ import android.widget.TextView;
 
 import com.example.attendance.R;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -31,6 +31,7 @@ public class UpcomingListAdapter extends RecyclerView.Adapter<UpcomingListAdapte
         public TextView assignmentName;
         public TextView courseCode;
         public TextView dueDate;
+        public TextView remainingTime;
 
         public Deadline deadline;
 
@@ -39,6 +40,7 @@ public class UpcomingListAdapter extends RecyclerView.Adapter<UpcomingListAdapte
             assignmentName = (TextView) view.findViewById(R.id.assignment_name);
             courseCode = (TextView) view.findViewById(R.id.course_code);
             dueDate = (TextView) view.findViewById(R.id.due_date);
+            remainingTime = (TextView) view.findViewById(R.id.time_remaining);
 
             // logic off the buttons in each row of the recycler view
             view.findViewById(R.id.deadline_done).setOnClickListener(new View.OnClickListener() {
@@ -66,12 +68,51 @@ public class UpcomingListAdapter extends RecyclerView.Adapter<UpcomingListAdapte
         Deadline deadline = deadlines.get(position);
         holder.assignmentName.setText(deadline.getAssignmentName());
         holder.courseCode.setText(deadline.getCourseCode());
-        holder.dueDate.setText(deadline.getDueDate().toString());
+        holder.dueDate.setText(getDueDateStringFromDate(deadline.getDueDate()));
+        holder.remainingTime.setText(getRemainingTime(deadline.getDueDate()));
         holder.deadline = deadline;
     }
 
     @Override
     public int getItemCount() {
         return deadlines.size();
+    }
+
+    private String getRemainingTime(Date dueDate){
+        String remainingTimeString;
+
+        Date currentDate = new Date();
+        long diff = dueDate.getTime() - currentDate.getTime();
+
+        long diffSeconds = diff / 1000 % 60;
+        long diffMinutes = diff / (60 * 1000) % 60;
+        long diffHours = diff / (60 * 60 * 1000);
+        long diffDays = (int) (diff / (24 * 60 * 60 * 1000));
+
+        if(diffMinutes < 0){
+            remainingTimeString = "0";
+        }else if(diffDays > 0){
+            remainingTimeString = "" + diffDays + "D";
+        }else if(diffHours == 0){
+            remainingTimeString = "" + diffMinutes + "M";
+        }else{
+            remainingTimeString = "" + diffHours + "H";
+        }
+
+        return remainingTimeString;
+    }
+
+    private String getDueDateStringFromDate(Date date){
+        String result = "";
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        String strDate = dateFormat.format(date);
+
+        result = "Due on " + strDate;
+
+        dateFormat = new SimpleDateFormat("hh:mm a");
+        strDate = dateFormat.format(date);
+
+        result = result + " at " + strDate;
+        return result;
     }
 }

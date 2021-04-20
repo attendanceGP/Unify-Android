@@ -81,6 +81,9 @@ public class DeadlineStudentActivity extends AppCompatActivity {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
+//                Room.databaseBuilder(getApplicationContext(),
+//                        AppDatabase.class, "attendance").build().deadlineDao().nukeTable();
+
                 upcomingList.clear();
                 upcomingList.addAll(Room.databaseBuilder(getApplicationContext(),
                         AppDatabase.class, "attendance").build().deadlineDao().getAllUpcoming());

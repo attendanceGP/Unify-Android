@@ -1,5 +1,8 @@
 package com.example.attendance.Deadline;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +19,12 @@ import androidx.recyclerview.widget.RecyclerView;
 public class UpcomingListAdapter extends RecyclerView.Adapter<UpcomingListAdapter.ViewHolder>{
     private List<Deadline> deadlines;
 
-    public UpcomingListAdapter(List<Deadline> deadlines) {
+    // to call the removeFromUpcoming() function from the deadline student avtivity
+    private Context context;
+
+    public UpcomingListAdapter(List<Deadline> deadlines, Context context) {
         this.deadlines = deadlines;
+        this.context = context;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
@@ -37,9 +44,10 @@ public class UpcomingListAdapter extends RecyclerView.Adapter<UpcomingListAdapte
             view.findViewById(R.id.deadline_done).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // logs the deadline id
-                    Log.d("test", "" + deadline.getId());
-
+                    // used the DeadlineStudentActivity context to calll the function from it
+                    if (context instanceof DeadlineStudentActivity) {
+                        ((DeadlineStudentActivity) context).removeFromUpcoming(deadline.getId());
+                    }
                 }
             });
         }

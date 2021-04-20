@@ -36,6 +36,9 @@ public interface DeadlineDao {
     @Update
     void update(Deadline deadline);
 
+    @Query("UPDATE deadline SET is_done = 1 WHERE id = :id")
+    void changeToDone(int id);
+
     @Delete
     void delete(Deadline deadline);
 }

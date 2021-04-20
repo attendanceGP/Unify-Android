@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
+import androidx.room.RoomDatabase;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -41,7 +42,7 @@ public class DeadlineStudentActivity extends AppCompatActivity {
         doneRecyclerView = (RecyclerView) findViewById(R.id.done_deadlines) ;
 
         // instantiating new list adapters for upcoming and done
-        upcomingListAdapter = new UpcomingListAdapter(upcomingList);
+        upcomingListAdapter = new UpcomingListAdapter(upcomingList, this);  // sending context as well
         doneListAdapter = new DoneListAdapter(doneList);
 
         // setting the upcoming recycler view to the upcoming adapter
@@ -63,7 +64,7 @@ public class DeadlineStudentActivity extends AppCompatActivity {
     }
 
     // refreshes the data from the Room db
-    void updateData(){
+    private void updateData(){
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
@@ -87,7 +88,7 @@ public class DeadlineStudentActivity extends AppCompatActivity {
     }
 
     // refreshes deadlines from the internet
-    void refreshDeadlines(){
+    private void refreshDeadlines(){
         DeadlineAPI deadlineAPI = APIClient.getClient().create(DeadlineAPI.class);
 
         Call<List<Deadline>> call = deadlineAPI.getStudentDeadlines(20170171);
@@ -112,7 +113,7 @@ public class DeadlineStudentActivity extends AppCompatActivity {
     }
 
     // syncs the retrieved deadlines with the ones that already exist in the Room db
-    void syncDeadlinesFromAPI(List<Deadline> deadlines){
+    private void syncDeadlinesFromAPI(List<Deadline> deadlines){
         // if the deadline already exists in room db, update date only
         // if not, add it to Room and update the lists
 
@@ -131,6 +132,18 @@ public class DeadlineStudentActivity extends AppCompatActivity {
                                 AppDatabase.class, "attendance").build().deadlineDao().insertAll(deadline);
                     }
                 }
+
+                updateData();
+            }
+        });
+    }
+
+    public void removeFromUpcoming(int deadlineId){
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                Room.databaseBuilder(getApplicationContext(),
+                        AppDatabase.class, "attendance").build().deadlineDao().changeToDone(deadlineId);
 
                 updateData();
             }

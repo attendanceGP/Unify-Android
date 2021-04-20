@@ -30,6 +30,14 @@ public class Deadline {
     public Deadline() {
     }
 
+    public Deadline(int id, String assignmentName, String courseCode, Date dueDate) {
+        this.id = id;
+        this.assignmentName = assignmentName;
+        this.courseCode = courseCode;
+        this.dueDate = dueDate;
+        this.isDone = false;
+    }
+
     public Deadline(int id, String assignmentName, String courseCode, Date dueDate, boolean isDone) {
         this.id = id;
         this.assignmentName = assignmentName;

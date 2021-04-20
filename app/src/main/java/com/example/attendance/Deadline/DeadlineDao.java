@@ -8,6 +8,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 @Dao
 public interface DeadlineDao {
@@ -26,8 +27,14 @@ public interface DeadlineDao {
     @Query("SELECT * FROM Deadline WHERE id = :id")
     Deadline findById(int id);
 
+    @Query("SELECT COUNT(*) FROM Deadline WHERE id = :id")
+    boolean isExists (int id);
+
     @Insert
     void insertAll(Deadline... deadlines);
+
+    @Update
+    void update(Deadline deadline);
 
     @Delete
     void delete(Deadline deadline);

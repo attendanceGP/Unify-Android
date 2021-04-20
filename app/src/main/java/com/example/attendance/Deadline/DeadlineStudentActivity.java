@@ -5,12 +5,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.attendance.APIClient;
 import com.example.attendance.Database.AppDatabase;
 import com.example.attendance.R;
-import com.example.attendance.User;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +17,9 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class DeadlineStudentActivity extends AppCompatActivity {
     private List<Deadline> upcomingList = new ArrayList<>();
@@ -55,19 +57,21 @@ public class DeadlineStudentActivity extends AppCompatActivity {
         doneRecyclerView.setAdapter(doneListAdapter);
 
         // preparing data
-        prepareData();
+        updateData();
+
+        refreshDeadlines();
     }
 
-    void prepareData(){
+    void updateData(){
         //TODO remove
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                // Insert Data
+                upcomingList.clear();
                 upcomingList.addAll(Room.databaseBuilder(getApplicationContext(),
                         AppDatabase.class, "attendance").build().deadlineDao().getAllUpcoming());
-                Log.i("Donzel", "" + upcomingList.size());
 
+                doneList.clear();
                 doneList.addAll(Room.databaseBuilder(getApplicationContext(),
                         AppDatabase.class, "attendance").build().deadlineDao().getAllDone());
 
@@ -78,6 +82,57 @@ public class DeadlineStudentActivity extends AppCompatActivity {
                         doneListAdapter.notifyDataSetChanged();
                     }
                 });
+            }
+        });
+    }
+
+    // refreshes deadlines from the internet
+    void refreshDeadlines(){
+        DeadlineAPI deadlineAPI = APIClient.getClient().create(DeadlineAPI.class);
+
+        Call<List<Deadline>> call = deadlineAPI.getStudentDeadlines(20170171);
+
+        call.enqueue(new Callback<List<Deadline>>() {
+            @Override
+            public void onResponse(Call<List<Deadline>> call, Response<List<Deadline>> response) {
+                List<Deadline> deadlineList = response.body();
+
+                if(response.code() != 200){
+                    Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
+                }
+
+                syncDeadlinesFromAPI(deadlineList);
+            }
+
+            @Override
+            public void onFailure(Call<List<Deadline>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "please check your internet connection", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // syncs the retrieved deadlines with the ones that already exist in the Room db
+    void syncDeadlinesFromAPI(List<Deadline> deadlines){
+        // if the deadline already exists in room db, update date only
+        // if not, add it to Room and update the lists
+
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                for(Deadline deadline: deadlines){
+                    // if exists
+                    if(Room.databaseBuilder(getApplicationContext(),
+                            AppDatabase.class, "attendance").build().deadlineDao().isExists(deadline.getId())){
+
+                        Room.databaseBuilder(getApplicationContext(),
+                                AppDatabase.class, "attendance").build().deadlineDao().update(deadline);
+                    }else{
+                        Room.databaseBuilder(getApplicationContext(),
+                                AppDatabase.class, "attendance").build().deadlineDao().insertAll(deadline);
+                    }
+                }
+
+                updateData();
             }
         });
     }

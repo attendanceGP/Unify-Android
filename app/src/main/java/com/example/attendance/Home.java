@@ -102,10 +102,42 @@ public class Home extends AppCompatActivity {
                     public void onResponse(Call<Attendance> call, Response<Attendance> response) {
                         //if there is an attendance available it gets the course name and save the
                         //store the row of the TA from the DB in the variable attendance
-                        attendance = response.body();
-                        if(attendance != null){
-                            found = true;
-                            course = attendance.getCourseName();
+
+                        if(response.body() != null){
+                            course = response.body().getCourseName();
+                            // for the geolocation
+                            if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                                    != PackageManager.PERMISSION_GRANTED) {
+                                ActivityCompat.requestPermissions(Home.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, CODE);
+                            } else {
+                                getCurrentLocation(30,31);
+                            }
+
+                        if (geoDistance > 1 ){
+                            Toast.makeText(Home.this, Double.toString(geoDistance), Toast.LENGTH_SHORT).show();
+                            button.setBackground(getResources().getDrawable(R.drawable.attend_button_on));
+                            button.setEnabled(true);
+                            button.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    // on clicking the button it calls the attend API which checks again if the attendance is available
+                                    // and if so it records the student attendance
+                                    Call<Void>call3 = APIClient.getClient().create(UserAPI.class).attend(sessionManager.getId(),course,new SimpleDateFormat("dd-MM-yyyy").format(date),response.body().getId());
+                                    call3.enqueue(new Callback<Void>() {
+                                        @Override
+                                        public void onResponse(Call<Void> call, Response<Void> response) {
+                                            Toast.makeText(Home.this, "Done", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<Void> call, Throwable t) {
+                                            Toast.makeText(Home.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+                            });
+                        }
+
                         }
                         else{
                             found=false;
@@ -118,17 +150,17 @@ public class Home extends AppCompatActivity {
                     }
                 });
 
-                    // for the geolocation
+                   /* // for the geolocation
                 if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                         != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(Home.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, CODE);
                 } else {
                     getCurrentLocation(30,31);
                 }
-
+*/
                 // if there is an attendance available make the attend button appear
-                ///todo change the geodistance 
-                if (found && geoDistance < 100000){
+                ///todo change the geodistance
+                /*if (found && geoDistance < 100000){
                     //button.setVisibility(View.VISIBLE);
                     Toast.makeText(Home.this, Double.toString(geoDistance), Toast.LENGTH_SHORT).show();
                     button.setBackground(getResources().getDrawable(R.drawable.attend_button_on));
@@ -152,7 +184,7 @@ public class Home extends AppCompatActivity {
                             });
                         }
                     });
-                }
+                }*/
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -173,6 +205,7 @@ public class Home extends AppCompatActivity {
     }
 
     private void getCurrentLocation(final double TALat, final double TALong) {
+        final double[] dis = new double[1];
         final LocationRequest locationRequest = new LocationRequest();
         locationRequest.setInterval(10000);
         locationRequest.setFastestInterval(3000);
@@ -198,7 +231,8 @@ public class Home extends AppCompatActivity {
                             int latestLocationIndex = locationResult.getLocations().size() - 1;
                             latitude =
                                     locationResult.getLocations().get(latestLocationIndex).getLatitude();
-                            longitude =
+                            longitude
+                                    =
                                     locationResult.getLocations().get(latestLocationIndex).getLongitude();
                             //longitudeText.setText("longitude =" + Double.toString(longitude)+" , latitude =" + Double.toString(latitude));
                             geoDistance =distance(latitude,TALat,longitude,TALong);
@@ -208,6 +242,7 @@ public class Home extends AppCompatActivity {
 
                     }
                 }, Looper.getMainLooper());
+
 
     }
     public static double distance(double lat1,

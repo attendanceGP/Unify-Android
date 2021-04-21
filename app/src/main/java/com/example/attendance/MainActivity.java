@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.attendance.Database.AppDatabase;
 import com.example.attendance.Deadline.DeadlineStudentActivity;
+import com.example.attendance.Deadline.DeadlineTAActivity;
 
 public class MainActivity extends AppCompatActivity {
     SessionManager sessionManager;
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         sessionManager = new SessionManager(getApplicationContext());
         //if (sessionManager.isLoggedIn()) startActivity(new Intent(MainActivity.this, Home.class));
         if (true) {
-            startActivity(new Intent(MainActivity.this, DeadlineStudentActivity.class));
+            startActivity(new Intent(MainActivity.this, DeadlineTAActivity.class));
         }
 
         setContentView(R.layout.login);

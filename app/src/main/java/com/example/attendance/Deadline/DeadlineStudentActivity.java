@@ -42,6 +42,8 @@ public class DeadlineStudentActivity extends AppCompatActivity {
 
         // binding to the swipe layout to refesh the page
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
+
+        // when pull down, refresh deadlines
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -124,6 +126,9 @@ public class DeadlineStudentActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<Deadline>> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "please check your internet connection", Toast.LENGTH_SHORT).show();
+                if (swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
             }
         });
     }

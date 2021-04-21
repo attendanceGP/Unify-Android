@@ -65,7 +65,7 @@ public class DeadlinesTAListAdapter extends RecyclerView.Adapter<DeadlinesTAList
                                 public void onTimeSet(TimePicker timePicker, int hour, int minute) {
                                     // when both date and time are chosen, call the update function with the context
                                     if (context instanceof DeadlineTAActivity) {
-                                        ((DeadlineTAActivity) context).updateDate(year, month+1, day, hour, minute);
+                                        ((DeadlineTAActivity) context).updateDate(deadline.getId(), year, month+1, day, hour, minute);
                                     }
                                 }
                             }, currentDate.get(Calendar.HOUR_OF_DAY), currentDate.get(Calendar.MINUTE), false);
@@ -73,7 +73,9 @@ public class DeadlinesTAListAdapter extends RecyclerView.Adapter<DeadlinesTAList
                         }
                     }, currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), currentDate.get(Calendar.DATE));
 
-                    datePickerDialog.getDatePicker().setMinDate(currentDate.getTimeInMillis() - 1000);
+                    // set min date so that you can only extend an assignment's deadline
+                    datePickerDialog.getDatePicker().setMinDate(currentDate.getTimeInMillis() + 1000 * 60 * 60 * 24);
+                    
                     datePickerDialog.show();
                 }
             });

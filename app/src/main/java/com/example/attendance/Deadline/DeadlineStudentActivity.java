@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
-import androidx.room.RoomDatabase;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -109,7 +108,8 @@ public class DeadlineStudentActivity extends AppCompatActivity {
     private void refreshDeadlines(){
         DeadlineAPI deadlineAPI = APIClient.getClient().create(DeadlineAPI.class);
 
-        Call<List<Deadline>> call = deadlineAPI.getStudentDeadlines(20170171);
+        //TODO make the user id the logged in user's id
+        Call<List<Deadline>> call = deadlineAPI.getDeadlines(20170171);
 
         call.enqueue(new Callback<List<Deadline>>() {
             @Override

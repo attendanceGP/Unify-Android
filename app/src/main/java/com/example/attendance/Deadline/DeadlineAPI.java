@@ -9,8 +9,8 @@ import retrofit2.http.Query;
 
 public interface DeadlineAPI {
     @GET("deadline/getStudentDeadlines")
-    Call< List<Deadline> > getStudentDeadlines(@Query("userId") Integer userId);
+    Call< List<Deadline> > getDeadlines(@Query("userId") Integer userId);
 
     @POST("deadline/updateDueDate")
-    Call<Boolean> updateDueDate(@Query("dueDate") String dueDate);
+    Call<Integer> updateDueDate(@Query("id") int id, @Query("date") String date);
 }

@@ -75,7 +75,7 @@ public class DeadlinesTAListAdapter extends RecyclerView.Adapter<DeadlinesTAList
 
                     // set min date so that you can only extend an assignment's deadline
                     datePickerDialog.getDatePicker().setMinDate(currentDate.getTimeInMillis() + 1000 * 60 * 60 * 24);
-                    
+
                     datePickerDialog.show();
                 }
             });

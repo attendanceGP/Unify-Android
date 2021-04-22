@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
     android:id="@+id/swipe_layout"
-    android:layout_width="match_parent"
+    android:layout_width="fill_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/deadline_ta"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
@@ -46,6 +45,14 @@
                         android:layout_alignParentTop="true"
                         android:layout_marginTop="8dp"/>
 
+                    <Button
+                        android:layout_width="49dp"
+                        android:layout_height="49dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginLeft="185dp"
+                        android:layout_marginStart="185dp"
+                        android:layout_marginTop="22dp"
+                        android:background="@drawable/add_deadline_button" />
                 </LinearLayout>
 
             </ScrollView>

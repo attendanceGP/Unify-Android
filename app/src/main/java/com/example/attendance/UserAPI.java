@@ -51,4 +51,14 @@ public interface UserAPI {
     Call<Attendance> setAbsence(@Query("courseID") String courseID, @Query("group") String Group,
                                 @Query("date") String date, @Query("studentID") Integer studentID,
                                 @Query("absent") boolean absent);
+
+
+    @GET("attendance/setStudentAbsence")
+    Call<Attendance> setAbsence(@Query("courseID") String courseID, @Query("group") String Group,
+                                @Query("date") String date, @Query("studentID") Integer studentID,
+                                @Query("absent") boolean absent, @Query ("penalty") boolean penalty);
+
+    @POST("attendance/confirmAttendance")
+    Call<Void> confirmList(@Query("courseID") String courseID, @Query("group") String Group,
+                                 @Query("date") String date);
 }

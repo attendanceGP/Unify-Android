@@ -10,5 +10,10 @@ Unify
 
     <string name="attend">Attend</string>
 
+    <string name="number_of_s">0 students attended </string>
 
+    <string name="button_confirm_text">Confirm</string>
+
+
+    <string name="button_add_text">Add</string>
 </resources>

@@ -71,7 +71,7 @@ public class ta_attendanceConfirmationList extends AppCompatActivity {
                     rv_adapter = new recyclerView_studentsList_adapter(getApplicationContext(), List_Attendance, str_date);
                     rv_studentsList.setAdapter(rv_adapter);
 
-//                    setAttendanceCount();
+                    setAttendanceCount();
                     et_inputID.setEnabled(true);
 
 
@@ -127,7 +127,8 @@ public class ta_attendanceConfirmationList extends AppCompatActivity {
                                         } else {
                                             Toast.makeText(getApplicationContext(), studentID+" is added", Toast.LENGTH_SHORT).show();
                                             rv_adapter.addItem(test);
-//                                            setAttendanceCount();
+                                            setAttendanceCount();
+                                            et_inputID.getText().clear();
                                         }
                                     }
                                     @Override

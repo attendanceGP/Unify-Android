@@ -4,7 +4,6 @@
     android:id="@+id/home_ta_3"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:clipToOutline="true"
     android:background="@drawable/home_ta_3">
 
 
@@ -79,6 +78,7 @@
         />
 
 
+    <!--    recycler view -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_studentsList"
         android:layout_width="362dp"

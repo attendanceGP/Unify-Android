@@ -71,8 +71,6 @@ public class recyclerView_studentsList_adapter extends RecyclerView.Adapter<recy
         holder.ID_TextView.setText(String.valueOf(attendance.getUserId())+" - "+ attendance.getUserGroup());
         holder.name_TextView.setText(attendance.getName());
         Button button = holder.buttonAction;
-        button.setText("Remove");
-        button.setBackgroundColor(Color.RED);
         button.setEnabled(true);
 
         button.setOnClickListener(new View.OnClickListener() {

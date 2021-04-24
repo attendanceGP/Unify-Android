@@ -13,7 +13,7 @@
         android:layout_width="84dp"
         android:layout_height="47dp"
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="276dp"
+        android:layout_marginLeft="250dp"
         android:layout_alignParentTop="true"
         android:layout_marginTop="21dp"
         android:background="@drawable/sign_in_but"
@@ -39,20 +39,19 @@
     <!--    add student -->
     <View
         android:id="@+id/rectangle_5"
-        android:layout_width="362dp"
-        android:layout_height="70dp"
-        android:layout_centerHorizontal="true"
+        android:layout_width="387dp"
+        android:layout_height="66dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="11dp"
-        android:background="@drawable/rectangle_5"
-        />
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/rectangle_5" />
 
     <Button
         android:id="@+id/buttonAddStudent"
         android:layout_width="84dp"
         android:layout_height="47dp"
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="270dp"
+        android:layout_marginLeft="250dp"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="23dp"

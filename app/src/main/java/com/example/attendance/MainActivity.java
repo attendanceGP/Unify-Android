@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
         // if logged in go to home page
         sessionManager = new SessionManager(getApplicationContext());
+        
         if (sessionManager.isLoggedIn()) {
             if(sessionManager.getType().equals("student")) {
                 startActivity(new Intent(MainActivity.this, Home.class));

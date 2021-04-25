@@ -1,18 +1,26 @@
 package com.example.attendance.Deadline;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.attendance.APIClient;
 import com.example.attendance.Database.AppDatabase;
+import com.example.attendance.Home;
+import com.example.attendance.MainActivity;
 import com.example.attendance.R;
 import com.example.attendance.SessionManager;
+import com.example.attendance.TA_home;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -80,6 +88,36 @@ public class DeadlineStudentActivity extends AppCompatActivity {
         updateData();
 
         refreshDeadlines();
+
+        /**
+         * code for the bottom navigation bar
+         */
+        //TODO add the rest of the activities to the bottom navv view when done
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch(item.getItemId()){
+                    case R.id.action_home:
+                        if(sessionManager.getType().equals("student")){
+                            startActivity(new Intent(DeadlineStudentActivity.this, Home.class));
+                        }else{
+                            startActivity(new Intent(DeadlineStudentActivity.this, TA_home.class));
+                        }
+                        return true;
+
+                    case R.id.action_announcements:
+                        return true;
+
+                    case R.id.action_forum:
+                        return true;
+
+                    case R.id.action_absence:
+                        return true;
+                }
+                return false;
+            }
+        });
     }
 
     // refreshes the data from the Room db

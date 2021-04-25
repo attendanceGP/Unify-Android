@@ -1,5 +1,6 @@
 package com.example.attendance.Deadline;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -14,12 +15,14 @@ import retrofit2.Response;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -33,9 +36,12 @@ import android.widget.Toast;
 
 import com.example.attendance.APIClient;
 import com.example.attendance.Database.AppDatabase;
+import com.example.attendance.Home;
 import com.example.attendance.R;
 import com.example.attendance.SessionManager;
+import com.example.attendance.TA_home;
 import com.example.attendance.UserAPI;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -236,6 +242,36 @@ public class DeadlineTAActivity extends AppCompatActivity {
         });
 
         updateData();
+
+        /**
+         * code for the bottom navigation bar
+         */
+        //TODO add the rest of the activities to the bottom navv view when done
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch(item.getItemId()){
+                    case R.id.action_home:
+                        if(sessionManager.getType().equals("student")){
+                            startActivity(new Intent(DeadlineTAActivity.this, Home.class));
+                        }else{
+                            startActivity(new Intent(DeadlineTAActivity.this, TA_home.class));
+                        }
+                        return true;
+
+                    case R.id.action_announcements:
+                        return true;
+
+                    case R.id.action_forum:
+                        return true;
+
+                    case R.id.action_absence:
+                        return true;
+                }
+                return false;
+            }
+        });
     }
 
     private void postDeadline(int userId, String name, String courseCode, Date postedDate, Date dueDate) {

@@ -1,0 +1,73 @@
+<?exml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/add_deadline_popup">
+
+    <TextView
+        android:id="@+id/add_a_new_d"
+        android:layout_width="164dp"
+        android:layout_height="29dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="14dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
+        android:text="@string/add_a_new_d"
+        android:textAppearance="@style/add_a_new_d"
+        android:gravity="center_vertical"
+        />
+
+    <EditText
+        android:id="@+id/deadline_name"
+        android:layout_width="292dp"
+        android:layout_height="48dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/deadline_name"
+        android:hint="Assignment Name"
+        android:textColorHint="#000000"
+        android:textAppearance="@style/deadline_name_input"
+        android:textAlignment="center"
+        android:elevation="4dp"/>
+
+    <Spinner
+        android:id="@+id/deadline_course"
+        android:layout_width="292dp"
+        android:layout_height="48dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="120dp"
+        android:background="@drawable/deadline_name"
+        android:textAppearance="@style/deadline_name_input"
+        android:textAlignment="center"
+        android:gravity="center_vertical"
+        android:elevation="4dp"/>
+
+    <TextView
+        android:id="@+id/deadline_date"
+        android:layout_width="292dp"
+        android:layout_height="48dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="190dp"
+        android:background="@drawable/deadline_name"
+        android:text="Due Date"
+        android:textAppearance="@style/deadline_name_input"
+        android:elevation="4dp"
+        android:gravity="center" />
+
+    <Button
+        android:id="@+id/add_deadline"
+        android:layout_width="67dp"
+        android:layout_height="37.49dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="238dp"
+        android:text="Add"
+        android:textAppearance="@style/deadline_add_button"
+        android:background="@drawable/add_button"/>
+
+
+</RelativeLayout>

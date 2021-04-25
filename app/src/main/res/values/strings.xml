@@ -36,5 +36,10 @@ Done
 </string>
     <string name="title">Deadlines you posted</string>
 
+    <string name="add_a_new_d">
+
+Add a new deadline
+</string>
+
 
 </resources>

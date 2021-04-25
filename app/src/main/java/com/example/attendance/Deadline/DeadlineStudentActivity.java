@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.example.attendance.APIClient;
 import com.example.attendance.Database.AppDatabase;
 import com.example.attendance.R;
+import com.example.attendance.SessionManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,10 +35,14 @@ public class DeadlineStudentActivity extends AppCompatActivity {
     private UpcomingListAdapter upcomingListAdapter;
     private DoneListAdapter doneListAdapter;
 
+    private SessionManager sessionManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_deadline_student);
+
+        sessionManager = new SessionManager(getApplicationContext());
 
         // binding to the swipe layout to refesh the page
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
@@ -108,8 +113,7 @@ public class DeadlineStudentActivity extends AppCompatActivity {
     private void refreshDeadlines(){
         DeadlineAPI deadlineAPI = APIClient.getClient().create(DeadlineAPI.class);
 
-        //TODO make the user id the logged in user's id
-        Call<List<Deadline>> call = deadlineAPI.getDeadlines(20170171);
+        Call<List<Deadline>> call = deadlineAPI.getDeadlines(sessionManager.getId());
 
         call.enqueue(new Callback<List<Deadline>>() {
             @Override

@@ -31,9 +31,12 @@ public class MainActivity extends AppCompatActivity {
 
         // if logged in go to home page
         sessionManager = new SessionManager(getApplicationContext());
-        //if (sessionManager.isLoggedIn()) startActivity(new Intent(MainActivity.this, Home.class));
-        if (true) {
-            startActivity(new Intent(MainActivity.this, DeadlineTAActivity.class));
+        if (sessionManager.isLoggedIn()) {
+            if(sessionManager.getType().equals("student")) {
+                startActivity(new Intent(MainActivity.this, Home.class));
+            }else{
+                startActivity(new Intent(MainActivity.this, TA_home.class));
+            }
         }
 
         setContentView(R.layout.login);
@@ -64,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
                         }else if(test.getErrorCode() == 2){
                             Toast.makeText(getApplicationContext(), "incorrect username or password", Toast.LENGTH_SHORT).show();
                         }else {
-                            //TODO open another activity and persist
                             sessionManager.login(response.body());
                             if(sessionManager.getType().equals("student")) {
                                 startActivity(new Intent(MainActivity.this, Home.class));

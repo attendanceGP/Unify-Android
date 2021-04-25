@@ -1,5 +1,6 @@
 package com.example.attendance.Deadline;
 
+import java.util.Calendar;
 import java.util.List;
 
 import retrofit2.Call;
@@ -13,4 +14,9 @@ public interface DeadlineAPI {
 
     @POST("deadline/updateDueDate")
     Call<Integer> updateDueDate(@Query("id") int id, @Query("date") String date);
+
+    @POST("deadline/postDeadline")
+    Call<Integer> postDeadline(@Query("userId") int userId, @Query("name") String name,
+                                   @Query("courseCode") String courseCode, @Query("postedDate") String postedDate,
+                                   @Query("deadlineDate") String deadlineDate);
 }

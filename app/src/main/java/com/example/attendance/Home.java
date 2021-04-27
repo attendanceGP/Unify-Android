@@ -7,10 +7,15 @@ import androidx.core.content.ContextCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
 import android.view.View;
@@ -30,186 +35,109 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Home extends AppCompatActivity {
+public class Home extends AppCompatActivity implements LocationListener {
     Button button;
-    double longitude,latitude,geoDistance;
+    double longitude, latitude, geoDistance;
     private static final int CODE = 1;
-    /*TextView name;
-    TextView level;
-    TextView id;
-    TextView gpa;
-
-    TextView token;
-    TextView type;*/
     SwipeRefreshLayout swipeRefreshLayout;
-    String [] courses=null;
-    Attendance attendance=null;
+    String[] courses = null;
+    Attendance attendance = null;
     boolean found;
-    String course =null;
+    String course = null;
     SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_student);
-
+        getCurrentLocation();
         sessionManager = new SessionManager(getApplicationContext());
-        /*name = findViewById(R.id.name);
-        token = findViewById(R.id.token);
-        type = findViewById(R.id.type);
-*/
-/*
-        name.setText("Name: "+sessionManager.getName());
-        id.setText("ID: "+sessionManager.getId().toString());
-        gpa.setText("GPA: "+sessionManager.getGPA().toString());
-        level.setText("Level: "+sessionManager.getLevel().toString());
-*/
-  /*      name.setText(sessionManager.getName());
-        token.setText(sessionManager.getToken());
-        type.setText(sessionManager.getType());
-*/
-        swipeRefreshLayout =(SwipeRefreshLayout) findViewById(R.id.swipe);
-        button = (Button)findViewById(R.id.attend_butt);
-        //button.setVisibility(View.INVISIBLE);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe);
+        button = (Button) findViewById(R.id.attend_butt);
         // call the get student courses API and store them in courses variable
         Call<String[]> call = APIClient.getClient().create(UserAPI.class).getStudentCourses(sessionManager.getId());
         call.enqueue(new Callback<String[]>() {
             @Override
             public void onResponse(Call<String[]> call, Response<String[]> response) {
-                courses=response.body();
+                courses = response.body();
             }
 
             @Override
             public void onFailure(Call<String[]> call, Throwable t) {
-                Toast.makeText(Home.this, "error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Home.this, t.getMessage(), Toast.LENGTH_SHORT).show();
 
             }
         });
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                button.setBackground(getResources().getDrawable(R.drawable.attend_button));
-                button.setEnabled(false);
-          //      button.setVisibility(View.INVISIBLE);
-                attendance=null;
 
-                Date date = new Date();
-                //call the check attendance API to check if there is any attendance available at the
-                //time the student refreshes the page
-                Call<Attendance>call2 = APIClient.getClient().create(UserAPI.class).checkAttendance(sessionManager.getId(),courses,new SimpleDateFormat("dd-MM-yyyy").format(date));
-                call2.enqueue(new Callback<Attendance>() {
-                    @Override
-                    public void onResponse(Call<Attendance> call, Response<Attendance> response) {
-                        //if there is an attendance available it gets the course name and save the
-                        //store the row of the TA from the DB in the variable attendance
-
-                        if(response.body() != null){
-                            course = response.body().getCourseName();
-                            // for the geolocation
-                            if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                                    != PackageManager.PERMISSION_GRANTED) {
-                                ActivityCompat.requestPermissions(Home.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, CODE);
-                            } else {
-                                getCurrentLocation(30,31);
-                            }
-
-                        if (geoDistance > 1 ){
-                            Toast.makeText(Home.this, Double.toString(geoDistance), Toast.LENGTH_SHORT).show();
-                            button.setBackground(getResources().getDrawable(R.drawable.attend_button_on));
-                            button.setEnabled(true);
-                            button.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    // on clicking the button it calls the attend API which checks again if the attendance is available
-                                    // and if so it records the student attendance
-                                    Call<Void>call3 = APIClient.getClient().create(UserAPI.class).attend(sessionManager.getId(),course,new SimpleDateFormat("dd-MM-yyyy").format(date),response.body().getId());
-                                    call3.enqueue(new Callback<Void>() {
-                                        @Override
-                                        public void onResponse(Call<Void> call, Response<Void> response) {
-                                            Toast.makeText(Home.this, "Done", Toast.LENGTH_SHORT).show();
-                                        }
-
-                                        @Override
-                                        public void onFailure(Call<Void> call, Throwable t) {
-                                            Toast.makeText(Home.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                }
-                            });
-                        }
-
-                        }
-                        else{
-                            found=false;
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<Attendance> call, Throwable t) {
-                        Toast.makeText(Home.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-                   /* // for the geolocation
-                if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(Home.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, CODE);
-                } else {
-                    getCurrentLocation(30,31);
-                }
-*/
-                // if there is an attendance available make the attend button appear
-                ///todo change the geodistance
-                /*if (found && geoDistance < 100000){
-                    //button.setVisibility(View.VISIBLE);
-                    Toast.makeText(Home.this, Double.toString(geoDistance), Toast.LENGTH_SHORT).show();
-                    button.setBackground(getResources().getDrawable(R.drawable.attend_button_on));
-                    button.setEnabled(true);
-                    button.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            // on clicking the button it calls the attend API which checks again if the attendance is available
-                            // and if so it records the student attendance
-                            Call<Void>call3 = APIClient.getClient().create(UserAPI.class).attend(sessionManager.getId(),course,new SimpleDateFormat("dd-MM-yyyy").format(date),attendance.getId());
-                            call3.enqueue(new Callback<Void>() {
-                                @Override
-                                public void onResponse(Call<Void> call, Response<Void> response) {
-                                    Toast.makeText(Home.this, "Done", Toast.LENGTH_SHORT).show();
-                                }
-
-                                @Override
-                                public void onFailure(Call<Void> call, Throwable t) {
-                                    Toast.makeText(Home.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
-                    });
-                }*/
-                swipeRefreshLayout.setRefreshing(false);
             }
         });
     }
 
 
-    //functions for the geolocation
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == CODE && grantResults.length > 0) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getCurrentLocation(30,31);
-            } else {
-                Toast.makeText(this, "leeeh", Toast.LENGTH_SHORT).show();
+    public void callAPIs() {
+        button.setBackground(getResources().getDrawable(R.drawable.attend_button));
+        button.setEnabled(false);
+        //      button.setVisibility(View.INVISIBLE);
+        attendance = null;
+
+        Date date = new Date();
+        //call the check attendance API to check if there is any attendance available at the
+        //time the student refreshes the page
+        Call<Attendance> call2 = APIClient.getClient().create(UserAPI.class).checkAttendance(sessionManager.getId(), courses, new SimpleDateFormat("dd-MM-yyyy").format(date));
+        call2.enqueue(new Callback<Attendance>() {
+            @Override
+            public void onResponse(Call<Attendance> call, Response<Attendance> response) {
+                //if there is an attendance available it gets the course name and save the
+                //store the row of the TA from the DB in the variable attendance
+
+                if (response.body() != null) {
+                    course = response.body().getCourseName();
+                    // for the geolocation
+                    geoDistance = distance(latitude,30,longitude,31);
+                    if (geoDistance > 1) {
+                        Toast.makeText(Home.this, Double.toString(geoDistance), Toast.LENGTH_SHORT).show();
+                        button.setBackground(getResources().getDrawable(R.drawable.attend_button_on));
+                        button.setEnabled(true);
+                        button.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                // on clicking the button it calls the attend API which checks again if the attendance is available
+                                // and if so it records the student attendance
+                                Call<Void> call3 = APIClient.getClient().create(UserAPI.class).attend(sessionManager.getId(), course, new SimpleDateFormat("dd-MM-yyyy").format(date), response.body().getId());
+                                call3.enqueue(new Callback<Void>() {
+                                    @Override
+                                    public void onResponse(Call<Void> call, Response<Void> response) {
+                                        Toast.makeText(Home.this, "Done", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<Void> call, Throwable t) {
+                                        Toast.makeText(Home.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                        });
+                    }
+
+                } else {
+                    found = false;
+                }
             }
-        }
+
+            @Override
+            public void onFailure(Call<Attendance> call, Throwable t) {
+                Toast.makeText(Home.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    private void getCurrentLocation(final double TALat, final double TALong) {
-        final double[] dis = new double[1];
-        final LocationRequest locationRequest = new LocationRequest();
-        locationRequest.setInterval(10000);
-        locationRequest.setFastestInterval(3000);
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    //function that gets the current location
+    private void getCurrentLocation() {
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -220,35 +148,23 @@ public class Home extends AppCompatActivity {
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        LocationServices.getFusedLocationProviderClient(Home.this)
-                .requestLocationUpdates(locationRequest, new LocationCallback() {
-                    @Override
-                    public void onLocationResult(@NonNull LocationResult locationResult) {
-                        super.onLocationResult(locationResult);
-                        LocationServices.getFusedLocationProviderClient(Home.this)
-                                .removeLocationUpdates(this);
-                        if (locationResult != null && locationResult.getLocations().size() > 0) {
-                            int latestLocationIndex = locationResult.getLocations().size() - 1;
-                            latitude =
-                                    locationResult.getLocations().get(latestLocationIndex).getLatitude();
-                            longitude
-                                    =
-                                    locationResult.getLocations().get(latestLocationIndex).getLongitude();
-                            //longitudeText.setText("longitude =" + Double.toString(longitude)+" , latitude =" + Double.toString(latitude));
-                            geoDistance =distance(latitude,TALat,longitude,TALong);
-                       //     Toast.makeText(Home.this, Double.toString(geoDistance), Toast.LENGTH_SHORT).show();
-
-                        }
-
-                    }
-                }, Looper.getMainLooper());
-
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 
     }
+    //function that sets the location ( longitude and latitude)and then calls the APIs and stops the refresh after
+    @Override
+    public void onLocationChanged(@NonNull Location location) {
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+        if (swipeRefreshLayout.isRefreshing()) {
+            callAPIs();
+            swipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
     public static double distance(double lat1,
                                   double lat2, double lon1,
-                                  double lon2)
-    {
+                                  double lon2) {
 
         // The math module contains a function
         // named toRadians which converts from
@@ -263,7 +179,7 @@ public class Home extends AppCompatActivity {
         double dlat = lat2 - lat1;
         double a = Math.pow(Math.sin(dlat / 2), 2)
                 + Math.cos(lat1) * Math.cos(lat2)
-                * Math.pow(Math.sin(dlon / 2),2);
+                * Math.pow(Math.sin(dlon / 2), 2);
 
         double c = 2 * Math.asin(Math.sqrt(a));
 
@@ -272,7 +188,23 @@ public class Home extends AppCompatActivity {
         double r = 6371;
 
         // calculate the result
-        return(c * r*1000);
+        return (c * r * 1000);
+    }
+
+    @Override
+    public void onProviderEnabled(@NonNull String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+
+    }
+
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
     }
 
 }

@@ -18,6 +18,7 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -95,32 +96,47 @@ public class Home extends AppCompatActivity implements LocationListener {
 
                 if (response.body() != null) {
                     course = response.body().getCourseName();
-                    // for the geolocation
-                    geoDistance = distance(latitude,30,longitude,31);
-                    if (geoDistance > 1) {
-                        Toast.makeText(Home.this, Double.toString(geoDistance), Toast.LENGTH_SHORT).show();
-                        button.setBackground(getResources().getDrawable(R.drawable.attend_button_on));
-                        button.setEnabled(true);
-                        button.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                // on clicking the button it calls the attend API which checks again if the attendance is available
-                                // and if so it records the student attendance
-                                Call<Void> call3 = APIClient.getClient().create(UserAPI.class).attend(sessionManager.getId(), course, new SimpleDateFormat("dd-MM-yyyy").format(date), response.body().getId());
-                                call3.enqueue(new Callback<Void>() {
+                    //for the TA location
+                    int taID = response.body().getUserId();
+                    Call<TeachingAssistant>taData = APIClient.getClient().create(UserAPI.class).getTA(taID);
+                    taData.enqueue(new Callback<TeachingAssistant>() {
+                        @Override
+                        public void onResponse(Call<TeachingAssistant> call, Response<TeachingAssistant> taResponse) {
+                            // for the geolocation
+                            geoDistance = distance(latitude,taResponse.body().getLatitude(),longitude,taResponse.body().getLongitude());
+                            if (geoDistance > 1) {
+                                Toast.makeText(Home.this, Double.toString(geoDistance), Toast.LENGTH_SHORT).show();
+                                button.setBackground(getResources().getDrawable(R.drawable.attend_button_on));
+                                button.setEnabled(true);
+                                button.setOnClickListener(new View.OnClickListener() {
                                     @Override
-                                    public void onResponse(Call<Void> call, Response<Void> response) {
-                                        Toast.makeText(Home.this, "Done", Toast.LENGTH_SHORT).show();
-                                    }
+                                    public void onClick(View view) {
+                                        // on clicking the button it calls the attend API which checks again if the attendance is available
+                                        // and if so it records the student attendance
+                                        Call<Void> call3 = APIClient.getClient().create(UserAPI.class).attend(sessionManager.getId(), course, new SimpleDateFormat("dd-MM-yyyy").format(date), response.body().getId());
+                                        call3.enqueue(new Callback<Void>() {
+                                            @Override
+                                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                                Toast.makeText(Home.this, "Done", Toast.LENGTH_SHORT).show();
+                                            }
 
-                                    @Override
-                                    public void onFailure(Call<Void> call, Throwable t) {
-                                        Toast.makeText(Home.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                            @Override
+                                            public void onFailure(Call<Void> call, Throwable t) {
+                                                Toast.makeText(Home.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
                                     }
                                 });
                             }
-                        });
-                    }
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<TeachingAssistant> call, Throwable t) {
+
+                        }
+                    });
+
 
                 } else {
                     found = false;
@@ -157,7 +173,7 @@ public class Home extends AppCompatActivity implements LocationListener {
         latitude = location.getLatitude();
         longitude = location.getLongitude();
         if (swipeRefreshLayout.isRefreshing()) {
-            callAPIs();
+           // callAPIs();
             swipeRefreshLayout.setRefreshing(false);
         }
     }

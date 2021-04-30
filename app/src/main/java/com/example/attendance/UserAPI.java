@@ -51,4 +51,6 @@ public interface UserAPI {
     Call<Attendance> setAbsence(@Query("courseID") String courseID, @Query("group") String Group,
                                 @Query("date") String date, @Query("studentID") Integer studentID,
                                 @Query("absent") boolean absent);
+    @GET("ta/getTA")
+    Call<TeachingAssistant> getTA(@Query("id") Integer id);
 }

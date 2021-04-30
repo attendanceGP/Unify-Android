@@ -173,7 +173,7 @@ public class Home extends AppCompatActivity implements LocationListener {
         latitude = location.getLatitude();
         longitude = location.getLongitude();
         if (swipeRefreshLayout.isRefreshing()) {
-           // callAPIs();
+            callAPIs();
             swipeRefreshLayout.setRefreshing(false);
         }
     }

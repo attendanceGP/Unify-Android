@@ -1,17 +1,21 @@
 package com.example.attendance;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.attendance.Database.AppDatabase;
+import com.example.attendance.Deadline.DeadlineStudentActivity;
+import com.example.attendance.Deadline.DeadlineTAActivity;
 
 public class MainActivity extends AppCompatActivity {
     SessionManager sessionManager;
@@ -27,7 +31,14 @@ public class MainActivity extends AppCompatActivity {
 
         // if logged in go to home page
         sessionManager = new SessionManager(getApplicationContext());
-        if (sessionManager.isLoggedIn()) startActivity(new Intent(MainActivity.this, Home.class));
+        
+        if (sessionManager.isLoggedIn()) {
+            if(sessionManager.getType().equals("student")) {
+                startActivity(new Intent(MainActivity.this, Home.class));
+            }else{
+                startActivity(new Intent(MainActivity.this, TA_home.class));
+            }
+        }
 
         setContentView(R.layout.login);
 
@@ -57,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
                         }else if(test.getErrorCode() == 2){
                             Toast.makeText(getApplicationContext(), "incorrect username or password", Toast.LENGTH_SHORT).show();
                         }else {
-                            //TODO open another activity and persist
                             sessionManager.login(response.body());
                             if(sessionManager.getType().equals("student")) {
                                 startActivity(new Intent(MainActivity.this, Home.class));

@@ -60,6 +60,6 @@ public interface ForumsDao {
     List<Reply> getAllRepliesForPost(Integer postId);
 
     @Query("SELECT COUNT(*) FROM Reply WHERE id = :id")
-    boolean isExists (Integer id);
+    boolean isExistsReply (Integer id);
 
 }

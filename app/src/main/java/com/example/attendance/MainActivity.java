@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.example.attendance.Database.AppDatabase;
 import com.example.attendance.Deadline.DeadlineStudentActivity;
 import com.example.attendance.Deadline.DeadlineTAActivity;
+import com.example.attendance.Forums.ForumsActivity;
 
 public class MainActivity extends AppCompatActivity {
     SessionManager sessionManager;
@@ -70,10 +71,10 @@ public class MainActivity extends AppCompatActivity {
                         }else {
                             sessionManager.login(response.body());
                             if(sessionManager.getType().equals("student")) {
-                                startActivity(new Intent(MainActivity.this, Home.class));
+                                startActivity(new Intent(MainActivity.this, ForumsActivity.class));
                             }
                             else{
-                                startActivity(new Intent(MainActivity.this, TA_home.class));
+                                startActivity(new Intent(MainActivity.this, ForumsActivity.class));
                             }
                         }
                     }

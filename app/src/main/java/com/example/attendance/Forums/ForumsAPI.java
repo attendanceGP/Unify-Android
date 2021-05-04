@@ -17,11 +17,11 @@ public interface ForumsAPI {
     Call<List<Post>> getReplies(@Query("postId") Integer postId);
 
     @POST("forums/addPost")
-    Call<String> addPost(@Query("userId") Integer userId, @Query("fk_course_code") String courseCode,
+    Call<String> addPost(@Query("userId") Integer userId, @Query("courseCode") String courseCode,
                          @Query("date") String date, @Query("title") String title, @Query("content") String content);
 
     @POST("forums/removePost")
-    Call<String> removePost(@Query("postId") Integer postId);
+    Call<Void> removePost(@Query("postId") Integer postId);
 
 
     @POST("forums/addReply")
@@ -29,5 +29,5 @@ public interface ForumsAPI {
                          @Query("date") String date, @Query("description") String description);
 
     @POST("forums/removeReply")
-    Call<String> removeReply(@Query("postId") Integer postId, @Query("replyId") Integer replyId);
+    Call<Void> removeReply(@Query("replyId") Integer replyId);
 }

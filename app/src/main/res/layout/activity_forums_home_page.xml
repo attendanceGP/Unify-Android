@@ -1,45 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/forum_main"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:clipToOutline="true"
-    android:background="@drawable/forum_main">
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout android:id="@+id/forums_swipe_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+         xmlns:app="http://schemas.android.com/apk/res-auto"
+         android:id="@+id/forum_main"
+         android:layout_width="fill_parent"
+         android:layout_height="fill_parent"
+         android:background="@drawable/forum_main">
 
-<!--        Filters Buttons rectangle holder -->
-        <View
-            android:id="@+id/filters_rectangle"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentTop="true"
-            />
+     <!--        Filters Buttons rectangle holder -->
+             <View
+                 android:id="@+id/filters_rectangle"
+                 android:layout_width="match_parent"
+                 android:layout_height="52dp"
+                 android:layout_centerHorizontal="true"
+                 android:layout_alignParentTop="true"
+                 />
 
-<!--        posts recyclerview -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/posts_recycler_view"
-            android:scrollbars="vertical"
-            android:layout_alignParentLeft="true"
-            android:layout_margin="8dp"
-            android:layout_above="@id/bottom_navigation"
-            android:layout_below="@+id/filters_rectangle"
-            />
+     <!--        posts recyclerview -->
+             <androidx.recyclerview.widget.RecyclerView
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:id="@+id/posts_recycler_view"
+                 android:scrollbars="vertical"
+                 android:layout_alignParentLeft="true"
+                 android:layout_margin="8dp"
+                 android:layout_above="@id/bottom_navigation"
+                 android:layout_below="@+id/filters_rectangle"
+                 />
 
-<!--        bottom navigation -->
+     <!--        bottom navigation -->
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottom_navigation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@color/colorPrimary"
-            app:itemIconTint="#FFFFFF"
-            app:itemTextColor="#FFFFFF"
-            app:labelVisibilityMode="unlabeled"
-            app:menu="@menu/my_navigation_items"
-            />
-
-</RelativeLayout>
+             <com.google.android.material.bottomnavigation.BottomNavigationView
+                 android:id="@+id/bottom_navigation"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_alignParentBottom="true"
+                 android:background="@color/colorPrimary"
+                 app:itemIconTint="#FFFFFF"
+                 app:itemTextColor="#FFFFFF"
+                 app:labelVisibilityMode="unlabeled"
+                 app:menu="@menu/my_navigation_items"
+                 />
+        </RelativeLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

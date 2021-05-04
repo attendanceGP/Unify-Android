@@ -28,7 +28,7 @@ public class Post {
     private String content;
 
     @ColumnInfo(name = "fk_course_code")
-    private String fk_course_code;
+    private String courseCode;
 
     @ColumnInfo(name = "date")
     private Date date;
@@ -39,25 +39,26 @@ public class Post {
     public Post() {
     }
 
-    public Post(Integer id, Integer userId, String userName, String title, String content, String fk_course_code, Date date, boolean isStarred) {
+    public Post(Integer id, Integer userId, String userName, String title, String content, String courseCode, Date date, boolean isStarred) {
         this.id = id;
         this.userId = userId;
         this.userName = userName;
         this.title = title;
         this.content = content;
-        this.fk_course_code = fk_course_code;
+        this.courseCode = courseCode;
         this.date = date;
         this.isStarred = isStarred;
     }
 
-    public Post(Integer id, Integer userId, String userName, String title, String content, String fk_course_code, Date date) {
+    public Post(Integer id, Integer userId, String userName, String title, String content, String courseCode, Date date) {
         this.id = id;
         this.userId = userId;
         this.userName = userName;
         this.title = title;
         this.content = content;
-        this.fk_course_code = fk_course_code;
+        this.courseCode = courseCode;
         this.date = date;
+        isStarred = false;
     }
 
     public Integer getId() {
@@ -95,11 +96,11 @@ public class Post {
         this.content = content;
     }
 
-    public String getFk_course_code() {
-        return fk_course_code;
+    public String getCourseCode() {
+        return courseCode;
     }
-    public void setFk_course_code(String fk_course_code) {
-        this.fk_course_code = fk_course_code;
+    public void setCourseCode(String courseCode) {
+        this.courseCode = courseCode;
     }
 
     public Date getDate() {

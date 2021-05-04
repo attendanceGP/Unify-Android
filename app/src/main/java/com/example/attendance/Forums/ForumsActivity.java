@@ -5,9 +5,11 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -30,8 +32,11 @@ public class ForumsActivity extends AppCompatActivity {
     private List<Post> posts = new ArrayList<>();
     private RecyclerView postsRecyclerView;
     private PostsListAdapter postsListAdapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
     ForumsAPI forumsAPI;
     SessionManager sessionManager;
+
+    Handler mHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +44,22 @@ public class ForumsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_forums_home_page);
         sessionManager = new SessionManager(getApplicationContext());
 
+        // binding to the swipe layout to refesh the page
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.forums_swipe_layout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Log.d("test", "sss");
+                refreshForums();
+            }
+        });
+
         forumsAPI = APIClient.getClient().create(ForumsAPI.class);
 
         postsRecyclerView = (RecyclerView) findViewById(R.id.posts_recycler_view);
-        postsListAdapter = new PostsListAdapter(getApplicationContext(), posts);
+        postsListAdapter = new PostsListAdapter(this, posts);
         postsRecyclerView.setLayoutManager(
-                new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.VERTICAL, false));
+                new LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false));
         postsRecyclerView.setItemAnimator(new DefaultItemAnimator());
         postsRecyclerView.setAdapter(postsListAdapter);
 
@@ -52,6 +67,7 @@ public class ForumsActivity extends AppCompatActivity {
         refreshForums();
 
     }
+
 
     private void updateData(){
         AsyncTask.execute(new Runnable() {
@@ -97,11 +113,13 @@ public class ForumsActivity extends AppCompatActivity {
             @Override
             public void run() {
                 for(Post post: _posts) {
+                    System.out.println(post.getId());
                     // if exists
                     if (!Room.databaseBuilder(getApplicationContext(),
-                            AppDatabase.class, "attendance").build().forumsDao().isExists(post.getId())) {
+                            AppDatabase.class, "attendance").build().forumsDao().isExistsPosts(post.getId())) {
                         Room.databaseBuilder(getApplicationContext(),
                                 AppDatabase.class, "attendance").build().forumsDao().insertAllPosts(post);
+                        System.out.println("here");
                     }
                     updateData();
                 }
@@ -109,23 +127,23 @@ public class ForumsActivity extends AppCompatActivity {
         });
     }
 
-    public void removeFromStarred(int postId){
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                Room.databaseBuilder(getApplicationContext(),
-                        AppDatabase.class, "attendance").build().forumsDao().changeToStarred(postId);
-                updateData();
-            }
-        });
-    }
-
-    public void addToStarred(int postId){
+    public void removeFromStarred(Integer postId){
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
                 Room.databaseBuilder(getApplicationContext(),
                         AppDatabase.class, "attendance").build().forumsDao().changeToUnStarred(postId);
+                updateData();
+            }
+        });
+    }
+
+    public void addToStarred(Integer postId){
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                Room.databaseBuilder(getApplicationContext(),
+                        AppDatabase.class, "attendance").build().forumsDao().changeToStarred(postId);
                 updateData();
             }
         });

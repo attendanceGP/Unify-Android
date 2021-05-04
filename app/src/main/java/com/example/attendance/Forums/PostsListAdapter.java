@@ -5,7 +5,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -14,11 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.attendance.Attendance;
-import com.example.attendance.Deadline.Deadline;
-import com.example.attendance.Deadline.DeadlineStudentActivity;
 import com.example.attendance.R;
-import com.example.attendance.recyclerView_studentsList_adapter;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -73,35 +68,38 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
         Post post = posts.get(position);
         holder.title.setText(post.getTitle());
         holder.publisherName.setText(post.getUserName());
-        holder.courseCode.setText(post.getFk_course_code());
+        holder.courseCode.setText(post.getCourseCode());
         holder.date.setText(getDateStringFromDate(post.getDate()));
         holder.description.setText(post.getContent());
         holder.post = post;
         ToggleButton starButton = (ToggleButton) holder.starred;
 
-        starButton.setChecked(false);
-        starButton.setBackgroundDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.forum_favourite_false));
-        starButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+        if (holder.post.isStarred())
+            starButton.setBackgroundDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.forum_favourite_true));
+        else
+            starButton.setBackgroundDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.forum_favourite_false));
+        starButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    starButton.setBackgroundDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.forum_favourite_true));
-                    holder.post.setStarred(true);
-                    if (applicationContext instanceof ForumsActivity) {
-                        ((ForumsActivity) applicationContext).addToStarred(post.getId());
-                    }
-                }
-                else{
-                    holder.post.setStarred(false);
+            public void onClick(View view) {
+                if (holder.post.isStarred()) {
                     starButton.setBackgroundDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.forum_favourite_false));
                     if (applicationContext instanceof ForumsActivity) {
-                        ((ForumsActivity) applicationContext).removeFromStarred(post.getId());
+                        System.out.println("instance");
+                        ((ForumsActivity) applicationContext).removeFromStarred(holder.post.getId());
+                    }
+                    System.out.println("unstarred");
+                } else {
+                    starButton.setBackgroundDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.forum_favourite_true));
+                    if (applicationContext instanceof ForumsActivity) {
+                        ((ForumsActivity) applicationContext).addToStarred(holder.post.getId());
+                        System.out.println("starred");
                     }
                 }
             }
         });
-
     }
+
 
     @Override
     public int getItemCount() {

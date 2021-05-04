@@ -218,4 +218,55 @@
         </item>
 
     </style>
+
+
+    <style name="forums_home_post_title">
+
+        <item name="android:textSize">
+            16sp
+        </item>
+
+        <item name="android:textColor">
+            #FFFFFF
+        </item>
+
+    </style>
+    <style name="forums_home_post_course_code">
+
+        <item name="android:textSize">
+            12sp
+        </item>
+
+        <item name="android:textColor">
+            #FFFFFF
+        </item>
+
+    </style>
+    <style name="forums_home_page_post_date">
+        <item name="android:textSize">
+            12sp
+        </item>
+
+        <item name="android:textColor">
+            #FFFFFF
+        </item>
+
+    </style>
+    <style name="forums_home_page_post_username">
+        <item name="android:textSize">
+        12sp
+    </item>
+        <item name="android:textColor">
+            #FFFFFF
+        </item></style>
+    <style name="forums_home_page_post_description">
+        <item name="android:textSize">
+            12sp
+        </item>
+
+        <item name="android:textColor">
+            #FFFFFF
+        </item>
+
+    </style>
 </resources>

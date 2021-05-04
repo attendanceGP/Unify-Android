@@ -36,6 +36,7 @@ import android.widget.Toast;
 
 import com.example.attendance.APIClient;
 import com.example.attendance.Database.AppDatabase;
+import com.example.attendance.Forums.ForumsActivity;
 import com.example.attendance.Home;
 import com.example.attendance.R;
 import com.example.attendance.SessionManager;
@@ -264,7 +265,7 @@ public class DeadlineTAActivity extends AppCompatActivity {
                         return true;
 
                     case R.id.action_forum:
-                        return true;
+                        startActivity(new Intent(DeadlineTAActivity.this, ForumsActivity.class));
 
                     case R.id.action_absence:
                         return true;

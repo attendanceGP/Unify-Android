@@ -37,16 +37,19 @@ Due 27-03-2021 at 11:59 pm
 Done
 </string>
     <string name="title">Deadlines you posted</string>
-
     <string name="add_a_new_d">
 
 Add a new deadline
 </string>
 
 
-
     <string name="button_confirm_text">Confirm</string>
-
-
     <string name="button_add_text">Add</string>
+
+
+    <string name="forums_home_post_title">forum title</string>
+    <string name="forums_home_post_course_code">course code</string>
+    <string name="forums_home_page_post_date">Posted DAY-MONTH-YEAR at HH:MM PM</string>
+    <string name="forums_home_page_post_username">user name</string>
+    <string name="forums_home_page_post_description">now when I click on Encrypt the terminal shows a Encrypted message I simply want to display the message on a scrollable text Box with the ability to copy the Encrypted message ...</string>
 </resources>

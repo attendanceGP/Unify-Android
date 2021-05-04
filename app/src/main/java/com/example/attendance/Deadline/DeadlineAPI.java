@@ -17,6 +17,6 @@ public interface DeadlineAPI {
 
     @POST("deadline/postDeadline")
     Call<Integer> postDeadline(@Query("userId") int userId, @Query("name") String name,
-                                   @Query("courseCode") String courseCode, @Query("postedDate") String postedDate,
+                                   @Query("fk_course_code") String courseCode, @Query("postedDate") String postedDate,
                                    @Query("deadlineDate") String deadlineDate);
 }

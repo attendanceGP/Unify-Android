@@ -1,9 +1,14 @@
 package com.example.attendance;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,7 +27,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class TA_home extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+
+public class TA_home extends AppCompatActivity implements AdapterView.OnItemSelectedListener, LocationListener {
     TextView TA_name;
     TextView TA_id;
     SessionManager sessionManager;
@@ -31,7 +40,7 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
     Spinner selectCourse;
     ArrayAdapter<String> adapter;
     ArrayList<String> givenCourses = new ArrayList<String>();
-
+    boolean gotLocation = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +97,7 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
         recordAttendance.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                getCurrentLocation();
                 UserAPI userAPI = APIClient.getClient().create(UserAPI.class);
 
                 java.util.Date date=new java.util.Date();
@@ -128,4 +138,58 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
     }
+    private void getCurrentLocation() {
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+
+    }
+    //function that sets the location ( longitude and latitude)and then calls the APIs and stops the refresh after
+    @Override
+    public void onLocationChanged(@NonNull Location location) {
+    if (!gotLocation){
+        gotLocation = true;
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
+        Call<Void>TALocation = APIClient.getClient().create(UserAPI.class).updateTaLocation(sessionManager.getId(),longitude,latitude);
+        TALocation.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Toast.makeText(TA_home.this, "location updated", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(TA_home.this, "error in updating location", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    }
+
+    @Override
+    public void onProviderEnabled(@NonNull String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+
+    }
+
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
 }

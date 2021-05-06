@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="2dp"
+    android:background="@drawable/reply_holder"
+    android:id="@+id/reply_holder"
+    >
+
+    <!-- user name text view -->
+    <TextView
+        android:id="@+id/reply_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="5dp"
+        android:text="@string/reply_user_name"
+        android:textAppearance="@style/reply_user_name"
+        android:gravity="top"
+        />
+
+<!--    date and time-->
+    <TextView
+        android:id="@+id/reply_date_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/reply_user_name"
+        android:gravity="center_vertical"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:text="@string/reply_date_time"
+        android:textAppearance="@style/reply_date_time" />
+
+<!--    Reply content -->
+    <TextView
+        android:id="@+id/reply_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/reply_date_time"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/reply_content"
+        android:textAppearance="@style/reply_content" />
+
+<!--    delete comment button -->
+
+    <Button
+        android:id="@+id/delete_reply_button"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/delete_reply_button"
+        android:visibility="invisible"
+        />
+</RelativeLayout>

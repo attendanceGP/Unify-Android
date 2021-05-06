@@ -1,5 +1,6 @@
 package com.example.attendance.Forums;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -17,6 +18,9 @@ public interface ForumsDao {
 
     @Query("SELECT * FROM Post WHERE id IN (:postsIds)")
     List<Post> loadPostsAllByIds(Integer[] postsIds);
+
+    @Query("SELECT * FROM Post WHERE id = :postId ")
+    Post loadPostById(Integer postId);
 
     @Insert
     void insertAllPosts(Post... posts);

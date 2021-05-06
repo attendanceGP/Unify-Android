@@ -1,5 +1,6 @@
 package com.example.attendance.Forums;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -7,20 +8,28 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.Spinner;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.example.attendance.APIClient;
 import com.example.attendance.Database.AppDatabase;
-import com.example.attendance.Deadline.Deadline;
-import com.example.attendance.Deadline.DeadlineAPI;
+import com.example.attendance.Deadline.DeadlineStudentActivity;
+import com.example.attendance.Deadline.DeadlineTAActivity;
+import com.example.attendance.Home;
 import com.example.attendance.R;
 import com.example.attendance.SessionManager;
+import com.example.attendance.TA_home;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,11 +41,16 @@ public class ForumsActivity extends AppCompatActivity {
     private List<Post> posts = new ArrayList<>();
     private RecyclerView postsRecyclerView;
     private PostsListAdapter postsListAdapter;
+
+    private Button viewFavourites;
+    private ToggleButton viewMyForums;
+    private Button addForum;
+    private Spinner filterCourses;
+
     private SwipeRefreshLayout swipeRefreshLayout;
+
     ForumsAPI forumsAPI;
     SessionManager sessionManager;
-
-    Handler mHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,18 +58,18 @@ public class ForumsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_forums_home_page);
         sessionManager = new SessionManager(getApplicationContext());
 
-        // binding to the swipe layout to refesh the page
+        // binding to the swipe layout to refresh the page
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.forums_swipe_layout);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Log.d("test", "sss");
                 refreshForums();
             }
         });
 
         forumsAPI = APIClient.getClient().create(ForumsAPI.class);
 
+//        Recycler View
         postsRecyclerView = (RecyclerView) findViewById(R.id.posts_recycler_view);
         postsListAdapter = new PostsListAdapter(this, posts);
         postsRecyclerView.setLayoutManager(
@@ -66,6 +80,62 @@ public class ForumsActivity extends AppCompatActivity {
         updateData();
         refreshForums();
 
+        // my Forums Button
+        viewMyForums = (ToggleButton) findViewById(R.id.my_posts_button);
+        viewMyForums.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    updateData();
+                    refreshForums();
+                    showUserForums();
+                } else {
+                    updateData();
+                    refreshForums();
+                }
+            }
+        });
+
+
+        // my Favourites forums Button
+        viewFavourites = (Button) findViewById(R.id.my_Favourite_button);
+
+        //  add forum button
+        addForum = (Button) findViewById(R.id.add_new_forum);
+
+        // Filter courses spinner
+        filterCourses = (Spinner) findViewById(R.id.course_filter_spinner);
+
+        //TODO add the rest of the activities to the bottom nav view when done
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch(item.getItemId()){
+                    case R.id.action_home:
+                        if(sessionManager.getType().equals("student")){
+                            startActivity(new Intent(ForumsActivity.this, Home.class));
+                        }else{
+                            startActivity(new Intent(ForumsActivity.this, TA_home.class));
+                        }
+                        return true;
+
+                    case R.id.action_announcements:
+                        return true;
+
+                    case R.id.action_deadlines:
+                        if(sessionManager.getType().equals("student")){
+                            startActivity(new Intent(ForumsActivity.this, DeadlineStudentActivity.class));
+                        }else{
+                            startActivity(new Intent(ForumsActivity.this, DeadlineTAActivity.class));
+                        }
+                        return true;
+
+                    case R.id.action_absence:
+                        return true;
+                }
+                return false;
+            }
+        });
     }
 
 
@@ -147,5 +217,38 @@ public class ForumsActivity extends AppCompatActivity {
                 updateData();
             }
         });
+    }
+
+    public void showStarred(){
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                Room.databaseBuilder(getApplicationContext(),
+                        AppDatabase.class, "attendance").build().forumsDao().getAllStarred();
+                updateData();
+            }
+        });
+    }
+
+    public void showUserForums(){
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                 List<Post> userForums = Room.databaseBuilder(getApplicationContext(),
+                        AppDatabase.class, "attendance").build().forumsDao().getAllPostedByMe(sessionManager.getId());
+                 postsListAdapter.filterList(userForums);
+            }
+        });
+
+    }
+
+    public void onForumClick(int position, Post clickedPost) {
+        System.out.println("here forums activity");
+        Intent intent = new Intent(ForumsActivity.this, PostActivity.class);
+        intent.putExtra("Post_id", clickedPost.getId());
+        System.out.println(clickedPost.getId());
+        intent.putExtra("course_code", clickedPost.getCourseCode());
+        System.out.println(clickedPost.getCourseCode());
+        startActivity(intent);
     }
 }

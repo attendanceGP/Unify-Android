@@ -26,7 +26,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
     private LayoutInflater mInflater;
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public TextView title;
         public TextView courseCode;
         public TextView date;
@@ -43,6 +43,19 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
             publisherName = itemView.findViewById(R.id.user_name);
             description = itemView.findViewById(R.id.description);
             starred = itemView.findViewById(R.id.favourite_toggleButton);
+            itemView.setOnClickListener(this);
+        }
+        // Handles the row being being clicked
+
+        @Override
+        public void onClick(View view) {
+            int position = getAdapterPosition(); // gets item position
+            if (position != RecyclerView.NO_POSITION) { // Check if an item was deleted, but the user clicked it before the UI removed it
+                Post post = posts.get(position);
+                System.out.println("here");
+                ((ForumsActivity) applicationContext).onForumClick(position, post);
+                System.out.println(post.getId());
+            }
         }
     }
 
@@ -72,8 +85,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
         holder.date.setText(getDateStringFromDate(post.getDate()));
         holder.description.setText(post.getContent());
         holder.post = post;
-        ToggleButton starButton = (ToggleButton) holder.starred;
 
+        ToggleButton starButton = (ToggleButton) holder.starred;
 
         if (holder.post.isStarred())
             starButton.setBackgroundDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.forum_favourite_true));
@@ -83,17 +96,14 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
             @Override
             public void onClick(View view) {
                 if (holder.post.isStarred()) {
-                    starButton.setBackgroundDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.forum_favourite_false));
                     if (applicationContext instanceof ForumsActivity) {
-                        System.out.println("instance");
+                        starButton.setBackgroundDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.forum_favourite_false));
                         ((ForumsActivity) applicationContext).removeFromStarred(holder.post.getId());
                     }
-                    System.out.println("unstarred");
                 } else {
-                    starButton.setBackgroundDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.forum_favourite_true));
                     if (applicationContext instanceof ForumsActivity) {
+                        starButton.setBackgroundDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.forum_favourite_true));
                         ((ForumsActivity) applicationContext).addToStarred(holder.post.getId());
-                        System.out.println("starred");
                     }
                 }
             }
@@ -107,8 +117,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
     }
 
     // convenience method for getting data at click position
-    String getItem(int id) {
-        return posts.get(id).getTitle();
+    Post getItem(int id) {
+        return posts.get(id);
     }
 
     public void removeItem(int position) {
@@ -120,6 +130,11 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
 
     public void addItem(Post newList) {
         posts.add(newList);
+        notifyDataSetChanged();
+    }
+
+    public void filterList(List<Post> filteredList){
+        posts = filteredList;
         notifyDataSetChanged();
     }
 
@@ -136,5 +151,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
         result = result + " at " + strDate;
         return result;
     }
+
 
 }

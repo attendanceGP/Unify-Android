@@ -4,20 +4,79 @@
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-         xmlns:app="http://schemas.android.com/apk/res-auto"
+     <RelativeLayout
          android:id="@+id/forum_main"
          android:layout_width="fill_parent"
          android:layout_height="fill_parent"
          android:background="@drawable/forum_main">
 
      <!--        Filters Buttons rectangle holder -->
-             <View
-                 android:id="@+id/filters_rectangle"
-                 android:layout_width="match_parent"
-                 android:layout_height="52dp"
-                 android:layout_centerHorizontal="true"
+         <View
+             android:id="@+id/filters_rectangle"
+             android:layout_width="match_parent"
+             android:layout_height="52dp"
+             android:layout_alignParentTop="true"
+             android:layout_marginEnd="-67dp"
+             android:layout_marginRight="-67dp"
+             android:layout_toStartOf="@+id/course_filter_spinner"
+             android:layout_toLeftOf="@+id/course_filter_spinner" />
+
+            <!--         My Posts button -->
+             <ToggleButton
+                 android:id="@+id/my_posts_button"
+                 android:layout_width="41dp"
+                 android:layout_height="41dp"
+                 android:layout_alignParentLeft="true"
+                 android:layout_marginLeft="26.25dp"
                  android:layout_alignParentTop="true"
+                 android:layout_marginTop="5dp"
+                 android:background="@drawable/person_icon"
+                 android:textOff=""
+                 android:textOn=""
+                 />
+
+             <!--         My favs button -->
+         <Button
+             android:id="@+id/my_Favourite_button"
+             android:layout_width="41dp"
+             android:layout_height="41dp"
+             android:layout_alignParentTop="true"
+             android:layout_marginStart="48dp"
+             android:layout_marginLeft="48dp"
+             android:layout_marginTop="5dp"
+             android:layout_toEndOf="@+id/my_posts_button"
+             android:layout_toRightOf="@+id/my_posts_button"
+             android:background="@drawable/forums_filter_favs" />
+
+             <!--         add forum button -->
+         <Button
+             android:id="@+id/add_new_forum"
+             android:layout_width="41dp"
+             android:layout_height="41dp"
+             android:layout_alignParentTop="true"
+             android:layout_marginStart="48dp"
+             android:layout_marginLeft="48dp"
+             android:layout_marginTop="5dp"
+             android:layout_marginEnd="48dp"
+             android:layout_marginRight="48dp"
+             android:layout_toStartOf="@+id/course_filter_spinner"
+             android:layout_toLeftOf="@+id/course_filter_spinner"
+             android:layout_toEndOf="@+id/my_Favourite_button"
+             android:layout_toRightOf="@+id/my_Favourite_button"
+             android:background="@drawable/add_deadline_button" />
+
+             <!--         course filter spinner button -->
+             <Spinner
+                 android:id="@+id/course_filter_spinner"
+                 android:layout_alignParentRight="true"
+                 android:layout_marginRight="26.25dp"
+                 android:layout_alignParentTop="true"
+                 android:layout_marginTop="5dp"
+                 android:background="@drawable/forums_filter_button"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_centerHorizontal="true"
+                 android:prompt="@string/spinner_title"
                  />
 
      <!--        posts recyclerview -->

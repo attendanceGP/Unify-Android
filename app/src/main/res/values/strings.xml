@@ -51,5 +51,14 @@ Add a new deadline
     <string name="forums_home_post_course_code">course code</string>
     <string name="forums_home_page_post_date">Posted DAY-MONTH-YEAR at HH:MM PM</string>
     <string name="forums_home_page_post_username">user name</string>
-    <string name="forums_home_page_post_description">now when I click on Encrypt the terminal shows a Encrypted message I simply want to display the message on a scrollable text Box with the ability to copy the Encrypted message ...</string>
+    <string name="forums_home_page_post_description">forum description</string>
+    <string name="spinner_title">Filter</string>
+    <string name="reply_user_name">user name</string>
+    <string name="reply_date_time">Posted DAY-MONTH-YEAR at HH:MM PM</string>
+    <string name="reply_content"> reply content</string>
+    <string name="post_title">post title</string>
+    <string name="course_code_post"> course code </string>
+    <string name="forum_post_date_time">Posted DAY-MONTH-YEAR at HH:MM PM</string>
+    <string name="publisher_name">user name</string>
+    <string name="post_description">Post description</string>
 </resources>

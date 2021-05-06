@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/ellipse_3"/>
+    <item
+        android:drawable="@drawable/forum_favourite_false"
+        android:gravity="center"
+        android:width="5dp"
+        android:height="5dp"
+        android:viewportWidth="5"
+        android:viewportHeight="5"
+        />
+</layer-list>

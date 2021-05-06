@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout android:id="@+id/post_swipe_refresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout
+        android:id="@+id/post_activity"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/forum_post">
+
+
+        <!--        post rectangle holder -->
+        <LinearLayout
+            android:id="@+id/post_rectangle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="10dp"
+            android:background="@drawable/rectangle_2"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/post_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:text="@string/post_title"
+                android:textAppearance="@style/post_title"
+                android:gravity="center_vertical"
+                />
+
+            <TextView
+                android:id="@+id/course_code_post"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:gravity="center_vertical"
+                android:text="@string/course_code_post"
+                android:textAppearance="@style/course_code_post" />
+            <TextView
+                android:id="@+id/forum_post_date_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:text="@string/forum_post_date_time"
+                android:textAppearance="@style/forum_post_date_time"
+                android:gravity="center_vertical"
+                />
+            <TextView
+                android:id="@+id/publisher_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:text="@string/publisher_name"
+                android:textAppearance="@style/publisher_name"
+                android:gravity="center_vertical"
+                />
+            <TextView
+                android:id="@+id/forum_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="15dp"
+                android:text="@string/post_description"
+                android:textAppearance="@style/post_description"
+                android:gravity="top"
+                />
+
+        </LinearLayout>
+
+        <!--        comments recyclerview -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/posts_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/comment_area"
+            android:layout_below="@+id/post_rectangle"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="8dp"
+            android:layout_marginBottom="175dp"
+            android:scrollbars="vertical" />
+
+        <!--       add comment section -->
+
+        <!--        bottom navigation -->
+
+        <View
+            android:id="@+id/comment_area"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_above="@+id/bottom_navigation"
+            android:layout_marginBottom="0dp" />
+
+        <EditText
+            android:id="@+id/reply_edit"
+            android:layout_width="290dp"
+            android:layout_height="50dp"
+            android:layout_alignBottom="@+id/comment_area"
+            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/reply_editt" />
+
+        <Button
+            android:id="@+id/reply_button"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignBottom="@+id/comment_area"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="11dp"
+            android:background="@drawable/reply_button"
+            />
+
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorPrimary"
+            app:itemIconTint="#FFFFFF"
+            app:itemTextColor="#FFFFFF"
+            app:labelVisibilityMode="unlabeled"
+            app:menu="@menu/my_navigation_items"
+            />
+    </RelativeLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

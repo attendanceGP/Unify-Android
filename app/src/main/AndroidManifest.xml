@@ -13,7 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Forums.ForumsActivity"></activity>
+        <activity android:name=".Forums.PostActivity"></activity>
+        <activity android:name=".Forums.ForumsActivity" />
         <activity android:name=".Deadline.DeadlineTAActivity" />
         <activity android:name=".TA_closes_attendance" />
         <activity android:name=".TA_home" />

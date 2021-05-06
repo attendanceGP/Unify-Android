@@ -14,7 +14,7 @@ public interface ForumsAPI {
     Call<List<Post>> getForums(@Query("userId") Integer userId);
 
     @GET("forums/getPostReplies")
-    Call<List<Post>> getReplies(@Query("postId") Integer postId);
+    Call<List<Reply>> getReplies(@Query("postId") Integer postId);
 
     @POST("forums/addPost")
     Call<String> addPost(@Query("userId") Integer userId, @Query("courseCode") String courseCode,

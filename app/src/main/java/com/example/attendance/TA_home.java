@@ -1,22 +1,25 @@
 package com.example.attendance;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.attendance.Announcement.Announcement_Student_Activity;
+import com.example.attendance.Announcement.Announcement_TA_Activity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,7 +36,7 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ta_home_2);
+        setContentView(R.layout.activity_ta_home);
 
         sessionManager = new SessionManager(getApplicationContext());
         groups = findViewById(R.id.Groups);
@@ -109,6 +112,37 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
                     });
                 }
     }
+        });
+
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch(item.getItemId()){
+                    //case R.id.action_deadlines:
+                        //if(sessionManager.getType().equals("student")){
+                        //    startActivity(new Intent(TA_home.this, DeadlineStudentActivity.class));
+                        //}else{
+                        //    startActivity(new Intent(TA_home.this, DeadlineTAActivity.class));
+                        //}
+                        //return true;
+
+                    case R.id.action_announcements:
+                        if(sessionManager.getType().equals("student")){
+                            startActivity(new Intent(TA_home.this, Announcement_Student_Activity.class));
+                        }else{
+                            startActivity(new Intent(TA_home.this, Announcement_TA_Activity.class));
+                        }
+                        return true;
+
+                    case R.id.action_forum:
+                        return true;
+
+                    case R.id.action_absence:
+                        return true;
+                }
+                return false;
+            }
         });
 }
 

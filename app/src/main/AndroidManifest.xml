@@ -13,12 +13,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".TA_closes_attendance"></activity>
+        <activity android:name=".Announcement.Announcement_TA_Activity"></activity>
+        <activity android:name=".Announcement.Announcement_Student_Activity" />
+        <activity android:name=".TA_closes_attendance" />
         <activity android:name=".TA_home" />
-
-        <activity android:name=".ta_attendanceConfirmationList"></activity>
+        <activity android:name=".ta_attendanceConfirmationList" />
         <activity android:name=".Home" />
-
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

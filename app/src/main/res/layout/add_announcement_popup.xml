@@ -1,0 +1,76 @@
+<?exml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/add_deadline_popup">
+
+    <TextView
+        android:id="@+id/add_a_new_d"
+        android:layout_width="220dp"
+        android:layout_height="29dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="14dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
+        android:text="Add a new announcement"
+        android:textAppearance="@style/add_a_new_d"
+        android:gravity="center_vertical"
+        />
+
+    <EditText
+        android:id="@+id/announcement_title"
+        android:layout_width="292dp"
+        android:layout_height="48dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/deadline_name"
+        android:hint="Title"
+        android:textColor="#000000"
+        android:textColorHint="#000000"
+        android:textAppearance="@style/deadline_name_input"
+        android:textAlignment="center"
+        android:elevation="4dp"/>
+
+    <Spinner
+        android:id="@+id/announcement_course"
+        android:layout_width="292dp"
+        android:layout_height="48dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="120dp"
+        android:background="@drawable/deadline_name"
+        android:textAppearance="@style/deadline_name_input"
+        android:textAlignment="center"
+        android:gravity="center_vertical"
+        android:elevation="4dp"/>
+
+    <EditText
+        android:id="@+id/announcement_description"
+        android:layout_width="292dp"
+        android:layout_height="163dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="190dp"
+        android:background="@drawable/deadline_name"
+        android:hint="Description"
+        android:textColor="#000000"
+        android:textColorHint="#000000"
+        android:textAppearance="@style/deadline_name_input"
+        android:elevation="4dp"
+        android:gravity="center" />
+
+    <Button
+        android:id="@+id/post_announcement"
+        android:layout_width="67dp"
+        android:layout_height="37.49dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="353dp"
+        android:text="Post"
+        android:textAppearance="@style/deadline_add_button"
+        android:background="@drawable/add_button"/>
+
+
+</RelativeLayout>

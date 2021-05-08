@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:drawable="@drawable/ellipse_3"
-        />
-    <item
-        android:drawable="@drawable/filter_button"
-        android:gravity="center"
-        />
-</layer-list>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="41dp"
+    android:height="41dp"
+    android:viewportWidth="41"
+    android:viewportHeight="41">
+    <path
+        android:fillColor="#3F9787"
+        android:pathData="M20.5 0a20.5 20.5 0 1 0 0 41a20.5 20.5 0 1 0 0-41z"/>
+    <path
+        android:fillColor="#FFF"
+        android:pathData="M18.27 26.9h4.46v-2.2h-4.46v2.2zm-7.82-13.2v2.2h20.1v-2.2h-20.1zm3.35 7.7h13.4v-2.2H13.8v2.2z"/>
+</vector>

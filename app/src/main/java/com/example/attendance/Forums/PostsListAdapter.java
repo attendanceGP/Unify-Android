@@ -2,6 +2,7 @@ package com.example.attendance.Forums;
 
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +15,11 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.attendance.R;
+import com.example.attendance.SessionManager;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -24,6 +27,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
     private List<Post> posts;
     private Context applicationContext;
     private LayoutInflater mInflater;
+    private SessionManager sessionManager;
 
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -52,9 +56,9 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
             int position = getAdapterPosition(); // gets item position
             if (position != RecyclerView.NO_POSITION) { // Check if an item was deleted, but the user clicked it before the UI removed it
                 Post post = posts.get(position);
-                System.out.println("here");
                 ((ForumsActivity) applicationContext).onForumClick(position, post);
-                System.out.println(post.getId());
+
+                Log.i("TESTPOST", "" + post.getId());
             }
         }
     }
@@ -66,6 +70,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
         this.mInflater = LayoutInflater.from(context);
         this.applicationContext = context;
         this.posts = posts;
+        this.sessionManager = new SessionManager(context);
     }
 
 
@@ -151,6 +156,5 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
         result = result + " at " + strDate;
         return result;
     }
-
 
 }

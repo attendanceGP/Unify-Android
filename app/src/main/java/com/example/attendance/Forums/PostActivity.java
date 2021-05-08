@@ -10,6 +10,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -61,6 +62,8 @@ public class PostActivity extends AppCompatActivity {
         this.intent = getIntent();
         this.post_id = intent.getIntExtra("Post_id", 0);
         this.course_code = intent.getStringExtra("course_code");
+
+        Log.i("TESTPOST", "2- " +post_id);
         getPostbyid();
 
         // binding to the swipe layout to refresh the page
@@ -74,7 +77,7 @@ public class PostActivity extends AppCompatActivity {
 
         forumsAPI = APIClient.getClient().create(ForumsAPI.class);
 
-        setPost();
+//        setPost();
 
         repliesRecyclerView = (RecyclerView) findViewById(R.id.posts_recycler_view);
         repliesListAdapter = new RepliesListAdapter(replies, this);
@@ -198,6 +201,10 @@ public class PostActivity extends AppCompatActivity {
             public void run() {
                post = Room.databaseBuilder(getApplicationContext(),
                         AppDatabase.class, "attendance").build().forumsDao().loadPostById(post_id);
+
+               setPost();
+
+                Log.i("TESTPOST", "3- " + post.getId());
                 System.out.println("post title  " + post.getTitle());
             }
         });

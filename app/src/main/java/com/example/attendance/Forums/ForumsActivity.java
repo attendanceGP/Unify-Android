@@ -85,9 +85,7 @@ public class ForumsActivity extends AppCompatActivity {
         viewMyForums.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    updateData();
-                    refreshForums();
-                    showUserForums();
+                    getUserPosts();
                 } else {
                     updateData();
                     refreshForums();
@@ -98,6 +96,8 @@ public class ForumsActivity extends AppCompatActivity {
 
         // my Favourites forums Button
         viewFavourites = (Button) findViewById(R.id.my_Favourite_button);
+//        getStarredPosts();
+
 
         //  add forum button
         addForum = (Button) findViewById(R.id.add_new_forum);
@@ -239,7 +239,6 @@ public class ForumsActivity extends AppCompatActivity {
                  postsListAdapter.filterList(userForums);
             }
         });
-
     }
 
     public void onForumClick(int position, Post clickedPost) {
@@ -251,4 +250,28 @@ public class ForumsActivity extends AppCompatActivity {
         System.out.println(clickedPost.getCourseCode());
         startActivity(intent);
     }
+
+    public void getUserPosts(){
+        List<Post> temp = new ArrayList();
+        for(Post d: posts){
+            if(d.getUserId().equals(this.sessionManager.getId())){
+                temp.add(d);
+            }
+        }
+        //update recyclerview
+        postsListAdapter.filterList(temp);
+    }
+
+    public void getStarredPosts(){
+        List<Post> temp = new ArrayList();
+        for(Post d: posts){
+            if(d.isStarred()){
+                temp.add(d);
+            }
+        }
+        //update recyclerview
+        postsListAdapter.filterList(temp);
+    }
+
+
 }

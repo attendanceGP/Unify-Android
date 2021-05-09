@@ -132,7 +132,7 @@ public class PostActivity extends AppCompatActivity {
             public void run() {
                 replies.clear();
                 replies.addAll(Room.databaseBuilder(getApplicationContext(),
-                        AppDatabase.class, "attendance").build().forumsDao().getAllReplies());
+                        AppDatabase.class, "attendance").build().forumsDao().getAllRepliesForPost(post_id));
 
                 runOnUiThread(new Runnable() {
                     @Override
@@ -159,7 +159,9 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<Reply>> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "please check your internet connection", Toast.LENGTH_SHORT).show();
-                System.out.println(t.getCause());
+                if (swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
             }
         });
     }
@@ -179,6 +181,9 @@ public class PostActivity extends AppCompatActivity {
                         System.out.println("here");
                     }
                     updateData();
+                    if (swipeRefreshLayout.isRefreshing()) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
                 }
             }
         });

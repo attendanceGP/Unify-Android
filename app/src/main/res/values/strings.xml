@@ -61,4 +61,7 @@ Add a new deadline
     <string name="forum_post_date_time">Posted DAY-MONTH-YEAR at HH:MM PM</string>
     <string name="publisher_name">user name</string>
     <string name="post_description">Post description</string>
+    <string name="add_a_new_post">Add a new post</string>
+    <string name="new_post_title">Title</string>
+    <string name="new_post_course">Course</string>
 </resources>

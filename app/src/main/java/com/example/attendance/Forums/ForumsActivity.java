@@ -96,14 +96,37 @@ public class ForumsActivity extends AppCompatActivity {
 
         // my Favourites forums Button
         viewFavourites = (Button) findViewById(R.id.my_Favourite_button);
-//        getStarredPosts();
+        viewFavourites.setOnClickListener(new View.OnClickListener(){
+            int m_counts =0;
+            @Override
+            public void onClick(View view) {
+                if (m_counts%2 == 0){
+                    updateData();
+                    refreshForums();
+                }
+                else{
+                    getStarredPosts();
+                }
+            }
+        });
 
 
         //  add forum button
         addForum = (Button) findViewById(R.id.add_new_forum);
+        addForum.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ForumsActivity.this, AddForumActivity.class);
+                startActivity(intent);
+                updateData();
+                refreshForums();
+            }
+        });
+
 
         // Filter courses spinner
         filterCourses = (Spinner) findViewById(R.id.course_filter_spinner);
+
 
         //TODO add the rest of the activities to the bottom nav view when done
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
@@ -172,7 +195,9 @@ public class ForumsActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<Post>> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "please check your internet connection", Toast.LENGTH_SHORT).show();
-                System.out.println(t.getCause());
+                if (swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
             }
         });
     }
@@ -192,6 +217,9 @@ public class ForumsActivity extends AppCompatActivity {
                         System.out.println("here");
                     }
                     updateData();
+                    if (swipeRefreshLayout.isRefreshing()) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
                 }
             }
         });
@@ -219,27 +247,27 @@ public class ForumsActivity extends AppCompatActivity {
         });
     }
 
-    public void showStarred(){
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                Room.databaseBuilder(getApplicationContext(),
-                        AppDatabase.class, "attendance").build().forumsDao().getAllStarred();
-                updateData();
-            }
-        });
-    }
-
-    public void showUserForums(){
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                 List<Post> userForums = Room.databaseBuilder(getApplicationContext(),
-                        AppDatabase.class, "attendance").build().forumsDao().getAllPostedByMe(sessionManager.getId());
-                 postsListAdapter.filterList(userForums);
-            }
-        });
-    }
+//    public void showStarred(){
+//        AsyncTask.execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                Room.databaseBuilder(getApplicationContext(),
+//                        AppDatabase.class, "attendance").build().forumsDao().getAllStarred();
+//                updateData();
+//            }
+//        });
+//    }
+//
+//    public void showUserForums(){
+//        AsyncTask.execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                 List<Post> userForums = Room.databaseBuilder(getApplicationContext(),
+//                        AppDatabase.class, "attendance").build().forumsDao().getAllPostedByMe(sessionManager.getId());
+//                 postsListAdapter.filterList(userForums);
+//            }
+//        });
+//    }
 
     public void onForumClick(int position, Post clickedPost) {
         System.out.println("here forums activity");

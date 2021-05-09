@@ -13,10 +13,10 @@ import java.util.List;
 @Dao
 public interface ForumsDao {
 //    Posts
-    @Query("SELECT * FROM Post")
+    @Query("SELECT * FROM Post ORDER BY date DESC ")
     List<Post> getAllPosts();
 
-    @Query("SELECT * FROM Post WHERE id IN (:postsIds)")
+    @Query("SELECT * FROM Post WHERE id IN (:postsIds) ORDER BY date DESC ")
     List<Post> loadPostsAllByIds(Integer[] postsIds);
 
     @Query("SELECT * FROM Post WHERE id = :postId ")
@@ -60,7 +60,7 @@ public interface ForumsDao {
     @Delete
     void deleteReply(Reply reply);
 
-    @Query("SELECT * FROM Reply WHERE fk_post_id = :postId")
+    @Query("SELECT * FROM Reply WHERE fk_post_id = :postId ORDER BY date ASC ")
     List<Reply> getAllRepliesForPost(Integer postId);
 
     @Query("SELECT COUNT(*) FROM Reply WHERE id = :id")

@@ -1,14 +1,21 @@
 package com.example.attendance.Announcement;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,11 +27,14 @@ import android.widget.Toast;
 import com.example.attendance.APIClient;
 import com.example.attendance.R;
 import com.example.attendance.SessionManager;
+import com.example.attendance.TA_home;
 import com.example.attendance.UserAPI;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,22 +47,51 @@ public class Announcement_TA_Activity extends AppCompatActivity {
 
     private Button postAnnouncement;
 
+    private RecyclerView announcementRecyclerView;
+
     private Context context;
 
+    private AnnouncementsTAListAdapter announcementTaListAdapter;
+
     SessionManager sessionManager;
+
+    List<Announcement> announcementList = new ArrayList<>();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_announcement_ta);
         sessionManager = new SessionManager(getApplicationContext());
 
-        // binding to the swipe layout to refesh the page
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.ta_announcement_swipe_layout);
-
-        addButton = (Button) findViewById(R.id.add_button);
         context = this;
 
+
+            // binding to the swipe layout to refesh the page
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.ta_announcement_swipe_layout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Log.d("test", "hello");
+                refreshAnnouncements();
+            }
+        });
+
+        //----------------------------------------------------------------------------------------------------------
+        announcementRecyclerView = (RecyclerView) findViewById(R.id.announcements_you_posted);
+
+        // instantiating new list adapter for deadlines
+        announcementTaListAdapter = new AnnouncementsTAListAdapter(announcementList,context); // sending context as well
+
+        announcementRecyclerView.setLayoutManager(
+                new LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false));
+        announcementRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        announcementRecyclerView.setAdapter(announcementTaListAdapter);
+
+
+        //----------------------------------------------------------------------------------------------------------
         // inflating the popup when clicked
+        addButton = (Button) findViewById(R.id.add_button);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -66,11 +105,11 @@ public class Announcement_TA_Activity extends AppCompatActivity {
                 // to add animation
                 dialogBuilder.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
 
-                final EditText title = (EditText) dialogView.findViewById(R.id.announcement_title);
-                EditText description = (EditText) dialogView.findViewById(R.id.announcement_description);
+                final EditText title = (EditText) dialogView.findViewById(R.id.announcement_title_in_popup);
+                EditText description = (EditText) dialogView.findViewById(R.id.announcement_description_in_pop_up);
 
                 //course spinner-----------------------------------------------------------------------------
-                Spinner selectCourse = (Spinner) dialogView.findViewById(R.id.announcement_course);
+                Spinner selectCourse = (Spinner) dialogView.findViewById(R.id.announcement_course_in_pop_up);
 
                 ArrayAdapter<String> adapter;
                 ArrayList<String> givenCourses = new ArrayList<String>();
@@ -119,6 +158,9 @@ public class Announcement_TA_Activity extends AppCompatActivity {
                     }
                 });
 
+                //-----------------------------------------------------------------------------------------
+                //post announcement button-----------------------------------------------------------------
+
                 postAnnouncement = (Button) dialogView.findViewById(R.id.post_announcement);
 
                 // when clicked, check that all fields are valid and then send to the api
@@ -147,22 +189,50 @@ public class Announcement_TA_Activity extends AppCompatActivity {
                 dialogBuilder.show();
             }
         });
-    }
 
+        //------------------------------------------------------------------------------------------------------------------------------
+        //nav bar-----------------------------------------------------------------------------------------------------------------------
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch(item.getItemId()){
+                    //case R.id.action_deadlines:
+                    //if(sessionManager.getType().equals("student")){
+                    //    startActivity(new Intent(TA_home.this, DeadlineStudentActivity.class));
+                    //}else{
+                    //    startActivity(new Intent(TA_home.this, DeadlineTAActivity.class));
+                    //}
+                    //return true;
+
+                    case R.id.action_home:
+
+                        startActivity(new Intent(Announcement_TA_Activity.this, TA_home.class));
+                        return true;
+
+                    case R.id.action_forum:
+                        return true;
+
+                    case R.id.action_absence:
+                        return true;
+                }
+                return false;
+            }
+        });
+    }
     private void postAnnouncement(int userId, String courseId, Date postedDate, String title, String post) {
         AnnouncementAPI announcementAPI = APIClient.getClient().create(AnnouncementAPI.class);
 
-        Call<Integer> call = announcementAPI.postDeadline(userId, courseId,
+        Call<Integer> call = announcementAPI.postAnnouncement(userId, courseId,
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(postedDate),
-                title,post
-                );
+                title, post);
 
         call.enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {
                 Integer integer = response.body();
 
-                if(response.code() != 200){
+                if (response.code() != 200) {
                     Toast.makeText(getApplicationContext(), "announcement added", Toast.LENGTH_SHORT).show();
                 }
 
@@ -172,6 +242,56 @@ public class Announcement_TA_Activity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Integer> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "please check your internet connection", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    void deleteAnnouncement(int id) {
+        AnnouncementAPI announcementAPI = APIClient.getClient().create(AnnouncementAPI.class);
+
+        Call<Integer> call = announcementAPI.deleteAnnouncement(id);
+
+        call.enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+                Integer integer = response.body();
+
+                if (response.code() != 200) {
+                    Toast.makeText(getApplicationContext(), "announcement deleted", Toast.LENGTH_SHORT).show();
+                }
+
+                //refreshAnnouncements();
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "please check your internet connection", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void refreshAnnouncements(){
+        AnnouncementAPI announcementAPI = APIClient.getClient().create(AnnouncementAPI.class);
+        Call<List<Announcement>> call = announcementAPI.getTaAnnouncements(sessionManager.getId());
+
+        call.enqueue(new Callback<List<Announcement>>() {
+            @Override
+            public void onResponse(Call<List<Announcement>> call, Response<List<Announcement>> response) {
+                if(response.code() != 200){
+                    Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    announcementList.clear();
+                    announcementList.addAll(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Announcement>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "please check your internet connection", Toast.LENGTH_SHORT).show();
+                if (swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
             }
         });
     }

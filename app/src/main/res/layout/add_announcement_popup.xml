@@ -19,7 +19,7 @@
         />
 
     <EditText
-        android:id="@+id/announcement_title"
+        android:id="@+id/announcement_title_in_popup"
         android:layout_width="292dp"
         android:layout_height="48dp"
         android:layout_centerHorizontal="true"
@@ -34,7 +34,7 @@
         android:elevation="4dp"/>
 
     <Spinner
-        android:id="@+id/announcement_course"
+        android:id="@+id/announcement_course_in_pop_up"
         android:layout_width="292dp"
         android:layout_height="48dp"
         android:layout_centerHorizontal="true"
@@ -47,7 +47,7 @@
         android:elevation="4dp"/>
 
     <EditText
-        android:id="@+id/announcement_description"
+        android:id="@+id/announcement_description_in_pop_up"
         android:layout_width="292dp"
         android:layout_height="163dp"
         android:layout_centerHorizontal="true"

@@ -8,7 +8,7 @@ public class User {
 
 
     //only if a student
-    private Float GPA;
+    private Float gpa;
     private Integer level;
 
     //for error codes
@@ -23,16 +23,16 @@ public class User {
         this.type = type;
         this.name = name;
 
-        this.GPA = null;
+        this.gpa = null;
         this.level = null;
     }
 
-    public User(Integer id, String type, String name, String token, Float GPA, Integer level) {
+    public User(Integer id, String type, String name, String token, Float gpa, Integer level) {
         this.id = id;
         this.type = type;
         this.name = name;
         this.token = token;
-        this.GPA = GPA;
+        this.gpa = gpa;
         this.level = level;
     }
 
@@ -64,12 +64,12 @@ public class User {
         this.name = name;
     }
 
-    public Float getGPA() {
-        return GPA;
+    public Float getGpa() {
+        return gpa;
     }
 
-    public void setGPA(Float GPA) {
-        this.GPA = GPA;
+    public void setGpa(Float gpa) {
+        this.gpa = gpa;
     }
 
     public Integer getLevel() {

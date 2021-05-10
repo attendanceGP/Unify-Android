@@ -1,21 +1,17 @@
 package com.example.attendance;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import com.example.attendance.Database.AppDatabase;
-import com.example.attendance.Deadline.DeadlineStudentActivity;
-import com.example.attendance.Deadline.DeadlineTAActivity;
 
 public class MainActivity extends AppCompatActivity {
     SessionManager sessionManager;
@@ -61,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
                         User test = response.body();
+                        Log.i("usertest", "" + test.getGpa() + test.getName());
                         if(response.code() != 200){
                             Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
                         }else if(test.getErrorCode() == 1){
@@ -68,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
                         }else if(test.getErrorCode() == 2){
                             Toast.makeText(getApplicationContext(), "incorrect username or password", Toast.LENGTH_SHORT).show();
                         }else {
-                            sessionManager.login(response.body());
+                            sessionManager.login(test);
                             if(sessionManager.getType().equals("student")) {
                                 startActivity(new Intent(MainActivity.this, Home.class));
                             }

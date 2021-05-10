@@ -78,6 +78,7 @@ public class Announcement_TA_Activity extends AppCompatActivity {
         });
 
         //----------------------------------------------------------------------------------------------------------
+        refreshAnnouncements();
         announcementRecyclerView = (RecyclerView) findViewById(R.id.announcements_you_posted);
 
         // instantiating new list adapter for deadlines
@@ -232,11 +233,11 @@ public class Announcement_TA_Activity extends AppCompatActivity {
             public void onResponse(Call<Integer> call, Response<Integer> response) {
                 Integer integer = response.body();
 
-                if (response.code() != 200) {
+                if (response.code() == 200) {
                     Toast.makeText(getApplicationContext(), "announcement added", Toast.LENGTH_SHORT).show();
                 }
 
-                //refreshDeadlines();
+                refreshAnnouncements();
             }
 
             @Override
@@ -256,11 +257,11 @@ public class Announcement_TA_Activity extends AppCompatActivity {
             public void onResponse(Call<Integer> call, Response<Integer> response) {
                 Integer integer = response.body();
 
-                if (response.code() != 200) {
+                if (response.code() == 200) {
                     Toast.makeText(getApplicationContext(), "announcement deleted", Toast.LENGTH_SHORT).show();
                 }
 
-                //refreshAnnouncements();
+                refreshAnnouncements();
             }
 
             @Override
@@ -281,14 +282,22 @@ public class Announcement_TA_Activity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
                 }
                 else{
+
                     announcementList.clear();
                     announcementList.addAll(response.body());
+
+                    announcementTaListAdapter.notifyDataSetChanged();
+
+                    if (swipeRefreshLayout.isRefreshing()) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<List<Announcement>> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "please check your internet connection", Toast.LENGTH_SHORT).show();
+                System.out.println(t.getMessage());
                 if (swipeRefreshLayout.isRefreshing()) {
                     swipeRefreshLayout.setRefreshing(false);
                 }

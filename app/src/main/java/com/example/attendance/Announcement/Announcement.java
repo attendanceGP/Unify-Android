@@ -1,8 +1,17 @@
 package com.example.attendance.Announcement;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
+
+import com.example.attendance.Database.Converters;
+
 import java.util.Date;
 
+@Entity
+@TypeConverters(Converters.class)
 public class Announcement {
+    @PrimaryKey
     private int id;
 
     private String title;

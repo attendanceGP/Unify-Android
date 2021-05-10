@@ -11,7 +11,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -41,6 +40,7 @@ public class ForumsActivity extends AppCompatActivity {
     private List<Post> posts = new ArrayList<>();
     private RecyclerView postsRecyclerView;
     private PostsListAdapter postsListAdapter;
+    private UserPostsListAdapter userPostsListAdapter;
 
     private Button viewFavourites;
     private ToggleButton viewMyForums;
@@ -59,7 +59,7 @@ public class ForumsActivity extends AppCompatActivity {
         sessionManager = new SessionManager(getApplicationContext());
 
         // binding to the swipe layout to refresh the page
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.forums_swipe_layout);
+        this.swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.forums_swipe_layout);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -89,6 +89,7 @@ public class ForumsActivity extends AppCompatActivity {
                 } else {
                     updateData();
                     refreshForums();
+                    postsListAdapter.notifyDataSetChanged();
                 }
             }
         });
@@ -118,8 +119,6 @@ public class ForumsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(ForumsActivity.this, AddForumActivity.class);
                 startActivity(intent);
-                updateData();
-                refreshForums();
             }
         });
 
@@ -217,9 +216,15 @@ public class ForumsActivity extends AppCompatActivity {
                         System.out.println("here");
                     }
                     updateData();
-                    if (swipeRefreshLayout.isRefreshing()) {
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (swipeRefreshLayout.isRefreshing()) {
+                                swipeRefreshLayout.setRefreshing(false);
+                            }
+                        }
+                    });
                 }
             }
         });
@@ -258,16 +263,30 @@ public class ForumsActivity extends AppCompatActivity {
 //        });
 //    }
 //
-//    public void showUserForums(){
-//        AsyncTask.execute(new Runnable() {
-//            @Override
-//            public void run() {
-//                 List<Post> userForums = Room.databaseBuilder(getApplicationContext(),
-//                        AppDatabase.class, "attendance").build().forumsDao().getAllPostedByMe(sessionManager.getId());
-//                 postsListAdapter.filterList(userForums);
-//            }
-//        });
-//    }
+
+    public List<Post> getUserPosts(){
+        List<Post> temp = new ArrayList();
+        for(Post d: posts){
+            if(d.getUserId().equals(this.sessionManager.getId())){
+                temp.add(d);
+            }
+        }
+        return temp;
+    }
+
+    public void showUserForums(){
+        posts.clear();
+        posts = getUserPosts();
+        userPostsListAdapter = new UserPostsListAdapter(this, posts);
+        postsRecyclerView.setAdapter(userPostsListAdapter);
+    }
+
+    public void showForums(){
+        updateData();
+        refreshForums();
+        postsRecyclerView.setAdapter(postsListAdapter);
+    }
+
 
     public void onForumClick(int position, Post clickedPost) {
         System.out.println("here forums activity");
@@ -279,16 +298,6 @@ public class ForumsActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void getUserPosts(){
-        List<Post> temp = new ArrayList();
-        for(Post d: posts){
-            if(d.getUserId().equals(this.sessionManager.getId())){
-                temp.add(d);
-            }
-        }
-        //update recyclerview
-        postsListAdapter.filterList(temp);
-    }
 
     public void getStarredPosts(){
         List<Post> temp = new ArrayList();
@@ -301,5 +310,15 @@ public class ForumsActivity extends AppCompatActivity {
         postsListAdapter.filterList(temp);
     }
 
+    public void deleteUserPost(Integer postId){
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                Room.databaseBuilder(getApplicationContext(),
+                        AppDatabase.class, "attendance").build().forumsDao().deletePostById(postId);
+                updateData();
+            }
+        });
+    }
 
 }

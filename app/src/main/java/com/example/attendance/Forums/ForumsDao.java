@@ -28,6 +28,9 @@ public interface ForumsDao {
     @Delete
     void deletePosts(Post post);
 
+    @Query("DELETE FROM Post WHERE id = :postId ")
+    void deletePostById(Integer postId);
+
     @Query("SELECT * FROM Post WHERE is_starred = 1")
     List<Post> getAllStarred();
 
@@ -59,6 +62,9 @@ public interface ForumsDao {
 
     @Delete
     void deleteReply(Reply reply);
+
+    @Query("DELETE FROM Reply WHERE id = :replyId ")
+    void deleteReplyById(Integer replyId);
 
     @Query("SELECT * FROM Reply WHERE fk_post_id = :postId ORDER BY date ASC ")
     List<Reply> getAllRepliesForPost(Integer postId);

@@ -17,7 +17,7 @@ public interface ForumsAPI {
     Call<List<Reply>> getReplies(@Query("postId") Integer postId);
 
     @POST("forums/addPost")
-    Call<String> addPost(@Query("userId") Integer userId, @Query("courseCode") String courseCode,
+    Call<Void> addPost(@Query("userId") Integer userId, @Query("courseCode") String courseCode,
                          @Query("date") String date, @Query("title") String title, @Query("content") String content);
 
     @POST("forums/removePost")
@@ -25,7 +25,7 @@ public interface ForumsAPI {
 
 
     @POST("forums/addReply")
-    Call<String> addReply(@Query("userId") int userId, @Query("postId") Integer postId,
+    Call<Void> addReply(@Query("userId") int userId, @Query("postId") Integer postId,
                          @Query("date") String date, @Query("description") String description);
 
     @POST("forums/removeReply")

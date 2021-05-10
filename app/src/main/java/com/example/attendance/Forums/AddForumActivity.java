@@ -37,6 +37,7 @@ public class AddForumActivity extends AppCompatActivity {
     ForumsAPI forumsAPI;
     UserAPI userAPI;
     SessionManager sessionManager;
+    String selectedCourse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +56,7 @@ public class AddForumActivity extends AppCompatActivity {
         courseSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String text = parent.getItemAtPosition(position).toString();
+                selectedCourse = parent.getItemAtPosition(position).toString();
             }
 
             @Override
@@ -79,15 +80,15 @@ public class AddForumActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Course cannot be empty", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    Call<String> add_post_call = forumsAPI.addPost(sessionManager.getId(), courseSpinner.getSelectedItem().toString(), getDateStringForCurrentDate(),str_title, str_description);
-                    add_post_call.enqueue(new Callback<String>() {
+                    Call<Void> add_post_call = forumsAPI.addPost(sessionManager.getId(), courseSpinner.getSelectedItem().toString(), getDateStringForCurrentDate(),str_title, str_description);
+                    add_post_call.enqueue(new Callback<Void>() {
                         @Override
-                        public void onResponse(Call<String> call, Response<String> response) {
+                        public void onResponse(Call<Void> call, Response<Void> response) {
                             Toast.makeText(getApplicationContext(), "posted", Toast.LENGTH_SHORT).show();
                             killActivity();
                         }
                         @Override
-                        public void onFailure(Call<String> call, Throwable t) {
+                        public void onFailure(Call<Void> call, Throwable t) {
                             Toast.makeText(getApplicationContext(), "check your connection", Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -134,10 +135,12 @@ public class AddForumActivity extends AppCompatActivity {
             }
 
         });
+        courses.add("Courses");
         //Creating the ArrayAdapter instance having the country list
-        ArrayAdapter arrayAdapter = new ArrayAdapter(this, R.layout.course_spinner_item,courses);
+        ArrayAdapter arrayAdapter = new ArrayAdapter(this, R.layout.post_course_spinner_item,courses);
         courseSpinner.setAdapter(arrayAdapter);
-        arrayAdapter.setDropDownViewResource(R.layout.course_dropdown_item);
+        courseSpinner.setSelection(arrayAdapter.getCount()-1);
+        arrayAdapter.setDropDownViewResource(R.layout.post_course_dropdown_item);
         courseSpinner.setPrompt("Courses");
 
     }

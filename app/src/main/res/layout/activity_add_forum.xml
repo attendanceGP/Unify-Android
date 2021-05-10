@@ -17,6 +17,7 @@
         android:layout_marginTop="17dp"
         android:text="@string/add_a_new_post"
         android:textAppearance="@style/add_a_new_post"
+
         android:gravity="center_vertical"
         />
 
@@ -36,14 +37,15 @@
         android:id="@+id/new_post_title_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="textMultiLine|textCapSentences"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_below="@+id/add_a_new_p"
         android:layout_marginTop="29dp"
         android:hint="Title"
         android:textAppearance="@style/new_post_title"
+        android:scrollHorizontally="false"
         android:gravity="center_vertical"
-        android:inputType="text"
         />
 
     <Spinner
@@ -55,19 +57,18 @@
         android:layout_below="@id/new_post_title_edit_text"
         android:layout_marginTop="5dp"
         android:hint="course"
-        android:textAlignment="Left"
         android:textAppearance="@style/new_post_course"
-        android:gravity="center_vertical"
+        android:gravity="left"
         />
 
     <View
         android:id="@+id/line_2"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_height="2dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_below="@id/new_post_course"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="2dp"
         android:background="@drawable/line_2"
         />
 
@@ -80,9 +81,10 @@
         android:layout_below="@+id/line_2"
         android:layout_marginTop="5dp"
         android:hint="Description"
-        android:inputType="text"
+        android:inputType="textMultiLine|textCapSentences"
         android:textAppearance="@style/new_post_description"
         android:gravity="center_vertical"
+        android:scrollHorizontally="false"
         />
 
 </RelativeLayout>

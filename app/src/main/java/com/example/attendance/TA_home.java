@@ -122,19 +122,11 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch(item.getItemId()){
                     case R.id.action_deadlines:
-                        if(sessionManager.getType().equals("student")){
-                            startActivity(new Intent(TA_home.this, DeadlineStudentActivity.class));
-                        }else{
-                            startActivity(new Intent(TA_home.this, DeadlineTAActivity.class));
-                        }
+                        startActivity(new Intent(TA_home.this, DeadlineTAActivity.class));
                         return true;
 
                     case R.id.action_announcements:
-                        if(sessionManager.getType().equals("student")){
-                            startActivity(new Intent(TA_home.this, Announcement_Student_Activity.class));
-                        }else{
-                            startActivity(new Intent(TA_home.this, Announcement_TA_Activity.class));
-                        }
+                        startActivity(new Intent(TA_home.this, Announcement_TA_Activity.class));
                         return true;
 
                     case R.id.action_forum:

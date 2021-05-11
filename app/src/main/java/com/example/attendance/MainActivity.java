@@ -28,8 +28,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        startActivity(new Intent(MainActivity.this, DeadlineStudentActivity.class));
-
         // if logged in go to home page
         sessionManager = new SessionManager(getApplicationContext());
         

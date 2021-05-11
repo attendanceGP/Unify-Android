@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/home_studen"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/home_student">
+
+    <Button
+    android:id="@+id/attend_button"
+    android:layout_width="174dp"
+    android:layout_height="174dp"
+        android:text="@string/attend"
+        android:textAppearance="@style/attend"
+    android:layout_centerHorizontal="true"
+    android:layout_alignParentTop="true"
+    android:layout_marginTop="136dp"
+    android:background="@drawable/attend_button" />
+
+</RelativeLayout>
+

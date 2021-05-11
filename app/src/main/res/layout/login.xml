@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/login"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/unify"
+        android:fontFamily="@font/rochester"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="140dp"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="@string/unify"
+        android:textAppearance="@style/unify" />
+
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="292dp"
+        android:layout_height="48dp"
+        android:hint="username"
+        android:textAlignment="center"
+        android:inputType="text"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="218dp"
+        android:background="@drawable/username"
+        android:elevation="4dp"
+        />
+
+    <EditText
+        android:id="@+id/password"
+        android:hint="password"
+        android:textAlignment="center"
+        android:inputType="textPassword"
+        android:layout_width="292dp"
+        android:layout_height="48dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="283dp"
+        android:background="@drawable/password"
+        android:elevation="4dp"
+        />
+
+    <Button
+        android:id="@+id/login"
+        android:hint="Login"
+        android:textColorHint="#FFFFFF"
+        android:layout_width="84dp"
+        android:layout_height="47dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="348dp"
+        android:background="@drawable/sign_in_but"
+        />
+
+    <TextView
+        android:id="@+id/don_t_have_"
+        android:layout_width="wrap_content"
+        android:layout_height="19dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="417dp"
+        android:text="@string/don_t_have_"
+        android:textAppearance="@style/don_t_have_"
+        android:gravity="center_horizontal|center_vertical"
+        />
+
+</RelativeLayout>

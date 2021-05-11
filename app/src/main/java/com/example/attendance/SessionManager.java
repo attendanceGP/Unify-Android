@@ -40,7 +40,7 @@ public class SessionManager {
         editor.putString(KEY_TOKEN, user.getToken());
         if(user.getType().equals("student")) {
             editor.putInt(KEY_LEVEL, user.getLevel());
-            editor.putFloat(KEY_GPA, user.getGPA());
+            editor.putFloat(KEY_GPA, user.getGpa());
         }
         editor.putBoolean(IS_LOGIN, true);
 

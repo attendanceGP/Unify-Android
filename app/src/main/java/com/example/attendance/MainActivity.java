@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.attendance.Deadline.DeadlineStudentActivity;
+import com.example.attendance.Deadline.DeadlineTAActivity;
 
 public class MainActivity extends AppCompatActivity {
     SessionManager sessionManager;
@@ -26,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        startActivity(new Intent(MainActivity.this, DeadlineStudentActivity.class));
 
         // if logged in go to home page
         sessionManager = new SessionManager(getApplicationContext());

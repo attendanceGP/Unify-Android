@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import com.example.attendance.Announcement.Announcement_Student_Activity;
 import com.example.attendance.Announcement.Announcement_TA_Activity;
+import com.example.attendance.Deadline.DeadlineStudentActivity;
+import com.example.attendance.Deadline.DeadlineTAActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.SimpleDateFormat;
@@ -119,13 +121,13 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch(item.getItemId()){
-                    //case R.id.action_deadlines:
-                        //if(sessionManager.getType().equals("student")){
-                        //    startActivity(new Intent(TA_home.this, DeadlineStudentActivity.class));
-                        //}else{
-                        //    startActivity(new Intent(TA_home.this, DeadlineTAActivity.class));
-                        //}
-                        //return true;
+                    case R.id.action_deadlines:
+                        if(sessionManager.getType().equals("student")){
+                            startActivity(new Intent(TA_home.this, DeadlineStudentActivity.class));
+                        }else{
+                            startActivity(new Intent(TA_home.this, DeadlineTAActivity.class));
+                        }
+                        return true;
 
                     case R.id.action_announcements:
                         if(sessionManager.getType().equals("student")){

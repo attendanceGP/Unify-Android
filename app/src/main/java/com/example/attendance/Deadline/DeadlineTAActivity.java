@@ -35,6 +35,8 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.attendance.APIClient;
+import com.example.attendance.Announcement.Announcement_Student_Activity;
+import com.example.attendance.Announcement.Announcement_TA_Activity;
 import com.example.attendance.Database.AppDatabase;
 import com.example.attendance.Home;
 import com.example.attendance.R;
@@ -261,6 +263,11 @@ public class DeadlineTAActivity extends AppCompatActivity {
                         return true;
 
                     case R.id.action_announcements:
+                        if(sessionManager.getType().equals("student")){
+                            startActivity(new Intent(DeadlineTAActivity.this, Announcement_Student_Activity.class));
+                        }else{
+                            startActivity(new Intent(DeadlineTAActivity.this, Announcement_TA_Activity.class));
+                        }
                         return true;
 
                     case R.id.action_forum:

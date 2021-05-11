@@ -3,7 +3,8 @@
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/home_ta">
     <RelativeLayout
         android:id="@+id/deadline_ta"
         android:layout_width="fill_parent"
@@ -59,6 +60,7 @@
                         android:scrollbars="vertical"
                         android:layout_alignParentLeft="true"
                         android:layout_marginLeft="8dp"
+                        android:layout_marginRight="7dp"
                         android:layout_alignParentTop="true"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="8dp"/>

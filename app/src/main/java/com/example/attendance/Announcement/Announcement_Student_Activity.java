@@ -49,6 +49,9 @@ public class Announcement_Student_Activity extends AppCompatActivity {
 
     List<Announcement> announcementList = new ArrayList<>();
 
+    List<Announcement> unchangedAnnouncementList = new ArrayList<>();
+
+
     ArrayList<String> courseCodes = new ArrayList<>();
 
     //will be turned into an array on api call
@@ -185,8 +188,13 @@ public class Announcement_Student_Activity extends AppCompatActivity {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
+
                 announcementList.clear();
                 announcementList.addAll(Room.databaseBuilder(getApplicationContext(),
+                        AppDatabase.class, "attendance").build().announcementDao().getAll());
+
+                unchangedAnnouncementList.clear();
+                unchangedAnnouncementList.addAll(Room.databaseBuilder(getApplicationContext(),
                         AppDatabase.class, "attendance").build().announcementDao().getAll());
 
                 runOnUiThread(new Runnable() {
@@ -224,6 +232,7 @@ public class Announcement_Student_Activity extends AppCompatActivity {
     //filters all announcements according to selected filter in the filter recycler view
     public void filter(String courseId) {
         if (courseId.equals("All")) {
+            Log.d("temp list size",""+unchangedAnnouncementList.size());
             //here we reset the filter before getting all the announcements without any filters
             activeFilters.clear();
             updateData();
@@ -239,12 +248,15 @@ public class Announcement_Student_Activity extends AppCompatActivity {
             }
 
             else {
+                announcementList.clear();
+                announcementList.addAll(unchangedAnnouncementList);
 
                 for (int i = 0; i < announcementList.size(); i++) {
                     if (!activeFilters.contains(announcementList.get(i).getCourseId())) {
                         announcementList.remove(i);
                     }
                 }
+
                 announcementsStudentListAdapter.notifyDataSetChanged();
             }
         }
@@ -252,11 +264,15 @@ public class Announcement_Student_Activity extends AppCompatActivity {
 
             activeFilters.add(courseId);
 
+            announcementList.clear();
+            announcementList.addAll(unchangedAnnouncementList);
+
             for (int i = 0; i < announcementList.size(); i++) {
                 if(!activeFilters.contains(announcementList.get(i).getCourseId())){
                     announcementList.remove(i);
                 }
             }
+
             announcementsStudentListAdapter.notifyDataSetChanged();
         }
     }

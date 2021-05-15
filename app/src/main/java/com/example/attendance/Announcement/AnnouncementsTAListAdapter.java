@@ -97,11 +97,4 @@ public class AnnouncementsTAListAdapter extends RecyclerView.Adapter<Announcemen
         return result;
     }
 
-    public void removeItem(int position) {
-        announcements.remove(position);
-        notifyItemRemoved(position);
-        notifyItemRangeChanged(position, announcements.size());
-        notifyDataSetChanged();
-    }
-
 }

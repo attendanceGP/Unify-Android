@@ -6,12 +6,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.DatabaseConfiguration;
+import androidx.room.InvalidationTracker;
+import androidx.room.Room;
+import androidx.sqlite.db.SupportSQLiteOpenHelper;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +30,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.attendance.APIClient;
+import com.example.attendance.Database.AppDatabase;
 import com.example.attendance.Deadline.DeadlineTAActivity;
 import com.example.attendance.R;
 import com.example.attendance.SessionManager;
@@ -59,14 +65,13 @@ public class Announcement_TA_Activity extends AppCompatActivity {
     List<Announcement> announcementList = new ArrayList<>();
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_announcement_ta);
         sessionManager = new SessionManager(getApplicationContext());
-
         context = this;
-
 
             // binding to the swipe layout to refesh the page
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.ta_announcement_swipe_layout);
@@ -79,10 +84,9 @@ public class Announcement_TA_Activity extends AppCompatActivity {
         });
 
         //----------------------------------------------------------------------------------------------------------
-        refreshAnnouncements();
         announcementRecyclerView = (RecyclerView) findViewById(R.id.announcements_you_posted);
 
-        // instantiating new list adapter for deadlines
+        // instantiating new list adapter for announcements
         announcementTaListAdapter = new AnnouncementsTAListAdapter(announcementList,context); // sending context as well
 
         announcementRecyclerView.setLayoutManager(
@@ -191,6 +195,7 @@ public class Announcement_TA_Activity extends AppCompatActivity {
                 dialogBuilder.show();
             }
         });
+        updateData();
 
         //------------------------------------------------------------------------------------------------------------------------------
         //nav bar-----------------------------------------------------------------------------------------------------------------------
@@ -218,6 +223,8 @@ public class Announcement_TA_Activity extends AppCompatActivity {
             }
         });
     }
+
+    //-------------------------------------------------------------------------------------------------------------------------------
     private void postAnnouncement(int userId, String courseId, Date postedDate, String title, String post) {
         AnnouncementAPI announcementAPI = APIClient.getClient().create(AnnouncementAPI.class);
 
@@ -230,8 +237,8 @@ public class Announcement_TA_Activity extends AppCompatActivity {
             public void onResponse(Call<Integer> call, Response<Integer> response) {
                 Integer integer = response.body();
 
-                if (response.code() == 200) {
-                    Toast.makeText(getApplicationContext(), "announcement added", Toast.LENGTH_SHORT).show();
+                if (response.code() != 200) {
+                    Toast.makeText(getApplicationContext(), "your announcement couldn't be added", Toast.LENGTH_SHORT).show();
                 }
 
                 refreshAnnouncements();
@@ -268,33 +275,64 @@ public class Announcement_TA_Activity extends AppCompatActivity {
         });
     }
 
-    private void refreshAnnouncements(){
+    public void refreshAnnouncements(){
         AnnouncementAPI announcementAPI = APIClient.getClient().create(AnnouncementAPI.class);
+
         Call<List<Announcement>> call = announcementAPI.getTaAnnouncements(sessionManager.getId());
 
         call.enqueue(new Callback<List<Announcement>>() {
             @Override
             public void onResponse(Call<List<Announcement>> call, Response<List<Announcement>> response) {
+                List<Announcement> announcements =response.body();
                 if(response.code() != 200){
                     Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
                 }
-                else{
-
-                    announcementList.clear();
-                    announcementList.addAll(response.body());
-
-                    announcementTaListAdapter.notifyDataSetChanged();
-
-                    if (swipeRefreshLayout.isRefreshing()) {
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-                }
+                syncAnnouncementsFromAPI(announcements);
             }
 
             @Override
             public void onFailure(Call<List<Announcement>> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "please check your internet connection", Toast.LENGTH_SHORT).show();
                 System.out.println(t.getMessage());
+                if (swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }
+        });
+    }
+
+    private void updateData(){
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                announcementList.clear();
+                announcementList.addAll(Room.databaseBuilder(getApplicationContext(),
+                        AppDatabase.class, "attendance").build().announcementDao().getAll());
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        announcementTaListAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        });
+    }
+
+    private void syncAnnouncementsFromAPI(List<Announcement> announcements){
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                Room.databaseBuilder(getApplicationContext(),
+                        AppDatabase.class, "attendance").build().announcementDao().nukeTable();
+
+                //System.out.println(announcement.getId());
+                // if exists
+                Room.databaseBuilder(getApplicationContext(),
+                        AppDatabase.class, "attendance")
+                        .build().announcementDao().insertAll(announcements.toArray(new Announcement[announcements.size()]));
+
+                updateData();
                 if (swipeRefreshLayout.isRefreshing()) {
                     swipeRefreshLayout.setRefreshing(false);
                 }

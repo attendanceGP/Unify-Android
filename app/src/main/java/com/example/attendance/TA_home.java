@@ -143,7 +143,6 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String text = parent.getItemAtPosition(position).toString();
-        Toast.makeText(parent.getContext(), "selected: " + text, Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -20,4 +20,10 @@ public interface AnnouncementAPI {
 
     @GET("announcement/getTaAnnouncements")
     Call< List<Announcement> > getTaAnnouncements(@Query("userId") Integer userId);
+
+    @GET("announcement/getStudentAnnouncements")
+    Call< List<Announcement> > getStudentAnnouncements(@Query("userId") Integer userId);
+
+    @GET("announcement/getFilteredStudentAnnouncements")
+    Call< List<Announcement> > getFilteredStudentAnnouncements(@Query("userId") Integer userId,@Query("courseId") String[] courseId);
 }

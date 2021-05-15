@@ -1,5 +1,6 @@
 package com.example.attendance.Announcement;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
@@ -14,14 +15,19 @@ public class Announcement {
     @PrimaryKey
     private int id;
 
+    @ColumnInfo(name = "title")
     private String title;
 
+    @ColumnInfo(name = "courseId")
     private String courseId;
 
+    @ColumnInfo(name = "postedDate")
     private Date postedDate;
 
+    @ColumnInfo(name = "postedBy")
     private String postedBy;
 
+    @ColumnInfo(name = "description")
     private String description;
 
     public Announcement(int id, String title, String courseId, Date postedDate, String postedBy, String description) {

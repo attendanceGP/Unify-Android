@@ -193,5 +193,27 @@
 
     </style>
 
+    <style name="filter">
 
+        <item name="android:textSize">
+            18sp
+        </item>
+
+        <item name="android:textColor">
+            #FFFFFF
+        </item>
+
+    </style>
+    <!-- styles.xml -->
+    <style name="filter_course_code">
+
+        <item name="android:textSize">
+            12sp
+        </item>
+
+        <item name="android:textColor">
+            #FFFFFF
+        </item>
+
+    </style>
 </resources>

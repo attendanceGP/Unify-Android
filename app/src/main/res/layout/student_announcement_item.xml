@@ -5,10 +5,10 @@
     android:layout_alignParentTop="true"
     android:layout_marginTop="8dp"
     android:layout_centerHorizontal="true"
-    android:background="@drawable/announcement_holder">
+    android:background="@drawable/upcoming_holder">
 
     <TextView
-        android:id="@+id/ta_announcement_title"
+        android:id="@+id/student_announcement_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -18,25 +18,28 @@
         android:layout_marginTop="13dp"
         android:text="title"
         android:textAppearance="@style/announcement_tvs"
+        android:gravity="center_vertical"
         />
 
     <TextView
-        android:id="@+id/ta_announcement_course_code"
+        android:id="@+id/student_announcement_course_code"
         android:layout_width="wrap_content"
-        android:layout_height="23dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="16dp"
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="37dp"
+        android:layout_marginRight="238dp"
         android:text="CS467"
         android:textAppearance="@style/announcement_tvs"
+        android:gravity="center_vertical"
         />
 
     <TextView
-        android:id="@+id/ta_posted_date"
+        android:id="@+id/student_posted_date"
         android:layout_width="wrap_content"
-        android:layout_height="23dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="16dp"
         android:layout_centerHorizontal="true"
@@ -44,12 +47,13 @@
         android:layout_marginTop="52dp"
         android:text="@string/posted_27_03_2"
         android:textAppearance="@style/announcement_tvs"
+        android:gravity="center_vertical"
         />
 
     <TextView
-        android:id="@+id/ta_posted_by"
+        android:id="@+id/student_posted_by"
         android:layout_width="wrap_content"
-        android:layout_height="23dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="16dp"
         android:layout_centerHorizontal="true"
@@ -57,11 +61,12 @@
         android:layout_marginTop="68dp"
         android:text="dr. ali zidan"
         android:textAppearance="@style/announcement_tvs"
+        android:gravity="center_vertical"
         />
 
     <TextView
-        android:id="@+id/ta_announcement_description"
-        android:layout_width="wrap_content"
+        android:id="@+id/student_announcement_description"
+        android:layout_width="334dp"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="15dp"
@@ -72,15 +77,5 @@
         android:textAppearance="@style/announcement_tvs"
         android:gravity="center_vertical"
         />
-
-    <Button
-        android:id="@+id/delete_announcement_button"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="12dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="13dp"
-        android:background="@drawable/ic_delete_announcement"/>
 
 </RelativeLayout>

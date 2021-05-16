@@ -233,7 +233,12 @@ public class Announcement_Student_Activity extends AppCompatActivity {
     //filters all announcements according to selected filter in the filter recycler view
     public void filter(String courseId) {
         if (courseId.equals("All")) {
-            Log.d("temp list size",""+unchangedAnnouncementList.size());
+            //resets all button colors to show that they have been unselected
+            for(int i=0;i<courseCodes.size();i++) {
+                filterRecyclerView.getLayoutManager().findViewByPosition(i).
+                        findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.announcement_filter_button_unselected);
+            }
+
             //here we reset the filter before getting all the announcements without any filters
             activeFilters.clear();
             updateData();
@@ -242,6 +247,10 @@ public class Announcement_Student_Activity extends AppCompatActivity {
         else if(activeFilters.contains(courseId)) {
             //this is used for when a filter is applied and we want to remove it and apply the remaining filters in the filter array if any,
             //if none exist we get all the announcements with no filters
+
+            filterRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf(courseId)).
+                    findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.announcement_filter_button_unselected);
+
             activeFilters.remove(courseId);
 
             if(activeFilters.size() == 0){
@@ -262,6 +271,9 @@ public class Announcement_Student_Activity extends AppCompatActivity {
             }
         }
         else{
+            //setting the clicked button color to darker green to show that it is selected
+            filterRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf(courseId)).
+                    findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.announcement_filter_button_selected);
 
             activeFilters.add(courseId);
 

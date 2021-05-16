@@ -196,7 +196,7 @@ public class Announcement_TA_Activity extends AppCompatActivity {
             }
         });
         updateData();
-
+        refreshAnnouncements();
         //------------------------------------------------------------------------------------------------------------------------------
         //nav bar-----------------------------------------------------------------------------------------------------------------------
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);

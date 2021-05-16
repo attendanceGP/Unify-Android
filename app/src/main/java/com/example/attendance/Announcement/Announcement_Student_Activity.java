@@ -102,6 +102,7 @@ public class Announcement_Student_Activity extends AppCompatActivity {
         announcementRecyclerView.setItemAnimator(new DefaultItemAnimator());
         announcementRecyclerView.setAdapter(announcementsStudentListAdapter);
         updateData();
+        refreshAnnouncements();
         //------------------------------------------------------------------------------------------------------------------------------
         //nav bar-----------------------------------------------------------------------------------------------------------------------
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);

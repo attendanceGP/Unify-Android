@@ -66,6 +66,9 @@ public interface ForumsDao {
     @Query("DELETE FROM Reply WHERE id = :replyId ")
     void deleteReplyById(Integer replyId);
 
+    @Query("DELETE FROM Reply WHERE fk_post_id = :postId ")
+    void deleteRepliesByPostId(Integer postId);
+
     @Query("SELECT * FROM Reply WHERE fk_post_id = :postId ORDER BY date ASC ")
     List<Reply> getAllRepliesForPost(Integer postId);
 

@@ -18,7 +18,6 @@
             android:pathData="M0 0V59H309V0"
             android:fillColor="#FFFFFF"
             />
-
         <path
             android:pathData="M20 0H289C300.046 0 309 8.95431 309 20V39C309 50.0457 300.046 59 289 59H20C8.95431 59 0 50.0457 0 39V20C0 8.95431 8.95431 0 20 0Z"
             android:strokeWidth="2"

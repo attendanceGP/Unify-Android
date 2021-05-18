@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ import com.example.attendance.SessionManager;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -92,6 +94,32 @@ public class PostActivity extends AppCompatActivity {
         replyArea = findViewById(R.id.reply_edit);
         replyButton = findViewById(R.id.reply_button);
 
+        replyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String replyContent = replyArea.getText().toString();
+                if(replyContent.equals("")){
+                    Toast.makeText(getApplicationContext(), "Reply is empty", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Call<Void> call = forumsAPI.addReply(sessionManager.getId(), post_id,getDateStringForCurrentDate(),replyContent);
+                    call.enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            Toast.makeText(getApplicationContext(), "posted", Toast.LENGTH_SHORT).show();
+                            replyArea.getText().clear();
+                            updateData();
+                            refreshForums();
+                        }
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            Toast.makeText(getApplicationContext(), "check your connection", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+        });
+
     }
 
     private void setPost() {
@@ -110,6 +138,21 @@ public class PostActivity extends AppCompatActivity {
         postDescription = findViewById(R.id.forum_description);
         postDescription.setText(post.getContent());
 
+    }
+
+    private String getDateStringForCurrentDate(){
+        String result = "";
+        Date currentTime = Calendar.getInstance().getTime();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String strDate = dateFormat.format(currentTime);
+
+        result = "" + strDate;
+
+        dateFormat = new SimpleDateFormat("hh:mm:ss");
+        strDate = dateFormat.format(currentTime);
+
+        result = result + " " + strDate;
+        return result;
     }
 
     private String getDateStringFromDate(Date date){
@@ -181,24 +224,48 @@ public class PostActivity extends AppCompatActivity {
                         System.out.println("here");
                     }
                     updateData();
-                    if (swipeRefreshLayout.isRefreshing()) {
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (swipeRefreshLayout.isRefreshing()) {
+                                swipeRefreshLayout.setRefreshing(false);
+                            }
+                        }
+                    });
                 }
             }
         });
     }
 
-    public void deleteReply(Reply reply) {
+    public void deleteReply(Integer replyId){
+        Call<Void> call = forumsAPI.removeReply(replyId);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Toast.makeText(getApplicationContext(), "removed", Toast.LENGTH_SHORT).show();
+                Log.d("test", "removed from API");
+                deleteReplyFromRoom(replyId);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "check your internet connection", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    public void deleteReplyFromRoom(Integer replyId) {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
                 Room.databaseBuilder(getApplicationContext(),
-                        AppDatabase.class, "attendance").build().forumsDao().deleteReply(reply);
+                        AppDatabase.class, "attendance").build().forumsDao().deleteReplyById(replyId);
+                Log.d("test", "deleted from room");
                 updateData();
+                refreshForums();
             }
         });
     }
+
 
     public void getPostbyid(){
         AsyncTask.execute(new Runnable() {

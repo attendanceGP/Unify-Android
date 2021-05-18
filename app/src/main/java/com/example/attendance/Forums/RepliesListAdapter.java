@@ -84,19 +84,8 @@ public class RepliesListAdapter extends RecyclerView.Adapter<RepliesListAdapter.
             @Override
             public void onClick(View view) {
                 if (applicationContext instanceof PostActivity) {
-                    ForumsAPI forumsAPI = APIClient.getClient().create(ForumsAPI.class);
-                    Call<Void> call = forumsAPI.removeReply(reply.getId());
-                    call.enqueue(new Callback<Void>() {
-                        @Override
-                        public void onResponse(Call<Void> call, Response<Void> response) {
-                            Toast.makeText(applicationContext, reply.getId()+" removed", Toast.LENGTH_SHORT).show();
-                        }
-                        @Override
-                        public void onFailure(Call<Void> call, Throwable t) {
-                            Toast.makeText(applicationContext, "an error occured", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    ((PostActivity) applicationContext).deleteReply(holder.reply);
+                    ((PostActivity) applicationContext).deleteReply(holder.reply.getId());
+                    removeItem(position);
                 }
             }
         });

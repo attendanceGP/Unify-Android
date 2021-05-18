@@ -39,11 +39,14 @@
                  android:layout_height="1dp"
                  android:layout_weight="1" >
              </Space>
-         <Button
-             android:id="@+id/my_Favourite_button"
-             android:layout_width="41dp"
-             android:layout_height="41dp"
-             android:background="@drawable/forums_filter_favs" />
+             <ToggleButton
+                 android:id="@+id/my_Favourite_button"
+                 android:layout_width="41dp"
+                 android:layout_height="41dp"
+                 android:background="@drawable/forums_filter_favs"
+                 android:textOff=""
+                 android:textOn=""
+                 />
 
              <!--         add forum button -->
              <Space
@@ -51,11 +54,11 @@
                  android:layout_height="1dp"
                  android:layout_weight="1" >
              </Space>
-         <Button
-             android:id="@+id/add_new_forum"
-             android:layout_width="41dp"
-             android:layout_height="41dp"
-             android:background="@drawable/add_deadline_button" />
+             <Button
+                 android:id="@+id/add_new_forum"
+                 android:layout_width="41dp"
+                 android:layout_height="41dp"
+                 android:background="@drawable/add_deadline_button" />
 
              <!--         course filter spinner button -->
              <Space

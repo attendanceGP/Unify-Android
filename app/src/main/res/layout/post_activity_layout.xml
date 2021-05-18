@@ -106,12 +106,17 @@
 
         <EditText
             android:id="@+id/reply_edit"
-            android:layout_width="290dp"
+            android:layout_width="match_parent"
+            android:layout_toLeftOf="@+id/reply_button"
             android:layout_height="50dp"
             android:layout_alignBottom="@+id/comment_area"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:layout_marginBottom="4dp"
-            android:background="@drawable/reply_editt" />
+            android:inputType="textMultiLine|textCapSentences"
+            android:background="@drawable/reply_editt"
+            android:hint="reply"
+            android:gravity="center_vertical|left"/>
 
         <Button
             android:id="@+id/reply_button"

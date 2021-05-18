@@ -2,6 +2,7 @@ package com.example.attendance.Forums;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -145,6 +146,8 @@ public class AddForumActivity extends AppCompatActivity {
 
     }
     void killActivity(){
+        Intent intent = new Intent(AddForumActivity.this, ForumsActivity.class);
+        startActivity(intent);
         finish();
     }
 

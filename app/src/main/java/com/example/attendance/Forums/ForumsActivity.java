@@ -38,11 +38,15 @@ import retrofit2.Response;
 
 public class ForumsActivity extends AppCompatActivity {
     private List<Post> posts = new ArrayList<>();
+    private List<Post> userPosts = new ArrayList<>();
+    private List<Post> favPosts = new ArrayList<>();
+
     private RecyclerView postsRecyclerView;
     private PostsListAdapter postsListAdapter;
+    private FavPostsListAdapter favPostsListAdapter;
     private UserPostsListAdapter userPostsListAdapter;
 
-    private Button viewFavourites;
+    private ToggleButton viewFavourites;
     private ToggleButton viewMyForums;
     private Button addForum;
     private Spinner filterCourses;
@@ -71,7 +75,11 @@ public class ForumsActivity extends AppCompatActivity {
 
 //        Recycler View
         postsRecyclerView = (RecyclerView) findViewById(R.id.posts_recycler_view);
+
         postsListAdapter = new PostsListAdapter(this, posts);
+        userPostsListAdapter = new UserPostsListAdapter(this, userPosts);
+        favPostsListAdapter = new FavPostsListAdapter(this, favPosts);
+
         postsRecyclerView.setLayoutManager(
                 new LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false));
         postsRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -87,29 +95,25 @@ public class ForumsActivity extends AppCompatActivity {
                 if (isChecked) {
                     getUserPosts();
                 } else {
-                    updateData();
-                    refreshForums();
-                    postsListAdapter.notifyDataSetChanged();
+                    showForums();
                 }
             }
         });
 
 
         // my Favourites forums Button
-        viewFavourites = (Button) findViewById(R.id.my_Favourite_button);
-        viewFavourites.setOnClickListener(new View.OnClickListener(){
-            int m_counts =0;
+        viewFavourites = (ToggleButton) findViewById(R.id.my_Favourite_button);
+        viewFavourites.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
-                if (m_counts%2 == 0){
-                    updateData();
-                    refreshForums();
-                }
-                else{
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
                     getStarredPosts();
+                } else {
+                    showForums();
                 }
             }
         });
+
 
 
         //  add forum button
@@ -207,13 +211,11 @@ public class ForumsActivity extends AppCompatActivity {
             @Override
             public void run() {
                 for(Post post: _posts) {
-                    System.out.println(post.getId());
                     // if exists
                     if (!Room.databaseBuilder(getApplicationContext(),
                             AppDatabase.class, "attendance").build().forumsDao().isExistsPosts(post.getId())) {
                         Room.databaseBuilder(getApplicationContext(),
                                 AppDatabase.class, "attendance").build().forumsDao().insertAllPosts(post);
-                        System.out.println("here");
                     }
                     updateData();
 
@@ -230,6 +232,8 @@ public class ForumsActivity extends AppCompatActivity {
         });
     }
 
+
+//    star and un-star posts
     public void removeFromStarred(Integer postId){
         AsyncTask.execute(new Runnable() {
             @Override
@@ -240,7 +244,6 @@ public class ForumsActivity extends AppCompatActivity {
             }
         });
     }
-
     public void addToStarred(Integer postId){
         AsyncTask.execute(new Runnable() {
             @Override
@@ -251,6 +254,7 @@ public class ForumsActivity extends AppCompatActivity {
             }
         });
     }
+
 
 //    public void showStarred(){
 //        AsyncTask.execute(new Runnable() {
@@ -264,59 +268,70 @@ public class ForumsActivity extends AppCompatActivity {
 //    }
 //
 
-    public List<Post> getUserPosts(){
-        List<Post> temp = new ArrayList();
+    public void getUserPosts(){
+        userPosts.clear();
+
         for(Post d: posts){
-            if(d.getUserId().equals(this.sessionManager.getId())){
-                temp.add(d);
+            if(d.getUserId().equals(sessionManager.getId())){
+                userPosts.add(d);
             }
         }
-        return temp;
-    }
-
-    public void showUserForums(){
-        posts.clear();
-        posts = getUserPosts();
-        userPostsListAdapter = new UserPostsListAdapter(this, posts);
         postsRecyclerView.setAdapter(userPostsListAdapter);
     }
-
     public void showForums(){
+        postsRecyclerView.setAdapter(postsListAdapter);
         updateData();
         refreshForums();
-        postsRecyclerView.setAdapter(postsListAdapter);
     }
 
 
+
+    public void getStarredPosts(){
+        favPosts.clear();
+        for(Post d: posts){
+            if(d.isStarred()){
+                favPosts.add(d);
+            }
+        }
+        postsRecyclerView.setAdapter(favPostsListAdapter);
+    }
+
+
+//    open post activity
     public void onForumClick(int position, Post clickedPost) {
-        System.out.println("here forums activity");
         Intent intent = new Intent(ForumsActivity.this, PostActivity.class);
         intent.putExtra("Post_id", clickedPost.getId());
-        System.out.println(clickedPost.getId());
         intent.putExtra("course_code", clickedPost.getCourseCode());
-        System.out.println(clickedPost.getCourseCode());
         startActivity(intent);
     }
 
 
-    public void getStarredPosts(){
-        List<Post> temp = new ArrayList();
-        for(Post d: posts){
-            if(d.isStarred()){
-                temp.add(d);
-            }
-        }
-        //update recyclerview
-        postsListAdapter.filterList(temp);
-    }
-
+//    delete user post from api and room
     public void deleteUserPost(Integer postId){
+        Call<Void> call = forumsAPI.removePost(postId);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Toast.makeText(getApplicationContext(), "removed", Toast.LENGTH_SHORT).show();
+                deleteUserPostFromRoom(postId);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "check your internet connection", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    public void deleteUserPostFromRoom(Integer postId){
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
                 Room.databaseBuilder(getApplicationContext(),
+                        AppDatabase.class, "attendance").build().forumsDao().deleteRepliesByPostId(postId);
+                Room.databaseBuilder(getApplicationContext(),
                         AppDatabase.class, "attendance").build().forumsDao().deletePostById(postId);
                 updateData();
+                refreshForums();
             }
         });
     }

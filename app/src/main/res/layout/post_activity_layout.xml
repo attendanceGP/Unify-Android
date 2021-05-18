@@ -116,7 +116,8 @@
             android:inputType="textMultiLine|textCapSentences"
             android:background="@drawable/reply_editt"
             android:hint="reply"
-            android:gravity="center_vertical|left"/>
+            android:padding="10dp"
+            android:gravity="center_vertical"/>
 
         <Button
             android:id="@+id/reply_button"

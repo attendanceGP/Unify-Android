@@ -20,6 +20,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.example.attendance.APIClient;
+import com.example.attendance.Course;
 import com.example.attendance.Database.AppDatabase;
 import com.example.attendance.Deadline.DeadlineStudentActivity;
 import com.example.attendance.Deadline.DeadlineTAActivity;
@@ -27,6 +28,7 @@ import com.example.attendance.Home;
 import com.example.attendance.R;
 import com.example.attendance.SessionManager;
 import com.example.attendance.TA_home;
+import com.example.attendance.UserAPI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -40,16 +42,21 @@ public class ForumsActivity extends AppCompatActivity {
     private List<Post> posts = new ArrayList<>();
     private List<Post> userPosts = new ArrayList<>();
     private List<Post> favPosts = new ArrayList<>();
+    ArrayList<String> courseCodes = new ArrayList<>();
 
     private RecyclerView postsRecyclerView;
     private PostsListAdapter postsListAdapter;
     private FavPostsListAdapter favPostsListAdapter;
     private UserPostsListAdapter userPostsListAdapter;
+    private CoursesListAdapter coursesListAdapter;
+
 
     private ToggleButton viewFavourites;
     private ToggleButton viewMyForums;
     private Button addForum;
-    private Spinner filterCourses;
+
+
+    private RecyclerView coursesRecyclerView;
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -73,7 +80,18 @@ public class ForumsActivity extends AppCompatActivity {
 
         forumsAPI = APIClient.getClient().create(ForumsAPI.class);
 
-//        Recycler View
+        // courses Recycler View
+        coursesRecyclerView = (RecyclerView) findViewById(R.id.course_filters_rv);
+        coursesRecyclerView.setLayoutManager((
+                new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)));
+        coursesRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        coursesListAdapter = new CoursesListAdapter(this, courseCodes);
+        coursesRecyclerView.setAdapter(coursesListAdapter);
+        getUserCourses();
+
+
+//       Posts Recycler View
         postsRecyclerView = (RecyclerView) findViewById(R.id.posts_recycler_view);
 
         postsListAdapter = new PostsListAdapter(this, posts);
@@ -127,9 +145,6 @@ public class ForumsActivity extends AppCompatActivity {
         });
 
 
-        // Filter courses spinner
-        filterCourses = (Spinner) findViewById(R.id.course_filter_spinner);
-
 
         //TODO add the rest of the activities to the bottom nav view when done
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
@@ -160,6 +175,31 @@ public class ForumsActivity extends AppCompatActivity {
                         return true;
                 }
                 return false;
+            }
+        });
+    }
+
+    private void getUserCourses() {
+        UserAPI userAPI = APIClient.getClient().create(UserAPI.class);
+        Call<ArrayList<String>> call = userAPI.getTaughtCourses(sessionManager.getId());
+
+        call.enqueue(new Callback<ArrayList<String>>() {
+            @Override
+            public void onResponse(Call<ArrayList<String>> call, Response<ArrayList<String>> response) {
+                if(response.code() != 200){
+                    Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    courseCodes.add("All");
+                    courseCodes.addAll(response.body());
+                    coursesListAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<String>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "please check your internet connection", Toast.LENGTH_SHORT).show();
+                System.out.println(t.getMessage());
             }
         });
     }
@@ -335,5 +375,66 @@ public class ForumsActivity extends AppCompatActivity {
             }
         });
     }
+
+//    //filters all announcements according to selected filter in the filter recycler view
+//    public void onCourseFilterClick(int position, String course){
+//            if (course.equals("All")) {
+//                //resets all button colors to show that they have been unselected
+//                for(int i=0;i<courseCodes.size();i++) {
+//                    coursesRecyclerView.getLayoutManager().findViewByPosition(i).
+//                            findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.course_filter_button_unselected);
+//                }
+//
+//                //here we reset the filter before getting all the announcements without any filters
+//                activeFilters.clear();
+//                updateData();
+//            }
+//
+//            else if(activeFilters.contains(courseId)) {
+//                //this is used for when a filter is applied and we want to remove it and apply the remaining filters in the filter array if any,
+//                //if none exist we get all the announcements with no filters
+//
+//                filterRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf(courseId)).
+//                        findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.announcement_filter_button_unselected);
+//
+//                activeFilters.remove(courseId);
+//
+//                if(activeFilters.size() == 0){
+//                    updateData();
+//                }
+//
+//                else {
+//                    announcementList.clear();
+//                    announcementList.addAll(unchangedAnnouncementList);
+//
+//                    for (int i = 0; i < announcementList.size(); i++) {
+//                        if (!activeFilters.contains(announcementList.get(i).getCourseId())) {
+//                            announcementList.remove(i);
+//                        }
+//                    }
+//
+//                    announcementsStudentListAdapter.notifyDataSetChanged();
+//                }
+//            }
+//            else{
+//                //setting the clicked button color to darker green to show that it is selected
+//                filterRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf(courseId)).
+//                        findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.announcement_filter_button_selected);
+//
+//                activeFilters.add(courseId);
+//
+//                announcementList.clear();
+//                announcementList.addAll(unchangedAnnouncementList);
+//
+//                for (int i = 0; i < announcementList.size(); i++) {
+//                    if(!activeFilters.contains(announcementList.get(i).getCourseId())){
+//                        announcementList.remove(i);
+//                    }
+//                }
+//
+//                announcementsStudentListAdapter.notifyDataSetChanged();
+//            }
+//
+//    }
 
 }

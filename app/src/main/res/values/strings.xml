@@ -9,6 +9,40 @@ Unify
     <string name="don_t_have_">Don\'t have an account? Contact your university for help.</string>
 
     <string name="attend">Attend</string>
+    <string name="pen_id">
+
+0
+</string>
+    <string name="abs_counter_id">
+
+4
+</string>
+    <string name="cs402">
+
+CS402
+</string>
+    <string name="overview">
+
+Overview
+</string>
+    <string name="recent">
+
+Recent
+</string>
+
+    <string name="recorded_on">
+
+Recorded on 24-5-2021
+</string>
+    <string name="ta_ahmed_sa">
+
+TA Ahmed Sameh
+</string>
+    <!-- strings.xml -->
+    <string name="p">
+
+P
+</string>
 
 
 </resources>

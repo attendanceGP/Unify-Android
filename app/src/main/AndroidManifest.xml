@@ -15,12 +15,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".TA_closes_attendance"></activity>
+        <activity android:name=".Absence.TAAbsenceTab"/>
+        <activity android:name=".Absence.AbsenceTab"/>
+        <activity android:name=".TA_closes_attendance" />
         <activity android:name=".TA_home" />
-
-        <activity android:name=".ta_attendanceConfirmationList"></activity>
+        <activity android:name=".ta_attendanceConfirmationList" />
         <activity android:name=".Home" />
-
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

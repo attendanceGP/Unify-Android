@@ -1,5 +1,8 @@
 package com.example.attendance;
 
+import com.example.attendance.Absence.Absence;
+import com.example.attendance.Absence.Recent;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,4 +58,6 @@ public interface UserAPI {
     Call<TeachingAssistant> getTA(@Query("id") Integer id);
     @GET("ta/updateTALocation")
     Call<Void>updateTaLocation(@Query("id") Integer id, @Query("longitude")double longitude,@Query("latitude")double latitude);
+
+
 }

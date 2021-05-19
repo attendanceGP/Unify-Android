@@ -19,15 +19,19 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.attendance.Absence.AbsenceTab;
+import com.example.attendance.Absence.TAAbsenceTab;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -46,12 +50,12 @@ public class Home extends AppCompatActivity implements LocationListener {
     boolean found;
     String course = null;
     SessionManager sessionManager;
-
+    boolean gotLocation;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_student);
-        getCurrentLocation();
+        gotLocation = false;
         sessionManager = new SessionManager(getApplicationContext());
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe);
         button = (Button) findViewById(R.id.attend_butt);
@@ -72,7 +76,31 @@ public class Home extends AppCompatActivity implements LocationListener {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+            if (!gotLocation){
+                getCurrentLocation();
+                gotLocation=true;
+            }
+            }
+        });
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch(item.getItemId()){
+                    case R.id.action_absence:
+                        startActivity(new Intent(Home.this, AbsenceTab.class));
+                        return true;
 
+                    case R.id.action_announcements:
+                        return true;
+
+                    case R.id.action_forum:
+                        return true;
+
+                    case R.id.action_deadlines:
+                        return true;
+                }
+                return false;
             }
         });
     }

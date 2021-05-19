@@ -7,7 +7,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 public class APIClient {
     private static Retrofit retrofit = null;
 
-    static Retrofit getClient() {
+    public static Retrofit getClient() {
         retrofit = new Retrofit.Builder()
                 .baseUrl("http://192.168.1.15:8080")
                 .addConverterFactory(JacksonConverterFactory.create())

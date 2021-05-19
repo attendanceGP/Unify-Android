@@ -31,6 +31,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 
+import com.example.attendance.Absence.TAAbsenceTab;
+
 public class TA_home extends AppCompatActivity implements AdapterView.OnItemSelectedListener, LocationListener {
     TextView TA_name;
     TextView TA_id;
@@ -45,7 +47,6 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_t_a_home);
-
         sessionManager = new SessionManager(getApplicationContext());
         groups = findViewById(R.id.Groups);
         selectCourse = findViewById(R.id.Courses);

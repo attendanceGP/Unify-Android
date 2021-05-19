@@ -1,5 +1,4 @@
 package com.example.attendance.Announcement;
-import java.util.Calendar;
 import java.util.List;
 
 import retrofit2.Call;
@@ -24,6 +23,4 @@ public interface AnnouncementAPI {
     @GET("announcement/getStudentAnnouncements")
     Call< List<Announcement> > getStudentAnnouncements(@Query("userId") Integer userId);
 
-    @GET("announcement/getFilteredStudentAnnouncements")
-    Call< List<Announcement> > getFilteredStudentAnnouncements(@Query("userId") Integer userId,@Query("courseId") String[] courseId);
 }

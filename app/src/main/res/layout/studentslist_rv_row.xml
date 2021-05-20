@@ -12,8 +12,8 @@
     <!--    Student Name text view -->
     <TextView
         android:id="@+id/tvStudentName"
-        android:layout_width="164dp"
-        android:layout_height="22dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:textAppearance="@style/student_name"

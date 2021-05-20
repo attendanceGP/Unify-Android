@@ -51,8 +51,8 @@
 
     <Button
         android:id="@+id/delete_reply_button"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_marginRight="20dp"

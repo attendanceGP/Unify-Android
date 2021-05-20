@@ -42,6 +42,8 @@ public class ForumsActivity extends AppCompatActivity {
     private List<Post> posts = new ArrayList<>();
     private List<Post> userPosts = new ArrayList<>();
     private List<Post> favPosts = new ArrayList<>();
+    private List<String> filterCourses = new ArrayList<>();
+
     ArrayList<String> courseCodes = new ArrayList<>();
 
     private RecyclerView postsRecyclerView;
@@ -51,8 +53,9 @@ public class ForumsActivity extends AppCompatActivity {
     private CoursesListAdapter coursesListAdapter;
 
 
-    private ToggleButton viewFavourites;
-    private ToggleButton viewMyForums;
+    private Button viewHome;
+    private Button viewFavourites;
+    private Button viewMyForums;
     private Button addForum;
 
 
@@ -85,7 +88,6 @@ public class ForumsActivity extends AppCompatActivity {
         coursesRecyclerView.setLayoutManager((
                 new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)));
         coursesRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
         coursesListAdapter = new CoursesListAdapter(this, courseCodes);
         coursesRecyclerView.setAdapter(coursesListAdapter);
         getUserCourses();
@@ -99,42 +101,48 @@ public class ForumsActivity extends AppCompatActivity {
         favPostsListAdapter = new FavPostsListAdapter(this, favPosts);
 
         postsRecyclerView.setLayoutManager(
-                new LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false));
+                new NPALinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        );
+//        postsRecyclerView.setLayoutManager(
+//                new LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false));
         postsRecyclerView.setItemAnimator(new DefaultItemAnimator());
         postsRecyclerView.setAdapter(postsListAdapter);
 
+
+        // get data from API and ROOM
         updateData();
         refreshForums();
 
         // my Forums Button
-        viewMyForums = (ToggleButton) findViewById(R.id.my_posts_button);
-        viewMyForums.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    getUserPosts();
-                } else {
-                    showForums();
-                }
+        viewMyForums = (Button) findViewById(R.id.my_posts_button);
+        viewMyForums.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getUserPosts();
             }
         });
 
 
         // my Favourites forums Button
-        viewFavourites = (ToggleButton) findViewById(R.id.my_Favourite_button);
-        viewFavourites.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        viewFavourites = (Button) findViewById(R.id.my_Favourite_button);
+        viewFavourites.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
-                    getStarredPosts();
-                } else {
-                    showForums();
-                }
+            public void onClick(View view) {
+                getStarredPosts();
+            }
+        });
+
+        // View Home Forums
+        viewHome = (Button) findViewById(R.id.all_posts_button);
+        viewHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showForums();
             }
         });
 
 
-
-        //  add forum button
+        // add forum button
         addForum = (Button) findViewById(R.id.add_new_forum);
         addForum.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,7 +151,6 @@ public class ForumsActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
 
 
         //TODO add the rest of the activities to the bottom nav view when done
@@ -296,18 +303,7 @@ public class ForumsActivity extends AppCompatActivity {
     }
 
 
-//    public void showStarred(){
-//        AsyncTask.execute(new Runnable() {
-//            @Override
-//            public void run() {
-//                Room.databaseBuilder(getApplicationContext(),
-//                        AppDatabase.class, "attendance").build().forumsDao().getAllStarred();
-//                updateData();
-//            }
-//        });
-//    }
-//
-
+//    show user posts
     public void getUserPosts(){
         userPosts.clear();
 
@@ -317,15 +313,18 @@ public class ForumsActivity extends AppCompatActivity {
             }
         }
         postsRecyclerView.setAdapter(userPostsListAdapter);
+        userPostsListAdapter.notifyDataSetChanged();
     }
+
+//    show all forums (with no filter)
     public void showForums(){
         postsRecyclerView.setAdapter(postsListAdapter);
+        postsListAdapter.notifyDataSetChanged();
         updateData();
         refreshForums();
     }
 
-
-
+//    show starred posts
     public void getStarredPosts(){
         favPosts.clear();
         for(Post d: posts){
@@ -334,6 +333,7 @@ public class ForumsActivity extends AppCompatActivity {
             }
         }
         postsRecyclerView.setAdapter(favPostsListAdapter);
+        favPostsListAdapter.notifyDataSetChanged();
     }
 
 
@@ -376,65 +376,65 @@ public class ForumsActivity extends AppCompatActivity {
         });
     }
 
-//    //filters all announcements according to selected filter in the filter recycler view
-//    public void onCourseFilterClick(int position, String course){
-//            if (course.equals("All")) {
-//                //resets all button colors to show that they have been unselected
-//                for(int i=0;i<courseCodes.size();i++) {
-//                    coursesRecyclerView.getLayoutManager().findViewByPosition(i).
-//                            findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.course_filter_button_unselected);
-//                }
+//    public void onCourseFilterClick(int position, String course) {
+//        if (course.equals("All")) {
+//            //resets all button colors to show that they have been unselected
+//            for (int i = 0; i < courseCodes.size(); i++) {
+//                coursesRecyclerView.getLayoutManager().findViewByPosition(i).
+//                        findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.course_filter_button_unselected);
+//            }
 //
-//                //here we reset the filter before getting all the announcements without any filters
-//                activeFilters.clear();
+//            //here we reset the filter before getting all the announcements without any filters
+//            filterCourses.clear();
+//            updateData();
+//            refreshForums();
+//        } else if (filterCourses.contains(course)) {
+//            //this is used for when a filter is applied and we want to remove it and apply the remaining filters in the filter array if any,
+//            //if none exist we get all the announcements with no filters
+//
+//            coursesRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf(course)).
+//                    findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.course_filter_button_unselected);
+//
+//            filterCourses.remove(course);
+//
+//            if (filterCourses.size() == 0) {
 //                updateData();
+//                refreshForums();
 //            }
+//            //
+////                else {
+////                    announcementList.clear();
+////                    announcementList.addAll(unchangedAnnouncementList);
+////
+////                    for (int i = 0; i < announcementList.size(); i++) {
+////                        if (!activeFilters.contains(announcementList.get(i).getCourseId())) {
+////                            announcementList.remove(i);
+////                        }
+////                    }
+////
+////                    announcementsStudentListAdapter.notifyDataSetChanged();
+////                }
+////            }
 //
-//            else if(activeFilters.contains(courseId)) {
-//                //this is used for when a filter is applied and we want to remove it and apply the remaining filters in the filter array if any,
-//                //if none exist we get all the announcements with no filters
-//
-//                filterRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf(courseId)).
-//                        findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.announcement_filter_button_unselected);
-//
-//                activeFilters.remove(courseId);
-//
-//                if(activeFilters.size() == 0){
-//                    updateData();
-//                }
-//
-//                else {
-//                    announcementList.clear();
-//                    announcementList.addAll(unchangedAnnouncementList);
-//
-//                    for (int i = 0; i < announcementList.size(); i++) {
-//                        if (!activeFilters.contains(announcementList.get(i).getCourseId())) {
-//                            announcementList.remove(i);
-//                        }
-//                    }
-//
-//                    announcementsStudentListAdapter.notifyDataSetChanged();
-//                }
-//            }
-//            else{
-//                //setting the clicked button color to darker green to show that it is selected
-//                filterRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf(courseId)).
-//                        findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.announcement_filter_button_selected);
-//
-//                activeFilters.add(courseId);
-//
-//                announcementList.clear();
-//                announcementList.addAll(unchangedAnnouncementList);
-//
-//                for (int i = 0; i < announcementList.size(); i++) {
-//                    if(!activeFilters.contains(announcementList.get(i).getCourseId())){
-//                        announcementList.remove(i);
-//                    }
-//                }
-//
-//                announcementsStudentListAdapter.notifyDataSetChanged();
-//            }
-//
-//    }
+////            else{
+////                //setting the clicked button color to darker green to show that it is selected
+////                coursesRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf(course)).
+////                        findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.course_filter_button_selected);
+////
+////                activeFilters.add(courseId);
+////
+////                announcementList.clear();
+////                announcementList.addAll(unchangedAnnouncementList);
+////
+////                for (int i = 0; i < announcementList.size(); i++) {
+////                    if(!activeFilters.contains(announcementList.get(i).getCourseId())){
+////                        announcementList.remove(i);
+////                    }
+////                }
+////
+////                announcementsStudentListAdapter.notifyDataSetChanged();
+////            }
+////
+//        }
 
 }

@@ -44,5 +44,15 @@ TA Ahmed Sameh
 P
 </string>
 
+    <string name="click_to_en">
+
+Click to end the attendance recording process and view attendees list
+</string>
+
+    <string name="username_in">
+
+Course
+</string>
+
 
 </resources>

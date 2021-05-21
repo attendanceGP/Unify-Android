@@ -78,7 +78,6 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
         givenCourses.add("");
 
         // use default spinner item to show options in spinner
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, givenCourses);
         selectCourse.setAdapter(adapter);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         selectCourse.setOnItemSelectedListener(this);

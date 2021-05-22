@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">Attendance</string>
 
+    <string name="posted_27_03_2">
+        posted 27-03-2021 at 11:59 pm
+    </string>
+
     <string name="unify">
 
 Unify
@@ -40,6 +44,5 @@ Done
 
 Add a new deadline
 </string>
-
 
 </resources>

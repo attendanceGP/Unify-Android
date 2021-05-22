@@ -1,18 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".TA_closes_attendance">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/home_ta_2"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/home_ta"
+    >
 
     <Button
         android:id="@+id/showAttendeesList"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Show attendees List"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_width="108dp"
+        android:layout_height="47dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="359dp"
+        android:background="@drawable/curved_rectangle_button"
+        android:text="End Attendance"
+        android:textAppearance="@style/record_attendance" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="243dp"
+        android:layout_height="40dp"
+        android:text="Click to end the attendance recording process and view attendees list"
+        android:textAppearance="@style/attendees_list_button_instructions"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="66dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="311dp"
+        android:gravity="center_horizontal|center_vertical"
+        />
+</RelativeLayout>

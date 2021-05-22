@@ -12,9 +12,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.example.attendance.Deadline.DeadlineStudentActivity;
 import com.example.attendance.Deadline.DeadlineTAActivity;
+import com.example.attendance.Announcement.Announcement_Student_Activity;
 
 public class MainActivity extends AppCompatActivity {
     SessionManager sessionManager;
@@ -70,7 +70,8 @@ public class MainActivity extends AppCompatActivity {
                         }else {
                             sessionManager.login(test);
                             if(sessionManager.getType().equals("student")) {
-                                startActivity(new Intent(MainActivity.this, Home.class));
+								//change when balf merges
+                                startActivity(new Intent(MainActivity.this, Announcement_Student_Activity.class));
                             }
                             else{
                                 startActivity(new Intent(MainActivity.this, TA_home.class));

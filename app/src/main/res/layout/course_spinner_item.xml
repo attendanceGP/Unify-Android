@@ -5,5 +5,4 @@
     android:textAppearance="@style/deadline_name_input"
     android:layout_gravity="center"
     android:textAlignment="center">
-
 </TextView>

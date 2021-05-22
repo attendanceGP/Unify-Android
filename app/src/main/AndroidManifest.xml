@@ -10,6 +10,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".Announcement.Announcement_TA_Activity"></activity>
+        <activity android:name=".Announcement.Announcement_Student_Activity" />
         <activity android:name=".Deadline.DeadlineTAActivity"></activity>
         <activity android:name=".TA_closes_attendance" />
         <activity android:name=".TA_home" />

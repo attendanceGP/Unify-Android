@@ -4,14 +4,17 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.attendance.APIClient;
+import com.example.attendance.Database.AppDatabase;
 import com.example.attendance.Home;
 import com.example.attendance.R;
 import com.example.attendance.SessionManager;
@@ -41,13 +44,47 @@ public class AbsenceTab extends AppCompatActivity {
                 AbsenceAdapter absenceAdapter = new AbsenceAdapter(absences);
                 rv.setAdapter(absenceAdapter);
                 rv.setLayoutManager(new LinearLayoutManager(AbsenceTab.this));
+                //update the room data base with
+                AsyncTask.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        AbsenceRoom[] absenceRooms= new AbsenceRoom[absences.length];
+                        for (int i = 0; i <absences.length ; i++) {
+                            Absence absence = absences[i];
+                            absenceRooms[i]=new AbsenceRoom(absence.getCourseCode(),absence.getAbsenceCounter(),absence.getPenCounter());
+                        }
+                        Room.databaseBuilder(getApplicationContext(), AppDatabase.class,"Absence").build().absenceDAO().deleteAbsence();
+                        Room.databaseBuilder(getApplicationContext(), AppDatabase.class,"Absence").build().absenceDAO().insertAllToAbsence(absenceRooms);
+
+                    }
+                });
             }
 
             @Override
             public void onFailure(Call<Absence[]> call, Throwable t) {
-                Toast.makeText(AbsenceTab.this, "Couldn't retrieve the absences", Toast.LENGTH_SHORT).show();
+                AsyncTask.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        AbsenceRoom[] absenceRooms =Room.databaseBuilder(getApplicationContext(), AppDatabase.class,"Absence").build().absenceDAO().readAllAbsence();
+                        Absence[] absences = new Absence[absenceRooms.length];
+                        for (int i = 0; i <absenceRooms.length ; i++) {
+                            AbsenceRoom absenceRoom = absenceRooms[i];
+                            absences[i] = new Absence(absenceRoom.getPen(),absenceRoom.getAbsCounter(),absenceRoom.getCourseCode());
+                        }
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                AbsenceAdapter absenceAdapter = new AbsenceAdapter(absences);
+                                rv.setAdapter(absenceAdapter);
+                                rv.setLayoutManager(new LinearLayoutManager(AbsenceTab.this));
+                            }
+                        });
+                    }
+                });
             }
         });
+
         Call<Recent[]>getRecent=APIClient.getClient().create(AbsenceAPIs.class).getRecent(sessionManager.getId());
         getRecent.enqueue(new Callback<Recent[]>() {
             @Override
@@ -56,12 +93,42 @@ public class AbsenceTab extends AppCompatActivity {
                 RecentAdapter recentAdapter = new RecentAdapter(recents);
                 rvRecent.setAdapter(recentAdapter);
                 rvRecent.setLayoutManager(new LinearLayoutManager(AbsenceTab.this));
+                RecentRoom[] recentRooms = new RecentRoom[recents.length];
+                for (int i = 0; i <recents.length ; i++) {
+                    Recent recent = recents[i];
+                    recentRooms[i]=new RecentRoom(recent.getCourseCode(),recent.getTaName(),recent.getDate(),recent.isPen());
+                }
+                AsyncTask.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        Room.databaseBuilder(getApplicationContext(),AppDatabase.class,"Recent").build().absenceDAO().deleteRecent();
+                        Room.databaseBuilder(getApplicationContext(),AppDatabase.class,"Recent").build().absenceDAO().insertAllToRecent(recentRooms);
+                    }
+                });
             }
 
             @Override
             public void onFailure(Call<Recent[]> call, Throwable t) {
-                Toast.makeText(AbsenceTab.this, "Couldn't retrieve the data", Toast.LENGTH_SHORT).show();
-                Log.d("the message is ", t.getMessage());
+                AsyncTask.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        RecentRoom[] recentRooms =Room.databaseBuilder(getApplicationContext(), AppDatabase.class,"Recent").build().absenceDAO().readAllRecent();
+                        Recent[]recents = new Recent[recentRooms.length];
+                        for (int i = 0; i <recentRooms.length ; i++) {
+                            RecentRoom recentRoom = recentRooms[i];
+                            recents[i] = new Recent(recentRoom.getCourseCode(),recentRoom.getTaName(),recentRoom.getDate(),recentRoom.isPen());
+                        }
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                RecentAdapter recentAdapter = new RecentAdapter(recents);
+                                rvRecent.setAdapter(recentAdapter);
+                                rvRecent.setLayoutManager(new LinearLayoutManager(AbsenceTab.this));
+                            }
+                        });
+                    }
+                });
             }
         });
 

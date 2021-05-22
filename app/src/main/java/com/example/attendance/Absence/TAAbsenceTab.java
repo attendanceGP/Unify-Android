@@ -1,6 +1,7 @@
 package com.example.attendance.Absence;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -9,8 +10,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import com.example.attendance.APIClient;
+import com.example.attendance.Database.AppDatabase;
 import com.example.attendance.Home;
 import com.example.attendance.R;
 import com.example.attendance.SessionManager;
@@ -37,11 +40,43 @@ public class TAAbsenceTab extends AppCompatActivity {
                 TaRecentAdapter taRecentAdapter = new TaRecentAdapter(taRecents);
                 rv.setAdapter(taRecentAdapter);
                 rv.setLayoutManager(new LinearLayoutManager(TAAbsenceTab.this));
+
+                TARecentRoom[] taRecentRooms = new TARecentRoom[taRecents.length];
+                for (int i = 0; i <taRecentRooms.length ; i++) {
+                    TaRecent taRecent = taRecents[i];
+                    taRecentRooms[i] = new TARecentRoom(taRecent.getCourseCode(),taRecent.getDate(),taRecent.getAttended(),taRecent.getAbsent());
+                }
+                AsyncTask.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        Room.databaseBuilder(getApplicationContext(), AppDatabase.class,"TARecent").build().absenceDAO().deleteTARecent();
+                        Room.databaseBuilder(getApplicationContext(), AppDatabase.class,"TARecent").build().absenceDAO().insertAllToTARecent(taRecentRooms);
+                    }
+                });
             }
 
             @Override
             public void onFailure(Call<TaRecent[]> call, Throwable t) {
-                Toast.makeText(TAAbsenceTab.this, "couldn't retrieve the data", Toast.LENGTH_SHORT).show();
+                AsyncTask.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        TARecentRoom[] taRecentRooms =Room.databaseBuilder(getApplicationContext(), AppDatabase.class,"TARecent").build().absenceDAO().readAllTARecent();
+                        TaRecent[]taRecents = new TaRecent[taRecentRooms.length];
+                        for (int i = 0; i <taRecentRooms.length ; i++) {
+                            TARecentRoom taRecentRoom = taRecentRooms[i];
+                            taRecents[i] = new TaRecent(taRecentRoom.getCourseCode(),taRecentRoom.getDate(),taRecentRoom.getAttended(),taRecentRoom.getAbsent());
+                        }
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                TaRecentAdapter taRecentAdapter = new TaRecentAdapter(taRecents);
+                                rv.setAdapter(taRecentAdapter);
+                                rv.setLayoutManager(new LinearLayoutManager(TAAbsenceTab.this));
+                            }
+                        });
+                    }
+                });
             }
         });
         //for the bottom navigation

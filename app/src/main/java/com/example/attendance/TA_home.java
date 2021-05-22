@@ -50,8 +50,6 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
         sessionManager = new SessionManager(getApplicationContext());
         groups = findViewById(R.id.Groups);
         selectCourse = findViewById(R.id.Courses);
-
-
         UserAPI userAPI = APIClient.getClient().create(UserAPI.class);
         Call<ArrayList<String>> call = userAPI.getTaughtCourses(sessionManager.getId());
         call.enqueue(new Callback<ArrayList<String>>() {
@@ -70,7 +68,7 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
 
             @Override
             public void onFailure(Call<ArrayList<String>> call, Throwable t) {
-
+                Toast.makeText(TA_home.this, "hena aho", Toast.LENGTH_SHORT).show();
             }
 
         });

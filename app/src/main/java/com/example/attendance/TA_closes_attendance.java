@@ -25,7 +25,7 @@ public class TA_closes_attendance extends AppCompatActivity {
 
         sessionManager = new SessionManager(getApplicationContext());
 
-        showAttendeesList = findViewById(R.id.showAttendeesList);
+        //showAttendeesList = findViewById(R.id.showAttendeesList);
         //show attendees list button------------------------------------------------------------------------------------------------------------------------
         showAttendeesList.setOnClickListener(new View.OnClickListener(){
             @Override

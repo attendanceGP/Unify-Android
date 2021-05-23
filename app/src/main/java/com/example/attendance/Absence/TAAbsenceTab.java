@@ -32,6 +32,28 @@ public class TAAbsenceTab extends AppCompatActivity {
         setContentView(R.layout.activity_t_a_absence_tab);
         sessionManager = new SessionManager(getApplicationContext());
         RecyclerView rv = findViewById(R.id.rv_ta_recent);
+        //to be deleted
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                TARecentRoom[] taRecentRooms =Room.databaseBuilder(getApplicationContext(), AppDatabase.class,"TARecent").build().absenceDAO().readAllTARecent();
+                TaRecent[]taRecents = new TaRecent[taRecentRooms.length];
+                for (int i = 0; i <taRecentRooms.length ; i++) {
+                    TARecentRoom taRecentRoom = taRecentRooms[i];
+                    taRecents[i] = new TaRecent(taRecentRoom.getCourseCode(),taRecentRoom.getDate(),taRecentRoom.getAttended(),taRecentRoom.getAbsent());
+                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        TaRecentAdapter taRecentAdapter = new TaRecentAdapter(taRecents);
+                        rv.setAdapter(taRecentAdapter);
+                        rv.setLayoutManager(new LinearLayoutManager(TAAbsenceTab.this));
+                    }
+                });
+            }
+        });
+        //to be deleted
         Call<TaRecent[]>getRecentTA = APIClient.getClient().create(AbsenceAPIs.class).getRecentTA(sessionManager.getId());
         getRecentTA.enqueue(new Callback<TaRecent[]>() {
             @Override
@@ -57,26 +79,7 @@ public class TAAbsenceTab extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<TaRecent[]> call, Throwable t) {
-                AsyncTask.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        TARecentRoom[] taRecentRooms =Room.databaseBuilder(getApplicationContext(), AppDatabase.class,"TARecent").build().absenceDAO().readAllTARecent();
-                        TaRecent[]taRecents = new TaRecent[taRecentRooms.length];
-                        for (int i = 0; i <taRecentRooms.length ; i++) {
-                            TARecentRoom taRecentRoom = taRecentRooms[i];
-                            taRecents[i] = new TaRecent(taRecentRoom.getCourseCode(),taRecentRoom.getDate(),taRecentRoom.getAttended(),taRecentRoom.getAbsent());
-                        }
 
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                TaRecentAdapter taRecentAdapter = new TaRecentAdapter(taRecents);
-                                rv.setAdapter(taRecentAdapter);
-                                rv.setLayoutManager(new LinearLayoutManager(TAAbsenceTab.this));
-                            }
-                        });
-                    }
-                });
             }
         });
         //for the bottom navigation

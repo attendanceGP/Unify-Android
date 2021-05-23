@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.attendance.Absence.TAAbsenceTab;
+
 public class MainActivity extends AppCompatActivity {
     SessionManager sessionManager;
 
@@ -27,7 +29,13 @@ public class MainActivity extends AppCompatActivity {
 
         // if logged in go to home page
         sessionManager = new SessionManager(getApplicationContext());
-        if (sessionManager.isLoggedIn()) startActivity(new Intent(MainActivity.this, Home.class));
+        if (sessionManager.isLoggedIn()) {
+            if(sessionManager.getType().equals("student")) {
+                startActivity(new Intent(MainActivity.this, Home.class));
+            }else{
+                startActivity(new Intent(MainActivity.this, TA_home.class));
+            }
+        }
 
         setContentView(R.layout.login);
 

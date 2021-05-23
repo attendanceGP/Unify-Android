@@ -47,6 +47,10 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_t_a_home);
+        //to be deleted
+        startActivity(new Intent(this,TAAbsenceTab.class));
+        //to be deleted
+
         sessionManager = new SessionManager(getApplicationContext());
         groups = findViewById(R.id.Groups);
         selectCourse = findViewById(R.id.Courses);
@@ -68,7 +72,6 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
 
             @Override
             public void onFailure(Call<ArrayList<String>> call, Throwable t) {
-                Toast.makeText(TA_home.this, "hena aho", Toast.LENGTH_SHORT).show();
             }
 
         });
@@ -76,6 +79,7 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
         givenCourses.add("");
 
         // use default spinner item to show options in spinner
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, givenCourses);
         selectCourse.setAdapter(adapter);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         selectCourse.setOnItemSelectedListener(this);

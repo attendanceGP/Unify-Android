@@ -36,6 +36,39 @@ public class AbsenceTab extends AppCompatActivity {
         sessionManager = new SessionManager(getApplicationContext());
         RecyclerView rv =findViewById(R.id.rv_absence);
         RecyclerView rvRecent= findViewById(R.id.rv_recent);
+        // get the data from room to the overview and recent and if there is an internet connection they will update instantly
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                AbsenceRoom[] absenceRooms =Room.databaseBuilder(getApplicationContext(), AppDatabase.class,"Absence").build().absenceDAO().readAllAbsence();
+                Absence[] absences = new Absence[absenceRooms.length];
+                RecentRoom[] recentRooms =Room.databaseBuilder(getApplicationContext(), AppDatabase.class,"Recent").build().absenceDAO().readAllRecent();
+                Recent[]recents = new Recent[recentRooms.length];
+
+                for (int i = 0; i <absenceRooms.length ; i++) {
+                    AbsenceRoom absenceRoom = absenceRooms[i];
+                    absences[i] = new Absence(absenceRoom.getPen(),absenceRoom.getAbsCounter(),absenceRoom.getCourseCode());
+                }
+                for (int i = 0; i <recentRooms.length ; i++) {
+                    RecentRoom recentRoom = recentRooms[i];
+                    recents[i] = new Recent(recentRoom.getCourseCode(),recentRoom.getTaName(),recentRoom.getDate(),recentRoom.isPen());
+                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        AbsenceAdapter absenceAdapter = new AbsenceAdapter(absences);
+                        rv.setAdapter(absenceAdapter);
+                        rv.setLayoutManager(new LinearLayoutManager(AbsenceTab.this));
+                        RecentAdapter recentAdapter = new RecentAdapter(recents);
+                        rvRecent.setAdapter(recentAdapter);
+                        rvRecent.setLayoutManager(new LinearLayoutManager(AbsenceTab.this));
+
+                    }
+                });
+            }
+        });
+
         Call<Absence[]>getAbsence = APIClient.getClient().create(AbsenceAPIs.class).getAbsence(sessionManager.getId());
         getAbsence.enqueue(new Callback<Absence[]>() {
             @Override
@@ -62,26 +95,7 @@ public class AbsenceTab extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Absence[]> call, Throwable t) {
-                AsyncTask.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        AbsenceRoom[] absenceRooms =Room.databaseBuilder(getApplicationContext(), AppDatabase.class,"Absence").build().absenceDAO().readAllAbsence();
-                        Absence[] absences = new Absence[absenceRooms.length];
-                        for (int i = 0; i <absenceRooms.length ; i++) {
-                            AbsenceRoom absenceRoom = absenceRooms[i];
-                            absences[i] = new Absence(absenceRoom.getPen(),absenceRoom.getAbsCounter(),absenceRoom.getCourseCode());
-                        }
 
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                AbsenceAdapter absenceAdapter = new AbsenceAdapter(absences);
-                                rv.setAdapter(absenceAdapter);
-                                rv.setLayoutManager(new LinearLayoutManager(AbsenceTab.this));
-                            }
-                        });
-                    }
-                });
             }
         });
 
@@ -109,26 +123,7 @@ public class AbsenceTab extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Recent[]> call, Throwable t) {
-                AsyncTask.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        RecentRoom[] recentRooms =Room.databaseBuilder(getApplicationContext(), AppDatabase.class,"Recent").build().absenceDAO().readAllRecent();
-                        Recent[]recents = new Recent[recentRooms.length];
-                        for (int i = 0; i <recentRooms.length ; i++) {
-                            RecentRoom recentRoom = recentRooms[i];
-                            recents[i] = new Recent(recentRoom.getCourseCode(),recentRoom.getTaName(),recentRoom.getDate(),recentRoom.isPen());
-                        }
 
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                RecentAdapter recentAdapter = new RecentAdapter(recents);
-                                rvRecent.setAdapter(recentAdapter);
-                                rvRecent.setLayoutManager(new LinearLayoutManager(AbsenceTab.this));
-                            }
-                        });
-                    }
-                });
             }
         });
 

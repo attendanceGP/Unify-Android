@@ -32,7 +32,7 @@ public class TAAbsenceTab extends AppCompatActivity {
         setContentView(R.layout.activity_t_a_absence_tab);
         sessionManager = new SessionManager(getApplicationContext());
         RecyclerView rv = findViewById(R.id.rv_ta_recent);
-        //to be deleted
+
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
@@ -53,7 +53,7 @@ public class TAAbsenceTab extends AppCompatActivity {
                 });
             }
         });
-        //to be deleted
+
         Call<TaRecent[]>getRecentTA = APIClient.getClient().create(AbsenceAPIs.class).getRecentTA(sessionManager.getId());
         getRecentTA.enqueue(new Callback<TaRecent[]>() {
             @Override

@@ -75,6 +75,14 @@ public class Announcement_Student_Activity extends AppCompatActivity {
             public void onRefresh() {
                 Log.d("test", "hello");
                 refreshAnnouncements();
+                //resets all button colors to show that they have been unselected
+                for(int i=0;i<courseCodes.size();i++) {
+                    filterRecyclerView.getLayoutManager().findViewByPosition(i).
+                            findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.announcement_filter_button_unselected);
+                }
+
+                //here we reset the filter before getting all the announcements without any filters
+                activeFilters.clear();
             }
         });
         //-----------------------------------------------------------------------------------------------------------------------------------

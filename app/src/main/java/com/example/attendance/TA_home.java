@@ -43,7 +43,8 @@ import android.location.LocationManager;
 import com.example.attendance.Absence.TAAbsenceTab;
 
 public class TA_home extends AppCompatActivity implements AdapterView.OnItemSelectedListener, LocationListener {
-
+    LocationManager lm;
+    LocationListener locationListener;
     SessionManager sessionManager;
     EditText groups;
     Button recordAttendance;
@@ -147,6 +148,7 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
                         return true;
 
                     case R.id.action_absence:
+                        startActivity(new Intent(TA_home.this, TAAbsenceTab.class));
                         return true;
                 }
                 return false;
@@ -163,7 +165,7 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
     public void onNothingSelected(AdapterView<?> adapterView) {
     }
     private void getCurrentLocation() {
-        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+         lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -185,6 +187,8 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
         gotLocation = true;
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
+        lm.removeUpdates(this);
+        lm=null;
         Call<Void>TALocation = APIClient.getClient().create(UserAPI.class).updateTaLocation(sessionManager.getId(),longitude,latitude);
         TALocation.enqueue(new Callback<Void>() {
             @Override

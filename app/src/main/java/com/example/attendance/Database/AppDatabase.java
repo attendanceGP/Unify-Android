@@ -21,7 +21,7 @@ import com.example.attendance.Announcement.AnnouncementDao;
 import com.example.attendance.Deadline.Deadline;
 import com.example.attendance.Deadline.DeadlineDao;
 
-@Database(entities = {Deadline.class, Announcement.class,AbsenceRoom.class, RecentRoom.class, TARecentRoom.class}, version = 2)
+@Database(entities = {Deadline.class, Announcement.class,AbsenceRoom.class, RecentRoom.class, TARecentRoom.class}, version = 3)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
     public abstract DeadlineDao deadlineDao();

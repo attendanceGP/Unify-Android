@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                             sessionManager.login(test);
                             if(sessionManager.getType().equals("student")) {
 								//change when balf merges
-                                startActivity(new Intent(MainActivity.this, Announcement_Student_Activity.class));
+                                startActivity(new Intent(MainActivity.this, Home.class));
                             }
                             else{
                                 startActivity(new Intent(MainActivity.this, TA_home.class));

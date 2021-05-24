@@ -133,7 +133,6 @@ public class Home extends AppCompatActivity implements LocationListener {
                             // for the geolocation
                             geoDistance = distance(latitude,taResponse.body().getLatitude(),longitude,taResponse.body().getLongitude());
                             if (geoDistance < 50) {
-                                Toast.makeText(Home.this, Double.toString(geoDistance), Toast.LENGTH_SHORT).show();
                                 button.setBackground(getResources().getDrawable(R.drawable.attend_button_on));
                                 button.setEnabled(true);
                                 button.setOnClickListener(new View.OnClickListener() {

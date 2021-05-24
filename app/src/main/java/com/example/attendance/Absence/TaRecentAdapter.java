@@ -37,7 +37,7 @@ public class TaRecentAdapter extends RecyclerView.Adapter<TaRecentAdapter.ViewHo
 
         courseCode.setText(tarecent.getCourseCode());
         date.setText("Recorded on "+tarecent.getDate());
-        totalAttended.setText(Integer.toString(tarecent.getAttended())+" attended, "+ Integer.toString(tarecent.getAbsent())+"were absent");
+        totalAttended.setText(Integer.toString(tarecent.getAttended())+" attended, "+ Integer.toString(tarecent.getAbsent())+" were absent");
     }
 
     @Override

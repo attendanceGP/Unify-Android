@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">Attendance</string>
 
+    <string name="posted_27_03_2">
+        posted 27-03-2021 at 11:59 pm
+    </string>
+
     <string name="unify">
 
 Unify
@@ -54,5 +58,35 @@ Click to end the attendance recording process and view attendees list
 Course
 </string>
 
+    <string name="upcoming">
+
+Upcoming
+</string>
+
+    <string name="assignment_">
+
+Assignment One
+</string>
+
+    <string name="cs402">
+
+CS402
+</string>
+
+    <string name="due_27_03_2">
+
+Due 27-03-2021 at 11:59 pm
+</string>
+
+    <string name="done">
+
+Done
+</string>
+    <string name="title">Deadlines you posted</string>
+
+    <string name="add_a_new_d">
+
+Add a new deadline
+</string>
 
 </resources>

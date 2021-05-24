@@ -7,25 +7,34 @@ import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+
+
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.attendance.Announcement.Announcement_Student_Activity;
+import com.example.attendance.Announcement.Announcement_TA_Activity;
+import com.example.attendance.Deadline.DeadlineStudentActivity;
+import com.example.attendance.Deadline.DeadlineTAActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 
 import android.location.Location;
 import android.location.LocationListener;
@@ -34,8 +43,7 @@ import android.location.LocationManager;
 import com.example.attendance.Absence.TAAbsenceTab;
 
 public class TA_home extends AppCompatActivity implements AdapterView.OnItemSelectedListener, LocationListener {
-    TextView TA_name;
-    TextView TA_id;
+
     SessionManager sessionManager;
     EditText groups;
     Button recordAttendance;
@@ -46,11 +54,7 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_t_a_home);
-        //to be deleted
-        startActivity(new Intent(this,TAAbsenceTab.class));
-        //to be deleted
-
+        setContentView(R.layout.activity_ta_home);
         sessionManager = new SessionManager(getApplicationContext());
         groups = findViewById(R.id.Groups);
         selectCourse = findViewById(R.id.Courses);
@@ -76,65 +80,83 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
 
         });
 
-        givenCourses.add("");
+        givenCourses.add("None");
 
         // use default spinner item to show options in spinner
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, givenCourses);
+        adapter = new ArrayAdapter<>(this, R.layout.course_spinner_item, givenCourses);
         selectCourse.setAdapter(adapter);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(R.layout.course_dropdown_item);
+        selectCourse.setPrompt("Courses");
         selectCourse.setOnItemSelectedListener(this);
 
-
-
-
-        //TA name and id shown-------------------------------------------------------------------------------------------------------------------------
-        TA_name = findViewById(R.id.TAname);
-        TA_id = findViewById(R.id.TAid);
         recordAttendance = findViewById(R.id.RecordAttendance);
-
-        TA_name.setText(sessionManager.getName());
-        TA_id.setText(sessionManager.getId().toString());
 
         //Record attendance button------------------------------------------------------------------------------------------------------------------------
         recordAttendance.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+
                 getCurrentLocation();
-                UserAPI userAPI = APIClient.getClient().create(UserAPI.class);
-
-                java.util.Date date=new java.util.Date();
-                String currDate = new SimpleDateFormat("dd-MM-yyyy").format(date);
                 String courseCode =selectCourse.getSelectedItem().toString();
-                String group = groups.getText().toString();
-                Call<Void> call = userAPI.taStartAttendance(currDate,group,courseCode,sessionManager.getId());
-                call.enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
-                        if (response.code() != 200) {
-                            Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
+                if(courseCode.equals("None")){
+                    Toast.makeText(getApplicationContext(), "you chose None for courses please change your choice", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    UserAPI userAPI = APIClient.getClient().create(UserAPI.class);
+                    java.util.Date date = new java.util.Date();
+                    String currDate = new SimpleDateFormat("dd-MM-yyyy").format(date);
+                    String group = groups.getText().toString();
+                    Call<Void> call = userAPI.taStartAttendance(currDate, group, courseCode, sessionManager.getId());
+                    call.enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            if (response.code() != 200) {
+                                Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Intent ta_page_2 = new Intent(TA_home.this, TA_closes_attendance.class);
+                                ta_page_2.putExtra("currDate", currDate);
+                                ta_page_2.putExtra("courseCode", courseCode);
+                                ta_page_2.putExtra("group", group);
+                                startActivity(ta_page_2);
+                            }
                         }
-                        else{
-                            Intent ta_page_2 = new Intent(TA_home.this, TA_closes_attendance.class);
-                            ta_page_2.putExtra("currDate",currDate);
-                            ta_page_2.putExtra("courseCode",courseCode);
-                            ta_page_2.putExtra("group",group);
-                            startActivity(ta_page_2);
-                        }
-                    }
 
-                    @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
-                        Toast.makeText(getApplicationContext(), "please check your internet connection", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            Toast.makeText(getApplicationContext(), "please check your internet connection", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
     }
+        });
+
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch(item.getItemId()){
+                    case R.id.action_deadlines:
+                        startActivity(new Intent(TA_home.this, DeadlineTAActivity.class));
+                        return true;
+
+                    case R.id.action_announcements:
+                        startActivity(new Intent(TA_home.this, Announcement_TA_Activity.class));
+                        return true;
+
+                    case R.id.action_forum:
+                        return true;
+
+                    case R.id.action_absence:
+                        return true;
+                }
+                return false;
+            }
         });
 }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String text = parent.getItemAtPosition(position).toString();
-        Toast.makeText(parent.getContext(), "selected: " + text, Toast.LENGTH_SHORT).show();
     }
 
     @Override

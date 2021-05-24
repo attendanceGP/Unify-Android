@@ -4,12 +4,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+
     android:orientation="vertical"
     tools:context=".MainActivity">
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+    android:id="@+id/home_studen"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/home_student">
+
 
         <RelativeLayout
             xmlns:android="http://schemas.android.com/apk/res/android"

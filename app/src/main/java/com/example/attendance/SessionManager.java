@@ -4,6 +4,15 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.util.Log;
+
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SessionManager {
     private SharedPreferences sharedPreferences;
@@ -40,11 +49,38 @@ public class SessionManager {
         editor.putString(KEY_TOKEN, user.getToken());
         if(user.getType().equals("student")) {
             editor.putInt(KEY_LEVEL, user.getLevel());
-            editor.putFloat(KEY_GPA, user.getGPA());
+            editor.putFloat(KEY_GPA, user.getGpa());
         }
         editor.putBoolean(IS_LOGIN, true);
 
         editor.commit();
+
+        subscribeToTopics();
+    }
+
+    // subscribe to topics: id, courses and all
+    private void subscribeToTopics(){
+        UserAPI userAPI = APIClient.getClient().create(UserAPI.class);
+
+        Call<ArrayList<String>> call = userAPI.getTaughtCourses(getId());
+
+        call.enqueue(new Callback<ArrayList<String>>() {
+            @Override
+            public void onResponse(Call<ArrayList<String >> call, Response<ArrayList<String>> response) {
+                for(int i =0; i<response.body().size(); i++){
+                    FirebaseMessaging.getInstance().subscribeToTopic(response.body().get(i)) ;
+                }
+
+                FirebaseMessaging.getInstance().subscribeToTopic("all");
+                FirebaseMessaging.getInstance().subscribeToTopic(getId().toString());
+                Log.i("usertest", getId().toString());
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<String >> call, Throwable t) {
+
+            }
+        });
     }
 
     public String getName(){

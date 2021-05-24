@@ -12,6 +12,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import com.example.attendance.Deadline.DeadlineStudentActivity;
+import com.example.attendance.Deadline.DeadlineTAActivity;
+import com.example.attendance.Announcement.Announcement_Student_Activity;
 
 import com.example.attendance.Absence.TAAbsenceTab;
 
@@ -29,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
         // if logged in go to home page
         sessionManager = new SessionManager(getApplicationContext());
+
         if (sessionManager.isLoggedIn()) {
             if(sessionManager.getType().equals("student")) {
                 startActivity(new Intent(MainActivity.this, Home.class));
@@ -58,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
                         User test = response.body();
+                        Log.i("usertest", "" + test.getGpa() + test.getName());
                         if(response.code() != 200){
                             Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
                         }else if(test.getErrorCode() == 1){
@@ -65,10 +70,10 @@ public class MainActivity extends AppCompatActivity {
                         }else if(test.getErrorCode() == 2){
                             Toast.makeText(getApplicationContext(), "incorrect username or password", Toast.LENGTH_SHORT).show();
                         }else {
-                            //TODO open another activity and persist
-                            sessionManager.login(response.body());
+                            sessionManager.login(test);
                             if(sessionManager.getType().equals("student")) {
-                                startActivity(new Intent(MainActivity.this, Home.class));
+								//change when balf merges
+                                startActivity(new Intent(MainActivity.this, Announcement_Student_Activity.class));
                             }
                             else{
                                 startActivity(new Intent(MainActivity.this, TA_home.class));

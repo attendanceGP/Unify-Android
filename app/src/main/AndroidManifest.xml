@@ -2,10 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.attendance">
 
+
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission. ACCESS_COARSE_LOCATION" />
+
 
     <application
         android:allowBackup="true"
@@ -15,12 +17,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+
         <activity android:name=".Absence.TAAbsenceTab"/>
         <activity android:name=".Absence.AbsenceTab"/>
+
+        <activity android:name=".Announcement.Announcement_TA_Activity"></activity>
+        <activity android:name=".Announcement.Announcement_Student_Activity" />
+        <activity android:name=".Deadline.DeadlineTAActivity"></activity>
+
         <activity android:name=".TA_closes_attendance" />
         <activity android:name=".TA_home" />
         <activity android:name=".ta_attendanceConfirmationList" />
         <activity android:name=".Home" />
+
+        <activity android:name=".Deadline.DeadlineStudentActivity" />
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,5 +40,8 @@
             </intent-filter>
         </activity>
     </application>
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 </manifest>

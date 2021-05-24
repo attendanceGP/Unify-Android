@@ -27,6 +27,8 @@ import android.widget.Toast;
 
 import com.example.attendance.Absence.AbsenceTab;
 import com.example.attendance.Absence.TAAbsenceTab;
+import com.example.attendance.Announcement.Announcement_Student_Activity;
+import com.example.attendance.Deadline.DeadlineStudentActivity;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
@@ -41,6 +43,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class Home extends AppCompatActivity implements LocationListener {
+    LocationManager lm;
     Button button;
     double longitude, latitude, geoDistance;
     private static final int CODE = 1;
@@ -92,12 +95,14 @@ public class Home extends AppCompatActivity implements LocationListener {
                         return true;
 
                     case R.id.action_announcements:
+                        startActivity(new Intent(Home.this, Announcement_Student_Activity.class));
                         return true;
 
                     case R.id.action_forum:
                         return true;
 
                     case R.id.action_deadlines:
+                        startActivity(new Intent(Home.this, DeadlineStudentActivity.class));
                         return true;
                 }
                 return false;
@@ -179,7 +184,7 @@ public class Home extends AppCompatActivity implements LocationListener {
 
     //function that gets the current location
     private void getCurrentLocation() {
-        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+         lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -199,6 +204,8 @@ public class Home extends AppCompatActivity implements LocationListener {
     public void onLocationChanged(@NonNull Location location) {
         latitude = location.getLatitude();
         longitude = location.getLongitude();
+        lm.removeUpdates(this);
+        lm = null;
         if (swipeRefreshLayout.isRefreshing()) {
             callAPIs();
             swipeRefreshLayout.setRefreshing(false);

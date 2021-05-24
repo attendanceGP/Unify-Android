@@ -66,7 +66,7 @@
         </item>
 
     </style>
-    <style name="cs402">
+    <style name="course_name">
 
         <item name="android:textSize">
             14sp
@@ -77,6 +77,8 @@
         </item>
 
     </style>
+
+
     <style name="overview">
 
         <item name="android:textSize">
@@ -133,7 +135,7 @@
 
     </style>
 
-    <style name="p">
+    <style name="recent_penalties">
 
         <item name="android:textSize">
             24sp

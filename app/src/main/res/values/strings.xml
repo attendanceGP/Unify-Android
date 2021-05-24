@@ -17,7 +17,7 @@ Unify
 
 4
 </string>
-    <string name="cs402">
+    <string name="course_name">
 
 CS402
 </string>
@@ -39,7 +39,7 @@ Recorded on 24-5-2021
 TA Ahmed Sameh
 </string>
     <!-- strings.xml -->
-    <string name="p">
+    <string name="recent_penalties">
 
 P
 </string>

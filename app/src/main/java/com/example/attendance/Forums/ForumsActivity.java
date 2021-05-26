@@ -14,13 +14,9 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.Spinner;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.example.attendance.APIClient;
-import com.example.attendance.Course;
 import com.example.attendance.Database.AppDatabase;
 import com.example.attendance.Deadline.DeadlineStudentActivity;
 import com.example.attendance.Deadline.DeadlineTAActivity;
@@ -40,11 +36,12 @@ import retrofit2.Response;
 
 public class ForumsActivity extends AppCompatActivity {
     private List<Post> posts = new ArrayList<>();
+    private List<Post> allPosts = new ArrayList<>();
     private List<Post> userPosts = new ArrayList<>();
     private List<Post> favPosts = new ArrayList<>();
-    private List<String> filterCourses = new ArrayList<>();
 
     ArrayList<String> courseCodes = new ArrayList<>();
+    ArrayList<String> selectedCourses = new ArrayList<>();
 
     private RecyclerView postsRecyclerView;
     private PostsListAdapter postsListAdapter;
@@ -200,6 +197,7 @@ public class ForumsActivity extends AppCompatActivity {
                     courseCodes.add("All");
                     courseCodes.addAll(response.body());
                     coursesListAdapter.notifyDataSetChanged();
+                    selectedCourses.add(courseCodes.get(0)); // ALL
                 }
             }
 
@@ -216,14 +214,17 @@ public class ForumsActivity extends AppCompatActivity {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                posts.clear();
-                posts.addAll(Room.databaseBuilder(getApplicationContext(),
+                allPosts.clear();
+                allPosts.addAll(Room.databaseBuilder(getApplicationContext(),
                         AppDatabase.class, "attendance").build().forumsDao().getAllPosts());
 
+                posts.clear();
+                posts.addAll(allPosts);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         postsListAdapter.notifyDataSetChanged();
+//                        onCourseFilterClick(0,"All");
                     }
                 });
             }
@@ -265,7 +266,6 @@ public class ForumsActivity extends AppCompatActivity {
                                 AppDatabase.class, "attendance").build().forumsDao().insertAllPosts(post);
                     }
                     updateData();
-
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -278,9 +278,15 @@ public class ForumsActivity extends AppCompatActivity {
             }
         });
     }
+    //    open post activity
+    public void onForumClick(int position, Post clickedPost) {
+        Intent intent = new Intent(ForumsActivity.this, PostActivity.class);
+        intent.putExtra("Post_id", clickedPost.getId());
+        intent.putExtra("course_code", clickedPost.getCourseCode());
+        startActivity(intent);
+    }
 
-
-//    star and un-star posts
+    //    star and un-star posts
     public void removeFromStarred(Integer postId){
         AsyncTask.execute(new Runnable() {
             @Override
@@ -302,51 +308,7 @@ public class ForumsActivity extends AppCompatActivity {
         });
     }
 
-
-//    show user posts
-    public void getUserPosts(){
-        userPosts.clear();
-
-        for(Post d: posts){
-            if(d.getUserId().equals(sessionManager.getId())){
-                userPosts.add(d);
-            }
-        }
-        postsRecyclerView.setAdapter(userPostsListAdapter);
-        userPostsListAdapter.notifyDataSetChanged();
-    }
-
-//    show all forums (with no filter)
-    public void showForums(){
-        postsRecyclerView.setAdapter(postsListAdapter);
-        postsListAdapter.notifyDataSetChanged();
-        updateData();
-        refreshForums();
-    }
-
-//    show starred posts
-    public void getStarredPosts(){
-        favPosts.clear();
-        for(Post d: posts){
-            if(d.isStarred()){
-                favPosts.add(d);
-            }
-        }
-        postsRecyclerView.setAdapter(favPostsListAdapter);
-        favPostsListAdapter.notifyDataSetChanged();
-    }
-
-
-//    open post activity
-    public void onForumClick(int position, Post clickedPost) {
-        Intent intent = new Intent(ForumsActivity.this, PostActivity.class);
-        intent.putExtra("Post_id", clickedPost.getId());
-        intent.putExtra("course_code", clickedPost.getCourseCode());
-        startActivity(intent);
-    }
-
-
-//    delete user post from api and room
+    //    delete user post from api and room
     public void deleteUserPost(Integer postId){
         Call<Void> call = forumsAPI.removePost(postId);
         call.enqueue(new Callback<Void>() {
@@ -376,65 +338,158 @@ public class ForumsActivity extends AppCompatActivity {
         });
     }
 
-//    public void onCourseFilterClick(int position, String course) {
-//        if (course.equals("All")) {
-//            //resets all button colors to show that they have been unselected
-//            for (int i = 0; i < courseCodes.size(); i++) {
-//                coursesRecyclerView.getLayoutManager().findViewByPosition(i).
-//                        findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.course_filter_button_unselected);
-//            }
-//
-//            //here we reset the filter before getting all the announcements without any filters
-//            filterCourses.clear();
-//            updateData();
-//            refreshForums();
-//        } else if (filterCourses.contains(course)) {
-//            //this is used for when a filter is applied and we want to remove it and apply the remaining filters in the filter array if any,
-//            //if none exist we get all the announcements with no filters
-//
-//            coursesRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf(course)).
-//                    findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.course_filter_button_unselected);
-//
-//            filterCourses.remove(course);
-//
-//            if (filterCourses.size() == 0) {
-//                updateData();
-//                refreshForums();
-//            }
-//            //
-////                else {
-////                    announcementList.clear();
-////                    announcementList.addAll(unchangedAnnouncementList);
-////
-////                    for (int i = 0; i < announcementList.size(); i++) {
-////                        if (!activeFilters.contains(announcementList.get(i).getCourseId())) {
-////                            announcementList.remove(i);
-////                        }
-////                    }
-////
-////                    announcementsStudentListAdapter.notifyDataSetChanged();
-////                }
-////            }
-//
-////            else{
-////                //setting the clicked button color to darker green to show that it is selected
-////                coursesRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf(course)).
-////                        findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.course_filter_button_selected);
-////
-////                activeFilters.add(courseId);
-////
-////                announcementList.clear();
-////                announcementList.addAll(unchangedAnnouncementList);
-////
-////                for (int i = 0; i < announcementList.size(); i++) {
-////                    if(!activeFilters.contains(announcementList.get(i).getCourseId())){
-////                        announcementList.remove(i);
-////                    }
-////                }
-////
-////                announcementsStudentListAdapter.notifyDataSetChanged();
-////            }
-////
-//        }
+//    show user posts
+    public void getUserPosts(){
+        userPosts.clear();
+
+        for(Post d: allPosts){
+            if(d.getUserId().equals(sessionManager.getId())){
+                if(selectedCourses.contains("All") || selectedCourses.contains(d.getCourseCode())){
+                    userPosts.add(d);
+                }
+            }
+        }
+        postsRecyclerView.setAdapter(userPostsListAdapter);
+        userPostsListAdapter.notifyDataSetChanged();
+    }
+    public void filterUserPosts(){
+        userPosts.clear();
+        for(Post d: allPosts){
+            if(d.getUserId().equals(sessionManager.getId())){
+                if(selectedCourses.contains("All") || selectedCourses.contains(d.getCourseCode())){
+                    userPosts.add(d);
+                }
+            }
+        }
+        userPostsListAdapter.notifyDataSetChanged();
+    }
+
+//    show all forums (with no filter)
+    public void showForums(){
+        postsRecyclerView.setAdapter(postsListAdapter);
+        posts.clear();
+        for(Post d: allPosts){
+            if(selectedCourses.contains("All") || selectedCourses.contains(d.getCourseCode())){
+                posts.add(d);
+            }
+        }
+        postsListAdapter.notifyDataSetChanged();
+    }
+    public void filterAllPosts(){
+        posts.clear();
+        for(Post d: allPosts){
+            if(selectedCourses.contains("All") || selectedCourses.contains(d.getCourseCode())){
+                posts.add(d);
+            }
+        }
+        postsListAdapter.notifyDataSetChanged();
+    }
+
+//    show starred posts
+    public void getStarredPosts(){
+        favPosts.clear();
+        for(Post d: allPosts){
+            if(d.isStarred()){
+                if(selectedCourses.contains("All") || selectedCourses.contains(d.getCourseCode())){
+                    favPosts.add(d);
+                }
+            }
+        }
+        postsRecyclerView.setAdapter(favPostsListAdapter);
+        favPostsListAdapter.notifyDataSetChanged();
+    }
+    public void filterStarredPosts(){
+        favPosts.clear();
+        for(Post d: allPosts){
+            if(d.isStarred()){
+                if(selectedCourses.contains("All") || selectedCourses.contains(d.getCourseCode())){
+                    favPosts.add(d);
+                }
+            }
+        }
+        favPostsListAdapter.notifyDataSetChanged();
+    }
+
+
+    public void onCourseFilterClick(int i, String course) {
+
+//        All courses are selected and user is trying to select all again.
+        if(selectedCourses.contains("All") && course.equals("All")){
+            coursesRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf("All")).
+                    findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.course_filter_button_selected);
+
+        }
+
+//        if user is selecting All courses
+        else if(!selectedCourses.contains("All") && (course.equals("All") ||  (courseCodes.size()-2 == selectedCourses.size()))){
+            /* if the selected course IS "All"   OR   al courses are selected
+             *  1- set "All" selected
+             *  2- add "All" to selectedCourses
+             *  3- remove all Courses from selectedCourses
+             *  4- set all Courses unselected */
+            System.out.println(courseCodes.size()-1);
+            System.out.println(selectedCourses.size());
+            for(String x: selectedCourses){
+                coursesRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf(x)).
+                        findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.course_filter_button_unselected);
+            }
+
+            coursesRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf("All")).
+                    findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.course_filter_button_selected);
+            selectedCourses.clear();
+            selectedCourses.add("All");
+        }
+
+//        if user is selecting first course
+        else if(selectedCourses.contains("All") && !course.equals("All")){
+            /* if the selected course IS NOT "All"
+            *  1- set "All" unselected
+            *  2- remove "All" from selectedCourses
+            *  3- add new Course to selectedCourses
+            *  4- set new Course selected */
+
+            coursesRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf("All")).
+                    findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.course_filter_button_unselected);
+            selectedCourses.remove("All");
+
+            coursesRecyclerView.getLayoutManager().findViewByPosition(i).
+                    findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.course_filter_button_selected);
+            selectedCourses.add(course);
+        }
+
+//        if user is un-selecting the selected course
+        else if(selectedCourses.contains(course)){
+            /* we have 2 cases:
+            *   ----- case 1 -----   user un-selecting only ONE selected course
+            *       1: select ALL
+            *       2: un-select el course
+            *
+            *   ----- case 2 -----    user is un-selecting a course and there are OTHER selected
+            *       1: un-select the course  */
+
+            if(selectedCourses.size() == 1){
+                coursesRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf("All")).
+                        findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.course_filter_button_selected);
+                selectedCourses.add("All");
+            }
+            coursesRecyclerView.getLayoutManager().findViewByPosition(i).
+                    findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.course_filter_button_unselected);
+            selectedCourses.remove(course);
+        }
+
+//        selecting an additional course
+        else {
+            coursesRecyclerView.getLayoutManager().findViewByPosition(i).
+                    findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.course_filter_button_selected);
+            selectedCourses.add(course);
+        }
+
+        filterPosts();
+    }
+    public void filterPosts(){
+        filterUserPosts();
+        filterStarredPosts();
+        filterAllPosts();
+    }
 
 }

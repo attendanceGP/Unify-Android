@@ -120,6 +120,12 @@ public class UserPostsListAdapter extends RecyclerView.Adapter<UserPostsListAdap
         notifyDataSetChanged();
     }
 
+    public void filterList(List<Post> filteredList){
+        userPosts.clear();
+        userPosts.addAll(filteredList);
+        notifyDataSetChanged();
+    }
+
     private String getDateStringFromDate(Date date){
         String result = "";
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");

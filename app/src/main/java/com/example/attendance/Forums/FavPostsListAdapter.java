@@ -137,7 +137,8 @@ public class FavPostsListAdapter extends RecyclerView.Adapter<FavPostsListAdapte
     }
 
     public void filterList(List<Post> filteredList){
-        posts = filteredList;
+        posts.clear();
+        posts.addAll(filteredList);
         notifyDataSetChanged();
     }
 

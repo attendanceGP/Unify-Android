@@ -139,7 +139,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
     }
 
     public void filterList(List<Post> filteredList){
-        posts = filteredList;
+        posts.clear();
+        posts.addAll(filteredList);
         notifyDataSetChanged();
     }
 

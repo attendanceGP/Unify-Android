@@ -1,5 +1,6 @@
 package com.example.attendance.Forums;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -11,6 +12,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,9 +20,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.attendance.APIClient;
+import com.example.attendance.Announcement.Announcement_Student_Activity;
+import com.example.attendance.Announcement.Announcement_TA_Activity;
 import com.example.attendance.Database.AppDatabase;
+import com.example.attendance.Deadline.DeadlineStudentActivity;
+import com.example.attendance.Deadline.DeadlineTAActivity;
+import com.example.attendance.Home;
 import com.example.attendance.R;
 import com.example.attendance.SessionManager;
+import com.example.attendance.TA_home;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -117,6 +126,47 @@ public class PostActivity extends AppCompatActivity {
                         }
                     });
                 }
+            }
+        });
+
+
+        //TODO add the rest of the activities to the bottom nav view when done
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch(item.getItemId()){
+                    case R.id.action_home:
+                        if(sessionManager.getType().equals("student")){
+                            startActivity(new Intent(PostActivity.this, Home.class));
+                        }else{
+                            startActivity(new Intent(PostActivity.this, TA_home.class));
+                        }
+                        return true;
+
+                    case R.id.action_announcements:
+                        if(sessionManager.getType().equals("student")){
+                            startActivity(new Intent(PostActivity.this, Announcement_Student_Activity.class));
+                        }else{
+                            startActivity(new Intent(PostActivity.this, Announcement_TA_Activity.class));
+                        }
+                        return true;
+
+                    case R.id.action_deadlines:
+                        if(sessionManager.getType().equals("student")){
+                            startActivity(new Intent(PostActivity.this, DeadlineStudentActivity.class));
+                        }else{
+                            startActivity(new Intent(PostActivity.this, DeadlineTAActivity.class));
+                        }
+                        return true;
+                    case R.id.action_forum:
+                        startActivity(new Intent(PostActivity.this, ForumsActivity.class));
+                        return true;
+
+                    case R.id.action_absence:
+                        return true;
+                }
+                return false;
             }
         });
 

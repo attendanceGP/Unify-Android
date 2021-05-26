@@ -39,6 +39,7 @@
                             android:text="@string/title"
                             android:textAppearance="@style/upcoming"
                             android:gravity="top"
+                            android:layout_weight="1"
                             />
 
                         <Button
@@ -46,19 +47,18 @@
                             android:layout_width="49dp"
                             android:layout_height="49dp"
                             android:layout_alignParentTop="true"
-                            android:layout_marginLeft="85dp"
+                            android:layout_marginRight="10dp"
                             android:layout_marginTop="15dp"
                             android:background="@drawable/add_deadline_button" />
 
                     </LinearLayout>
                     <androidx.recyclerview.widget.RecyclerView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/deadlines_you_posted"
                         android:scrollbars="vertical"
-                        android:layout_alignParentLeft="true"
                         android:layout_marginLeft="8dp"
-                        android:layout_alignParentTop="true"
+                        android:layout_marginRight="8dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="8dp"/>
 

@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:textAppearance="@style/deadline_name_input"
+    android:background="#FFFFFF"
     android:layout_gravity="center"
     android:textAlignment="center"
-    android:background="#3F9787">
-
+    android:padding="7dp">
 </TextView>

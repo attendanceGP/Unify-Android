@@ -75,6 +75,14 @@ public class Announcement_Student_Activity extends AppCompatActivity {
             public void onRefresh() {
                 Log.d("test", "hello");
                 refreshAnnouncements();
+                //resets all button colors to show that they have been unselected
+                for(int i=0;i<courseCodes.size();i++) {
+                    filterRecyclerView.getLayoutManager().findViewByPosition(i).
+                            findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.announcement_filter_button_unselected);
+                }
+
+                //here we reset the filter before getting all the announcements without any filters
+                activeFilters.clear();
             }
         });
         //-----------------------------------------------------------------------------------------------------------------------------------
@@ -232,6 +240,7 @@ public class Announcement_Student_Activity extends AppCompatActivity {
 
     //filters all announcements according to selected filter in the filter recycler view
     public void filter(String courseId) {
+        ArrayList<Announcement> undeletedAnnouncements = new ArrayList<>();
         if (courseId.equals("All")) {
             //resets all button colors to show that they have been unselected
             for(int i=0;i<courseCodes.size();i++) {
@@ -259,13 +268,18 @@ public class Announcement_Student_Activity extends AppCompatActivity {
 
             else {
                 announcementList.clear();
+                undeletedAnnouncements.clear();
+
                 announcementList.addAll(unchangedAnnouncementList);
 
                 for (int i = 0; i < announcementList.size(); i++) {
-                    if (!activeFilters.contains(announcementList.get(i).getCourseId())) {
-                        announcementList.remove(i);
+                    if (activeFilters.contains(announcementList.get(i).getCourseId())) {
+                        undeletedAnnouncements.add(announcementList.get(i));
                     }
                 }
+
+                announcementList.clear();
+                announcementList.addAll(undeletedAnnouncements);
 
                 announcementsStudentListAdapter.notifyDataSetChanged();
             }
@@ -278,13 +292,18 @@ public class Announcement_Student_Activity extends AppCompatActivity {
             activeFilters.add(courseId);
 
             announcementList.clear();
+            undeletedAnnouncements.clear();
+
             announcementList.addAll(unchangedAnnouncementList);
 
             for (int i = 0; i < announcementList.size(); i++) {
-                if(!activeFilters.contains(announcementList.get(i).getCourseId())){
-                    announcementList.remove(i);
+                if(activeFilters.contains(announcementList.get(i).getCourseId())){
+                    undeletedAnnouncements.add(announcementList.get(i));
                 }
             }
+
+            announcementList.clear();
+            announcementList.addAll(undeletedAnnouncements);
 
             announcementsStudentListAdapter.notifyDataSetChanged();
         }

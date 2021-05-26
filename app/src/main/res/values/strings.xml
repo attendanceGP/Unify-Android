@@ -58,6 +58,8 @@ Click to end the attendance recording process and view attendees list
 Course
 </string>
 
+    <string name="number_of_s">0 students attended </string>
+
     <string name="upcoming">
 
 Upcoming
@@ -83,10 +85,32 @@ Due 27-03-2021 at 11:59 pm
 Done
 </string>
     <string name="title">Deadlines you posted</string>
-
     <string name="add_a_new_d">
 
 Add a new deadline
 </string>
+
+
+    <string name="button_confirm_text">Confirm</string>
+    <string name="button_add_text">Add</string>
+
+
+    <string name="forums_home_post_title">forum title</string>
+    <string name="forums_home_post_course_code">course code</string>
+    <string name="forums_home_page_post_date">Posted DAY-MONTH-YEAR at HH:MM PM</string>
+    <string name="forums_home_page_post_username">user name</string>
+    <string name="forums_home_page_post_description">forum description</string>
+    <string name="spinner_title">Filter</string>
+    <string name="reply_user_name">user name</string>
+    <string name="reply_date_time">Posted DAY-MONTH-YEAR at HH:MM PM</string>
+    <string name="reply_content"> reply content</string>
+    <string name="post_title">post title</string>
+    <string name="course_code_post"> course code </string>
+    <string name="forum_post_date_time">Posted DAY-MONTH-YEAR at HH:MM PM</string>
+    <string name="publisher_name">user name</string>
+    <string name="post_description">Post description</string>
+    <string name="add_a_new_post">Add a new post</string>
+    <string name="new_post_title">Title</string>
+    <string name="new_post_course">Course</string>
 
 </resources>

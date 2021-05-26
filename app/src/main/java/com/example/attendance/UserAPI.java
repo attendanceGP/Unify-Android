@@ -54,10 +54,23 @@ public interface UserAPI {
     Call<Attendance> setAbsence(@Query("courseID") String courseID, @Query("group") String Group,
                                 @Query("date") String date, @Query("studentID") Integer studentID,
                                 @Query("absent") boolean absent);
+
     @GET("ta/getTA")
     Call<TeachingAssistant> getTA(@Query("id") Integer id);
     @GET("ta/updateTALocation")
     Call<Void>updateTaLocation(@Query("id") Integer id, @Query("longitude")double longitude,@Query("latitude")double latitude);
 
+
+
+
+
+    @GET("attendance/setStudentAbsence")
+    Call<Attendance> setAbsence(@Query("courseID") String courseID, @Query("group") String Group,
+                                @Query("date") String date, @Query("studentID") Integer studentID,
+                                @Query("absent") boolean absent, @Query ("penalty") boolean penalty);
+
+    @POST("attendance/confirmAttendance")
+    Call<Void> confirmList(@Query("courseID") String courseID, @Query("group") String Group,
+                                 @Query("date") String date);
 
 }

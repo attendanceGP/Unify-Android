@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/home_ta_3"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/add_forum_activity">
+
+<!--    add a new post title-->
+    <TextView
+        android:id="@+id/add_a_new_p"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="19dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="17dp"
+        android:text="@string/add_a_new_post"
+        android:textAppearance="@style/add_a_new_post"
+
+        android:gravity="center_vertical"
+        />
+
+    <!-- post button -->
+    <Button
+        android:id="@+id/post_button"
+        android:layout_width="64dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="17dp"
+        android:background="@drawable/add_new_post_button"
+        />
+
+    <EditText
+        android:id="@+id/new_post_title_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine|textCapSentences"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_below="@+id/add_a_new_p"
+        android:layout_marginTop="29dp"
+        android:hint="Title"
+        android:textAppearance="@style/new_post_title"
+        android:scrollHorizontally="false"
+        android:gravity="center_vertical"
+        />
+
+    <Spinner
+        android:id="@+id/new_post_course"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_below="@id/new_post_title_edit_text"
+        android:layout_marginTop="5dp"
+        android:hint="course"
+        android:textAppearance="@style/new_post_course"
+        android:gravity="left"
+        />
+
+    <View
+        android:id="@+id/line_2"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_below="@id/new_post_course"
+        android:layout_marginTop="2dp"
+        android:background="@drawable/line_2"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/new_post_description"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_below="@+id/line_2"
+        android:layout_marginTop="5dp"
+        android:hint="Description"
+        android:inputType="textMultiLine|textCapSentences"
+        android:textAppearance="@style/new_post_description"
+        android:gravity="center_vertical"
+        android:scrollHorizontally="false"
+        />
+
+</RelativeLayout>

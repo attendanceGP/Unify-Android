@@ -154,7 +154,7 @@ import java.util.Date;
 
 public class Attendance {
     private Integer userId;
-    private String courseCode;
+    private String fk_course_code;
     private String name;
     private String userGroup;
 

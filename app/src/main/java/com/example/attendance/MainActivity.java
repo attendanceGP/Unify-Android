@@ -14,7 +14,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 import com.example.attendance.Deadline.DeadlineStudentActivity;
 import com.example.attendance.Deadline.DeadlineTAActivity;
+
+import com.example.attendance.Forums.ForumsActivity;
+
 import com.example.attendance.Announcement.Announcement_Student_Activity;
+
 
 import com.example.attendance.Absence.TAAbsenceTab;
 

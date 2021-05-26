@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.example.attendance.APIClient;
 import com.example.attendance.Database.AppDatabase;
 import com.example.attendance.Deadline.DeadlineStudentActivity;
+import com.example.attendance.Forums.ForumsActivity;
 import com.example.attendance.Home;
 import com.example.attendance.R;
 import com.example.attendance.SessionManager;
@@ -127,6 +128,7 @@ public class Announcement_Student_Activity extends AppCompatActivity {
                         return true;
 
                     case R.id.action_forum:
+                        startActivity(new Intent(Announcement_Student_Activity.this, ForumsActivity.class));
                         return true;
 
                     case R.id.action_absence:
@@ -156,7 +158,9 @@ public class Announcement_Student_Activity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Announcement>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "please check your internet connection", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "you are now seeing all announcements but they are not up to date, please check" +
+                        " your internet connection and try again", Toast.LENGTH_SHORT).show();
+                updateData();
                 System.out.println(t.getMessage());
                 if (swipeRefreshLayout.isRefreshing()) {
                     swipeRefreshLayout.setRefreshing(false);

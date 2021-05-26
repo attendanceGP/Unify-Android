@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -25,7 +26,7 @@ import retrofit2.Response;
 // https://guides.codepath.com/android/using-the-recyclerview
 
 public class ta_attendanceConfirmationList extends AppCompatActivity {
-    private TextView attendanceDetails; // name of course, group
+//    private TextView attendanceDetails; // name of course, group
     private TextView attendanceCount; // total attendees, total registrants, total absent
     private EditText et_inputID;
     private Button buttonConfirm;
@@ -34,33 +35,27 @@ public class ta_attendanceConfirmationList extends AppCompatActivity {
     private recyclerView_studentsList_adapter rv_adapter;
     private List<Attendance> List_Attendance;
 
+    private Intent intent;
+    private String CourseID;
+    private String Group;
+    private String str_date;
+    private UserAPI userAPI;
+
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ta_attendance);
-        Intent intent = getIntent();
-        String CourseID = intent.getStringExtra("CoureID_Key");
-        String Group = intent.getStringExtra("Group_Key");
-        String str_date = intent.getStringExtra("Date_Key");
+        this.intent = getIntent();
+        this.CourseID = intent.getStringExtra("CoureID_Key");
+        this.Group = intent.getStringExtra("Group_Key");
+        this.str_date = intent.getStringExtra("Date_Key");
 
-        attendanceDetails = findViewById(R.id.textView_SectionNumber);
-        attendanceCount = findViewById(R.id.textView_StudentsCount);
-        buttonConfirm = findViewById(R.id.buttonConfirm);
-        rv_studentsList = findViewById(R.id.rv_studentsList);
-        buttonAdd = findViewById(R.id.buttonAddStudent);
-        et_inputID = findViewById(R.id.et_InputID);
-
-        buttonConfirm.setClickable(false);
-        buttonAdd.setClickable(false);
-        et_inputID.setEnabled(false);
-
-        attendanceDetails.setText(CourseID+"-"+Group+"\n"+str_date);
-
+        setViews();
 
 
         // -------------  Calling the API to get Students List ----------------------
-        UserAPI userAPI = APIClient.getClient().create(UserAPI.class);
+        userAPI = APIClient.getClient().create(UserAPI.class);
 
         Call<List<Attendance>> call = userAPI.getStudentsList(CourseID, Group, str_date);
         call.enqueue(new Callback<List<Attendance>>() {
@@ -75,17 +70,36 @@ public class ta_attendanceConfirmationList extends AppCompatActivity {
                     rv_studentsList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                     rv_adapter = new recyclerView_studentsList_adapter(getApplicationContext(), List_Attendance, str_date);
                     rv_studentsList.setAdapter(rv_adapter);
-                    attendanceCount.setText("attendees = " + rv_adapter.getItemCount());
+
+                    setAttendanceCount();
                     et_inputID.setEnabled(true);
+
+
+                    rv_adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+                        @Override
+                        public void onChanged() {
+                            setAttendanceCount();
+                        }
+                    });
 
                     buttonConfirm.setClickable(true);
                     buttonConfirm.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Toast.makeText(getApplicationContext(), "confirmed", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(ta_attendanceConfirmationList.this, TA_home.class));
-                        }
+                            Call<Void> confirm_list = userAPI.confirmList(CourseID, Group, str_date);
+                            confirm_list.enqueue(new Callback<Void>() {
+                                @Override
+                                public void onResponse(Call<Void> call, Response<Void> response) {
+                                    Toast.makeText(getApplicationContext(), "confirmed", Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(ta_attendanceConfirmationList.this, TA_home.class));
+                                }
 
+                                @Override
+                                public void onFailure(Call<Void> call, Throwable t) {
+                                    Toast.makeText(getApplicationContext(), "an error occured", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
                     });
 
                     buttonAdd.setClickable(true);
@@ -113,7 +127,8 @@ public class ta_attendanceConfirmationList extends AppCompatActivity {
                                         } else {
                                             Toast.makeText(getApplicationContext(), studentID+" is added", Toast.LENGTH_SHORT).show();
                                             rv_adapter.addItem(test);
-                                            attendanceCount.setText("attendees = " + rv_adapter.getItemCount());
+                                            setAttendanceCount();
+                                            et_inputID.getText().clear();
                                         }
                                     }
                                     @Override
@@ -135,7 +150,21 @@ public class ta_attendanceConfirmationList extends AppCompatActivity {
 
     }
 
-    void setAttendanceCount(int count){
-        attendanceCount.setText("attendees = " + rv_adapter.getItemCount());
+    void setAttendanceCount(){
+        attendanceCount.setText(rv_adapter.getItemCount() + " students attended");
     }
+
+    void setViews(){
+//        attendanceDetails = findViewById(R.id.textView_SectionNumber);
+        attendanceCount = findViewById(R.id.textView_StudentsCount);
+        buttonConfirm = findViewById(R.id.buttonConfirm);
+        rv_studentsList = findViewById(R.id.rv_studentsList);
+        buttonAdd = findViewById(R.id.buttonAddStudent);
+        et_inputID = findViewById(R.id.et_InputID);
+
+        buttonConfirm.setClickable(false);
+        buttonAdd.setClickable(false);
+        et_inputID.setEnabled(false);
+    }
+
 }

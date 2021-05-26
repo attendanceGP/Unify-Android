@@ -3,10 +3,15 @@
     package="com.example.attendance">
 
 
+
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission. ACCESS_COARSE_LOCATION" />
+
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 
     <application
@@ -18,12 +23,18 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
 
+
         <activity android:name=".Absence.TAAbsenceTab"/>
         <activity android:name=".Absence.AbsenceTab"/>
 
+        <activity android:name=".Forums.AddForumActivity"></activity>
+        <activity android:name=".Forums.PostActivity" />
+        <activity android:name=".Forums.ForumsActivity" />
+        <activity android:name=".Deadline.DeadlineTAActivity" />
+
+
         <activity android:name=".Announcement.Announcement_TA_Activity"></activity>
         <activity android:name=".Announcement.Announcement_Student_Activity" />
-        <activity android:name=".Deadline.DeadlineTAActivity"></activity>
 
         <activity android:name=".TA_closes_attendance" />
         <activity android:name=".TA_home" />
@@ -40,8 +51,5 @@
             </intent-filter>
         </activity>
     </application>
-    <uses-permission android:name="android.permission.INTERNET" />
-
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 </manifest>

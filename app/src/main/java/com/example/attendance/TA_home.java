@@ -26,6 +26,7 @@ import com.example.attendance.Announcement.Announcement_Student_Activity;
 import com.example.attendance.Announcement.Announcement_TA_Activity;
 import com.example.attendance.Deadline.DeadlineStudentActivity;
 import com.example.attendance.Deadline.DeadlineTAActivity;
+import com.example.attendance.Forums.ForumsActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.SimpleDateFormat;
@@ -145,6 +146,7 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
                         return true;
 
                     case R.id.action_forum:
+                        startActivity(new Intent(TA_home.this, ForumsActivity.class));
                         return true;
 
                     case R.id.action_absence:

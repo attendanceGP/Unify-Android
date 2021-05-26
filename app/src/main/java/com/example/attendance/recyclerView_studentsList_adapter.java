@@ -3,6 +3,7 @@ package com.example.attendance;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,7 @@ public class recyclerView_studentsList_adapter extends RecyclerView.Adapter<recy
     private Context applicationContext;
     private LayoutInflater mInflater;
     private String date;
+
 
     // ViewHolder used to store each row in our recycler view to be easily cashed and accessed
     // stores and recycles views as they are scrolled off screen
@@ -69,8 +71,6 @@ public class recyclerView_studentsList_adapter extends RecyclerView.Adapter<recy
         holder.ID_TextView.setText(String.valueOf(attendance.getUserId())+" - "+ attendance.getUserGroup());
         holder.name_TextView.setText(attendance.getName());
         Button button = holder.buttonAction;
-        button.setText("Remove");
-        button.setBackgroundColor(Color.RED);
         button.setEnabled(true);
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -78,7 +78,7 @@ public class recyclerView_studentsList_adapter extends RecyclerView.Adapter<recy
             public void onClick(View view) {
                 UserAPI userAPI = APIClient.getClient().create(UserAPI.class);
 
-                Call<Attendance> call = userAPI.setAbsence(attendance.getCourseCode(), attendance.getUserGroup(), date, attendance.getUserId(), true);
+                Call<Attendance> call = userAPI.setAbsence(attendance.getCourseCode(), attendance.getUserGroup(), date, attendance.getUserId(), true, true);
                 call.enqueue(new Callback<Attendance>() {
                     @Override
                     public void onResponse(Call<Attendance> call, Response<Attendance> response) {

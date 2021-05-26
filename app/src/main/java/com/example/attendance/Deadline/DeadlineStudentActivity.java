@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.example.attendance.APIClient;
 import com.example.attendance.Database.AppDatabase;
+import com.example.attendance.Forums.ForumsActivity;
 import com.example.attendance.Home;
 import com.example.attendance.MainActivity;
 import com.example.attendance.R;
@@ -110,6 +111,7 @@ public class DeadlineStudentActivity extends AppCompatActivity {
                         return true;
 
                     case R.id.action_forum:
+                        startActivity(new Intent(DeadlineStudentActivity.this, ForumsActivity.class));
                         return true;
 
                     case R.id.action_absence:

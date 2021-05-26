@@ -112,6 +112,7 @@ public class DeadlineStudentActivity extends AppCompatActivity {
 
                     case R.id.action_forum:
                         startActivity(new Intent(DeadlineStudentActivity.this, ForumsActivity.class));
+                        return true;
 
                     case R.id.action_absence:
                         return true;

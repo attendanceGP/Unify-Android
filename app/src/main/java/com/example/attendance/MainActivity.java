@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
                                 startActivity(new Intent(MainActivity.this, Announcement_Student_Activity.class));
                             }
                             else{
-                                startActivity(new Intent(MainActivity.this, ForumsActivity.class));
+                                startActivity(new Intent(MainActivity.this, TA_home.class));
                             }
                         }
                     }

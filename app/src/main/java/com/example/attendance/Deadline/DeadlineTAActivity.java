@@ -273,6 +273,7 @@ public class DeadlineTAActivity extends AppCompatActivity {
 
                     case R.id.action_forum:
                         startActivity(new Intent(DeadlineTAActivity.this, ForumsActivity.class));
+                        return true;
 
                     case R.id.action_absence:
                         return true;

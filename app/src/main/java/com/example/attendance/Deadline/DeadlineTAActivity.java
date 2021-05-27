@@ -35,6 +35,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.attendance.APIClient;
+import com.example.attendance.Absence.TAAbsenceTab;
 import com.example.attendance.Announcement.Announcement_Student_Activity;
 import com.example.attendance.Announcement.Announcement_TA_Activity;
 import com.example.attendance.Database.AppDatabase;
@@ -276,6 +277,7 @@ public class DeadlineTAActivity extends AppCompatActivity {
                         return true;
 
                     case R.id.action_absence:
+                        startActivity(new Intent(DeadlineTAActivity.this, TAAbsenceTab.class));
                         return true;
                 }
                 return false;

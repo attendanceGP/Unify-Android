@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.attendance.APIClient;
+import com.example.attendance.Absence.AbsenceTab;
+import com.example.attendance.Announcement.Announcement_Student_Activity;
 import com.example.attendance.Database.AppDatabase;
 import com.example.attendance.Forums.ForumsActivity;
 import com.example.attendance.Home;
@@ -108,6 +110,7 @@ public class DeadlineStudentActivity extends AppCompatActivity {
                         return true;
 
                     case R.id.action_announcements:
+                        startActivity(new Intent(DeadlineStudentActivity.this, Announcement_Student_Activity.class));
                         return true;
 
                     case R.id.action_forum:
@@ -115,6 +118,7 @@ public class DeadlineStudentActivity extends AppCompatActivity {
                         return true;
 
                     case R.id.action_absence:
+                        startActivity(new Intent(DeadlineStudentActivity.this, AbsenceTab.class));
                         return true;
                 }
                 return false;

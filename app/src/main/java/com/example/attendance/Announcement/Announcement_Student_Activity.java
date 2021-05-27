@@ -78,6 +78,7 @@ public class Announcement_Student_Activity extends AppCompatActivity {
             public void onRefresh() {
                 Log.d("test", "hello");
                 refreshAnnouncements();
+                getFilterCourses();
                 //resets all button colors to show that they have been unselected
                 for(int i=0;i<courseCodes.size();i++) {
                     filterRecyclerView.getLayoutManager().findViewByPosition(i).

@@ -30,6 +30,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.attendance.APIClient;
+import com.example.attendance.Absence.TAAbsenceTab;
 import com.example.attendance.Database.AppDatabase;
 import com.example.attendance.Deadline.DeadlineStudentActivity;
 import com.example.attendance.Deadline.DeadlineTAActivity;
@@ -217,10 +218,10 @@ public class Announcement_TA_Activity extends AppCompatActivity {
 
                     case R.id.action_forum:
                         startActivity(new Intent(Announcement_TA_Activity.this, ForumsActivity.class));
-
                         return true;
 
                     case R.id.action_absence:
+                        startActivity(new Intent(Announcement_TA_Activity.this, TAAbsenceTab.class));
                         return true;
                 }
                 return false;

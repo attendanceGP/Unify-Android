@@ -17,6 +17,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.attendance.APIClient;
+import com.example.attendance.Absence.AbsenceTab;
+import com.example.attendance.Absence.TAAbsenceTab;
 import com.example.attendance.Announcement.Announcement_Student_Activity;
 import com.example.attendance.Announcement.Announcement_TA_Activity;
 import com.example.attendance.Database.AppDatabase;
@@ -183,6 +185,11 @@ public class ForumsActivity extends AppCompatActivity {
                         return true;
 
                     case R.id.action_absence:
+                        if(sessionManager.getType().equals("student")){
+                            startActivity(new Intent(ForumsActivity.this, AbsenceTab.class));
+                        }else{
+                            startActivity(new Intent(ForumsActivity.this, TAAbsenceTab.class));
+                        }
                         return true;
                 }
                 return false;

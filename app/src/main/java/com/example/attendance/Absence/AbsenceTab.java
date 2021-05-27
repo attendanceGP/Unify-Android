@@ -14,7 +14,10 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.attendance.APIClient;
+import com.example.attendance.Announcement.Announcement_Student_Activity;
 import com.example.attendance.Database.AppDatabase;
+import com.example.attendance.Deadline.DeadlineStudentActivity;
+import com.example.attendance.Forums.ForumsActivity;
 import com.example.attendance.Home;
 import com.example.attendance.R;
 import com.example.attendance.SessionManager;
@@ -139,12 +142,15 @@ public class AbsenceTab extends AppCompatActivity {
                         return true;
 
                     case R.id.action_announcements:
+                        startActivity(new Intent(AbsenceTab.this, Announcement_Student_Activity.class));
                         return true;
 
                     case R.id.action_forum:
+                        startActivity(new Intent(AbsenceTab.this, ForumsActivity.class));
                         return true;
 
                     case R.id.action_deadlines:
+                        startActivity(new Intent(AbsenceTab.this, DeadlineStudentActivity.class));
                         return true;
                 }
                 return false;

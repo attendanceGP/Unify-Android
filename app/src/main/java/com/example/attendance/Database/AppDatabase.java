@@ -11,6 +11,8 @@ import com.example.attendance.Absence.RecentRoom;
 import com.example.attendance.Absence.TARecentRoom;
 
 
+import com.example.attendance.Course.Course;
+import com.example.attendance.Course.CourseDAO;
 import com.example.attendance.Deadline.Deadline;
 import com.example.attendance.Deadline.DeadlineDao;
 import com.example.attendance.Forums.ForumsDao;
@@ -37,12 +39,13 @@ import com.example.attendance.Deadline.DeadlineDao;
 
 
 
-@Database(entities = {Deadline.class, Post.class, Reply.class, Announcement.class,AbsenceRoom.class, RecentRoom.class, TARecentRoom.class}, version = 1)
+@Database(entities = {Deadline.class, Post.class, Reply.class, Announcement.class,AbsenceRoom.class, RecentRoom.class, TARecentRoom.class, Course.class}, version = 1)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
     public abstract DeadlineDao deadlineDao();
     public abstract ForumsDao forumsDao();
     public abstract AnnouncementDao announcementDao();
     public abstract AbsenceDAO absenceDAO();
+    public abstract CourseDAO courseDAO();
 
 }

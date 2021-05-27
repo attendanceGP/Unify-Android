@@ -17,10 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AnnouncementFilterListAdapter extends RecyclerView.Adapter<AnnouncementFilterListAdapter.ViewHolder> {
-    private ArrayList<String> courseCodes;
+    private List<String> courseCodes;
     private Context context;
 
-    public AnnouncementFilterListAdapter(ArrayList<String> courseCodes, Context context) {
+    public AnnouncementFilterListAdapter(List<String> courseCodes, Context context) {
         this.courseCodes = courseCodes;
         this.context = context;
     }

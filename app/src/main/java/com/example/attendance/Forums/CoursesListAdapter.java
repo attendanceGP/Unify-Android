@@ -10,7 +10,6 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.attendance.Course;
 import com.example.attendance.R;
 import com.example.attendance.SessionManager;
 

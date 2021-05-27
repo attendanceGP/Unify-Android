@@ -13,7 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.example.attendance.APIClient;
+import com.example.attendance.Announcement.Announcement_TA_Activity;
 import com.example.attendance.Database.AppDatabase;
+import com.example.attendance.Deadline.DeadlineTAActivity;
+import com.example.attendance.Forums.ForumsActivity;
 import com.example.attendance.Home;
 import com.example.attendance.R;
 import com.example.attendance.SessionManager;
@@ -93,12 +96,15 @@ public class TAAbsenceTab extends AppCompatActivity {
                         return true;
 
                     case R.id.action_announcements:
+                        startActivity(new Intent(TAAbsenceTab.this, Announcement_TA_Activity.class));
                         return true;
 
                     case R.id.action_forum:
+                        startActivity(new Intent(TAAbsenceTab.this, ForumsActivity.class));
                         return true;
 
                     case R.id.action_deadlines:
+                        startActivity(new Intent(TAAbsenceTab.this, DeadlineTAActivity.class));
                         return true;
                 }
                 return false;

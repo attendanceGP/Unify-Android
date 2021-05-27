@@ -17,6 +17,8 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.attendance.APIClient;
+import com.example.attendance.Absence.AbsenceTab;
+import com.example.attendance.Course.Course;
 import com.example.attendance.Database.AppDatabase;
 import com.example.attendance.Deadline.DeadlineStudentActivity;
 import com.example.attendance.Forums.ForumsActivity;
@@ -53,7 +55,7 @@ public class Announcement_Student_Activity extends AppCompatActivity {
     List<Announcement> unchangedAnnouncementList = new ArrayList<>();
 
 
-    ArrayList<String> courseCodes = new ArrayList<>();
+    List<String> courseCodes = new ArrayList<>();
 
     //will be turned into an array on api call
     ArrayList<String> activeFilters = new ArrayList<>();
@@ -90,15 +92,13 @@ public class Announcement_Student_Activity extends AppCompatActivity {
         //setting up recycler view for course filter-----------------------------------------------------------------------------------------
         //getFilterCourses();
 
-        courseCodes.add("All");
-        getFilterCourses();
         filterRecyclerView =(RecyclerView) findViewById(R.id.course_filters_rv);
         announcementFilterListAdapter = new AnnouncementFilterListAdapter(courseCodes,context);
-//
         filterRecyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
         filterRecyclerView.setItemAnimator(new DefaultItemAnimator());
         filterRecyclerView.setAdapter(announcementFilterListAdapter);
-
+        updateCourseData();
+        getFilterCourses();
         //----------------------------------------------------------------------------------------------------------
         //setting up the recycler view for student announcements-----------------------------------------------------------------------------
         announcementRecyclerView = (RecyclerView) findViewById(R.id.student_announcements);
@@ -132,6 +132,7 @@ public class Announcement_Student_Activity extends AppCompatActivity {
                         return true;
 
                     case R.id.action_absence:
+                        startActivity(new Intent(Announcement_Student_Activity.this, AbsenceTab.class));
                         return true;
                 }
                 return false;
@@ -140,6 +141,7 @@ public class Announcement_Student_Activity extends AppCompatActivity {
 
     }
 
+    ////////////////////////////////////ROOM ANNOUNCEMENT FUNCTIONS/////////////////////////////////////////////////////////////////////////////////
     //gets all announcements in all the courses in which the current user is registered and uses syncAnnouncements to fill the room database and the announcement
     //arrayList we have which populates the announcements recyclerView
     private void refreshAnnouncements(){
@@ -168,33 +170,6 @@ public class Announcement_Student_Activity extends AppCompatActivity {
             }
         });
     }
-
-    //this function is used to get all the courses a user is registered in to fill the arraylist we use to populate the filters recyclerView
-    private void getFilterCourses(){
-
-        UserAPI userAPI = APIClient.getClient().create(UserAPI.class);
-        Call<ArrayList<String>> call = userAPI.getTaughtCourses(sessionManager.getId());
-
-        call.enqueue(new Callback<ArrayList<String>>() {
-            @Override
-            public void onResponse(Call<ArrayList<String>> call, Response<ArrayList<String>> response) {
-                if(response.code() != 200){
-                    Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    courseCodes.addAll(response.body());
-                    announcementFilterListAdapter.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<String>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "please check your internet connection", Toast.LENGTH_SHORT).show();
-                System.out.println(t.getMessage());
-            }
-        });
-    }
-
 
     //fills the announcementList used for the list adapter with all the announcements we have in our room database in descending order according to date
     private void updateData(){
@@ -241,6 +216,81 @@ public class Announcement_Student_Activity extends AppCompatActivity {
             }
         });
     }
+
+
+    ////////////////////////////////////ROOM COURSE FUNCTIONS/////////////////////////////////////////////////////////////////////////////////
+    //this function is used to get all the courses a user is registered in to fill the arraylist we use to populate the filters recyclerView
+    private void getFilterCourses(){
+
+        UserAPI userAPI = APIClient.getClient().create(UserAPI.class);
+        Call<ArrayList<String>> call = userAPI.getTaughtCourses(sessionManager.getId());
+
+        call.enqueue(new Callback<ArrayList<String>>() {
+            @Override
+            public void onResponse(Call<ArrayList<String>> call, Response<ArrayList<String>> response) {
+                ArrayList<String> courses= response.body();
+                if(response.code() != 200){
+                    Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
+                }
+                syncCoursesFromAPI(courses);
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<String>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "please check your internet connection", Toast.LENGTH_SHORT).show();
+                System.out.println(t.getMessage());
+            }
+        });
+    }
+
+    //fills the courseCodes List used for the list adapter with all the courses we have in our room database
+    private void updateCourseData(){
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+
+                courseCodes.clear();
+                courseCodes.add("All");
+                courseCodes.addAll(Room.databaseBuilder(getApplicationContext(),
+                        AppDatabase.class, "attendance").build().courseDAO().getAll());
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        announcementFilterListAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        });
+    }
+
+    //drops the current courses room table and inserts all coursecodes that we returned from the api into a list into the room database
+    private void syncCoursesFromAPI(ArrayList<String> courseCodes){
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                Room.databaseBuilder(getApplicationContext(),
+                        AppDatabase.class, "attendance").build().courseDAO().nukeTable();
+
+                ArrayList<Course> courses = new ArrayList<>();
+                for(int i=0;i<courseCodes.size();i++){
+                    Course nc= new Course(i,courseCodes.get(i));
+                    courses.add(nc);
+                }
+                //System.out.println(announcement.getId());
+                // if exists
+                Room.databaseBuilder(getApplicationContext(),
+                        AppDatabase.class, "attendance")
+                        .build().courseDAO().insertAll(courses.toArray(new Course[courses.size()]));
+
+                updateData();
+                if (swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }
+        });
+    }
+
 
     //filters all announcements according to selected filter in the filter recycler view
     public void filter(String courseId) {

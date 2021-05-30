@@ -238,6 +238,7 @@ public class Announcement_Student_Activity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ArrayList<String>> call, Throwable t) {
+                updateCourseData();
                 Toast.makeText(getApplicationContext(), "please check your internet connection", Toast.LENGTH_SHORT).show();
                 System.out.println(t.getMessage());
             }
@@ -284,7 +285,7 @@ public class Announcement_Student_Activity extends AppCompatActivity {
                         AppDatabase.class, "attendance")
                         .build().courseDAO().insertAll(courses.toArray(new Course[courses.size()]));
 
-                updateData();
+                updateCourseData();
                 if (swipeRefreshLayout.isRefreshing()) {
                     swipeRefreshLayout.setRefreshing(false);
                 }

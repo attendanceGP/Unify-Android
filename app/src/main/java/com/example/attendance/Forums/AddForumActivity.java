@@ -77,7 +77,7 @@ public class AddForumActivity extends AppCompatActivity {
                 else if(str_description.equals("")){
                     Toast.makeText(getApplicationContext(), "description cannot be empty", Toast.LENGTH_SHORT).show();
                 }
-                else if(courseSpinner.getCount()==0){
+                else if(courseSpinner.getSelectedItem().toString()=="Courses"){
                     Toast.makeText(getApplicationContext(), "Course cannot be empty", Toast.LENGTH_SHORT).show();
                 }
                 else{

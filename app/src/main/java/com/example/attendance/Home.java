@@ -21,6 +21,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.attendance.Absence.AbsenceTab;
 import com.example.attendance.Announcement.Announcement_Student_Activity;
 import com.example.attendance.Deadline.DeadlineStudentActivity;
+import com.example.attendance.Forums.ForumsActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.SimpleDateFormat;
@@ -87,6 +88,7 @@ public class Home extends AppCompatActivity implements LocationListener {
                         return true;
 
                     case R.id.action_forum:
+                        startActivity(new Intent(Home.this, ForumsActivity.class));
                         return true;
 
                     case R.id.action_deadlines:

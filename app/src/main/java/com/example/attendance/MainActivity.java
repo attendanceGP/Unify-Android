@@ -40,8 +40,10 @@ public class MainActivity extends AppCompatActivity {
         if (sessionManager.isLoggedIn()) {
             if(sessionManager.getType().equals("student")) {
                 startActivity(new Intent(MainActivity.this, Home.class));
+                finish();
             }else{
                 startActivity(new Intent(MainActivity.this, TA_home.class));
+                finish();
             }
         }
 
@@ -75,12 +77,14 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "incorrect username or password", Toast.LENGTH_SHORT).show();
                         }else {
                             sessionManager.login(test);
+
                             if(sessionManager.getType().equals("student")) {
-								//change when balf merges
                                 startActivity(new Intent(MainActivity.this, Home.class));
+                                finish();
                             }
                             else{
                                 startActivity(new Intent(MainActivity.this, TA_home.class));
+                                finish();
                             }
                         }
                     }

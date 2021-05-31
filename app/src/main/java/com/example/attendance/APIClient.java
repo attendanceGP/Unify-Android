@@ -16,7 +16,7 @@ public class APIClient {
                 .create();
 
         retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.11:8080")
+                .baseUrl("http://attendance-gp.azurewebsites.net")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 

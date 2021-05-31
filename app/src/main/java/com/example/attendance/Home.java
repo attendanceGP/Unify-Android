@@ -93,10 +93,10 @@ public class Home extends AppCompatActivity implements LocationListener {
                     swipeRefreshLayout.setRefreshing(false);
 
                 }*/
-            if (!gotLocation){
+
                 getCurrentLocation();
-                gotLocation=true;
-            }
+
+
             }
         });
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);

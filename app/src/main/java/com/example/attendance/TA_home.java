@@ -52,7 +52,6 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
     Spinner selectCourse;
     ArrayAdapter<String> adapter;
     ArrayList<String> givenCourses = new ArrayList<String>();
-    boolean gotLocation = false;
     private static final int CODE = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -191,8 +190,6 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
     //function that sets the location ( longitude and latitude)and then calls the APIs and stops the refresh after
     @Override
     public void onLocationChanged(@NonNull Location location) {
-    if (!gotLocation){
-        gotLocation = true;
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
         lm.removeUpdates(this);
@@ -209,7 +206,7 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
                 Toast.makeText(TA_home.this, "error in updating location", Toast.LENGTH_SHORT).show();
             }
         });
-    }
+
     }
 
     @Override

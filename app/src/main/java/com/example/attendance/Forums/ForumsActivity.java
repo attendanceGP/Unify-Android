@@ -11,6 +11,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +22,7 @@ import com.example.attendance.Absence.AbsenceTab;
 import com.example.attendance.Absence.TAAbsenceTab;
 import com.example.attendance.Announcement.Announcement_Student_Activity;
 import com.example.attendance.Announcement.Announcement_TA_Activity;
+import com.example.attendance.Course.Course;
 import com.example.attendance.Database.AppDatabase;
 import com.example.attendance.Deadline.DeadlineStudentActivity;
 import com.example.attendance.Deadline.DeadlineTAActivity;
@@ -91,6 +93,7 @@ public class ForumsActivity extends AppCompatActivity {
         coursesRecyclerView.setItemAnimator(new DefaultItemAnimator());
         coursesListAdapter = new CoursesListAdapter(this, courseCodes);
         coursesRecyclerView.setAdapter(coursesListAdapter);
+        updateCourseData();
         getUserCourses();
 
 
@@ -197,6 +200,53 @@ public class ForumsActivity extends AppCompatActivity {
         });
     }
 
+    private void updateCourseData(){
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+
+                courseCodes.clear();
+                courseCodes.add("All");
+                courseCodes.addAll(Room.databaseBuilder(getApplicationContext(),
+                        AppDatabase.class, "attendance").build().courseDAO().getAll());
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        selectedCourses.clear();
+                        selectedCourses.add(courseCodes.get(0));
+                        coursesListAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        });
+    }
+    //drops the current courses room table and inserts all coursecodes that we returned from the api into a list into the room database
+    private void syncCoursesFromAPI(ArrayList<String> courseCodes){
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                Room.databaseBuilder(getApplicationContext(),
+                        AppDatabase.class, "attendance").build().courseDAO().nukeTable();
+
+                ArrayList<Course> courses = new ArrayList<>();
+                for(int i=0;i<courseCodes.size();i++){
+                    Course nc= new Course(i,courseCodes.get(i));
+                    courses.add(nc);
+                }
+                //System.out.println(announcement.getId());
+                // if exists
+                Room.databaseBuilder(getApplicationContext(),
+                        AppDatabase.class, "attendance")
+                        .build().courseDAO().insertAll(courses.toArray(new Course[courses.size()]));
+
+                updateCourseData();
+                if (swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }
+        });
+    }
     private void getUserCourses() {
         UserAPI userAPI = APIClient.getClient().create(UserAPI.class);
         Call<ArrayList<String>> call = userAPI.getTaughtCourses(sessionManager.getId());
@@ -204,19 +254,16 @@ public class ForumsActivity extends AppCompatActivity {
         call.enqueue(new Callback<ArrayList<String>>() {
             @Override
             public void onResponse(Call<ArrayList<String>> call, Response<ArrayList<String>> response) {
+                ArrayList<String> courses= response.body();
                 if(response.code() != 200){
                     Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
                 }
-                else{
-                    courseCodes.add("All");
-                    courseCodes.addAll(response.body());
-                    coursesListAdapter.notifyDataSetChanged();
-                    selectedCourses.add(courseCodes.get(0)); // ALL
-                }
+                syncCoursesFromAPI(courses);
             }
 
             @Override
             public void onFailure(Call<ArrayList<String>> call, Throwable t) {
+                updateCourseData();
                 Toast.makeText(getApplicationContext(), "please check your internet connection", Toast.LENGTH_SHORT).show();
                 System.out.println(t.getMessage());
             }
@@ -279,16 +326,17 @@ public class ForumsActivity extends AppCompatActivity {
                         Room.databaseBuilder(getApplicationContext(),
                                 AppDatabase.class, "attendance").build().forumsDao().insertAllPosts(post);
                     }
-                    updateData();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (swipeRefreshLayout.isRefreshing()) {
-                                swipeRefreshLayout.setRefreshing(false);
-                            }
-                        }
-                    });
                 }
+
+                updateData();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (swipeRefreshLayout.isRefreshing()) {
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
+                    }
+                });
             }
         });
     }
@@ -425,35 +473,45 @@ public class ForumsActivity extends AppCompatActivity {
     }
 
 
-    public void onCourseFilterClick(int i, String course) {
+    public void onCourseFilterClick(int viewPosition, String course) {
 
 //        All courses are selected and user is trying to select all again.
-        if(selectedCourses.contains("All") && course.equals("All")){
-            coursesRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf("All")).
-                    findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.course_filter_button_selected);
+        if(course.equals("All")){
 
+            for(String x: selectedCourses){
+                coursesRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf(x)).
+                        findViewById(R.id.forums_course_filter_button).setBackgroundResource(R.drawable.course_filter_button_unselected);
+            }
+
+            coursesRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf(course)).
+                    findViewById(R.id.forums_course_filter_button).setBackgroundResource(R.drawable.course_filter_button_selected);
+
+            selectedCourses.clear();
+            selectedCourses.add("All");
         }
 
+//        todo
 //        if user is selecting All courses
-        else if(!selectedCourses.contains("All") && (course.equals("All") ||  (courseCodes.size()-2 == selectedCourses.size()))){
+        else if(selectedCourses.size() == courseCodes.size()-2 ){
             /* if the selected course IS "All"   OR   al courses are selected
              *  1- set "All" selected
              *  2- add "All" to selectedCourses
              *  3- remove all Courses from selectedCourses
              *  4- set all Courses unselected */
-            System.out.println(courseCodes.size()-1);
-            System.out.println(selectedCourses.size());
+
             for(String x: selectedCourses){
                 coursesRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf(x)).
-                        findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.course_filter_button_unselected);
+                        findViewById(R.id.forums_course_filter_button).setBackgroundResource(R.drawable.course_filter_button_unselected);
             }
 
             coursesRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf("All")).
-                    findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.course_filter_button_selected);
+                    findViewById(R.id.forums_course_filter_button).setBackgroundResource(R.drawable.course_filter_button_selected);
             selectedCourses.clear();
             selectedCourses.add("All");
+
         }
 
+//        todo
 //        if user is selecting first course
         else if(selectedCourses.contains("All") && !course.equals("All")){
             /* if the selected course IS NOT "All"
@@ -462,17 +520,26 @@ public class ForumsActivity extends AppCompatActivity {
             *  3- add new Course to selectedCourses
             *  4- set new Course selected */
 
-            coursesRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf("All")).
-                    findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.course_filter_button_unselected);
-            selectedCourses.remove("All");
+            for(String x: selectedCourses){
+                Log.i("sss", "index of before");
+                coursesRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf(x)).
+                        findViewById(R.id.forums_course_filter_button).setBackgroundResource(R.drawable.course_filter_button_unselected);
+                Log.i("sss", "index of after");
+            }
 
-            coursesRecyclerView.getLayoutManager().findViewByPosition(i).
-                    findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.course_filter_button_selected);
+            coursesRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf(course)).
+                    findViewById(R.id.forums_course_filter_button).setBackgroundResource(R.drawable.course_filter_button_selected);
+
+            selectedCourses.clear();
             selectedCourses.add(course);
         }
 
 //        if user is un-selecting the selected course
         else if(selectedCourses.contains(course)){
+            Log.i("sss", "selected: course ------ course clicked: course (unselecting)");
+            Log.i("sss", String.valueOf(selectedCourses.size()));
+            Log.i("sss", "rv adapter list size: ");
+            Log.i("sss", String.valueOf(coursesRecyclerView.getAdapter().getItemCount()));
             /* we have 2 cases:
             *   ----- case 1 -----   user un-selecting only ONE selected course
             *       1: select ALL
@@ -483,18 +550,24 @@ public class ForumsActivity extends AppCompatActivity {
 
             if(selectedCourses.size() == 1){
                 coursesRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf("All")).
-                        findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.course_filter_button_selected);
+                        findViewById(R.id.forums_course_filter_button).setBackgroundResource(R.drawable.course_filter_button_selected);
                 selectedCourses.add("All");
             }
-            coursesRecyclerView.getLayoutManager().findViewByPosition(i).
-                    findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.course_filter_button_unselected);
+            coursesRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf(course)).
+                    findViewById(R.id.forums_course_filter_button).setBackgroundResource(R.drawable.course_filter_button_unselected);
+            Log.i("sss", "removing");
             selectedCourses.remove(course);
+
         }
 
 //        selecting an additional course
         else {
-            coursesRecyclerView.getLayoutManager().findViewByPosition(i).
-                    findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.course_filter_button_selected);
+            Log.i("sss", "selected: many ------ course clicked: additional");
+            Log.i("sss", String.valueOf(selectedCourses.size()));
+            Log.i("sss", "rv adapter list size: ");
+            Log.i("sss", String.valueOf(coursesRecyclerView.getAdapter().getItemCount()));
+            coursesRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf(course)).
+                    findViewById(R.id.forums_course_filter_button).setBackgroundResource(R.drawable.course_filter_button_selected);
             selectedCourses.add(course);
         }
 

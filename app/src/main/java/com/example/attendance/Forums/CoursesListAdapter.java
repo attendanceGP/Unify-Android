@@ -10,38 +10,36 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.attendance.Announcement.Announcement_Student_Activity;
 import com.example.attendance.R;
 import com.example.attendance.SessionManager;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.ViewHolder> {
 
     private List<String> courses;
-    private List<String> selectedCourses;
     private Context applicationContext;
     private LayoutInflater mInflater;
     private SessionManager sessionManager;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        Button courseCodeButton;
-        String courseCode;
+        public Button courseCodeButton;
+        public String courseCode;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            courseCodeButton = itemView.findViewById(R.id.course_filter_button);
+            courseCodeButton =(Button) itemView.findViewById(R.id.forums_course_filter_button);
             courseCodeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int position = getAdapterPosition();
-                    System.out.println(" course clicked ");
                     Log.i("sss", "course clicked");
-                    if(position != RecyclerView.NO_POSITION) {
-                        String course = courses.get(position);
-                        ((ForumsActivity) applicationContext).onCourseFilterClick(position, course);
-                        System.out.println(" course has position ");
-                        Log.i("sss", "course has position");
+
+                    if (applicationContext instanceof ForumsActivity) {
+                        ((ForumsActivity) applicationContext).onCourseFilterClick(getAdapterPosition(), courseCodeButton.getText().toString());
                     }
+                        Log.i("sss", "course has position");
                 }
             });
         }
@@ -72,12 +70,22 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
         if(courseCode.equals("All")){
             courseButt.setBackgroundResource(R.drawable.course_filter_button_selected);
         }
-
     }
 
     @Override
     public int getItemCount() {
         return courses.size();
     }
+
+//    public HashMap<String, Integer> getAllPosition(){
+//        HashMap<String,Integer> map = new HashMap<>();
+//
+//        for(String s: courses) {
+//
+//            map.put(s, i); // i is the position of adapter
+//        }
+//        return map;
+//    }
+
 
 }

@@ -34,12 +34,9 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
             courseCodeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Log.i("sss", "course clicked");
-
                     if (applicationContext instanceof ForumsActivity) {
                         ((ForumsActivity) applicationContext).onCourseFilterClick(getAdapterPosition(), courseCodeButton.getText().toString());
                     }
-                        Log.i("sss", "course has position");
                 }
             });
         }
@@ -65,27 +62,11 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
         String courseCode = courses.get(position);
         holder.courseCodeButton.setText(courseCode);
         holder.courseCode = courseCode;
-        Button courseButt = holder.courseCodeButton;
-
-        if(courseCode.equals("All")){
-            courseButt.setBackgroundResource(R.drawable.course_filter_button_selected);
-        }
     }
 
     @Override
     public int getItemCount() {
         return courses.size();
     }
-
-//    public HashMap<String, Integer> getAllPosition(){
-//        HashMap<String,Integer> map = new HashMap<>();
-//
-//        for(String s: courses) {
-//
-//            map.put(s, i); // i is the position of adapter
-//        }
-//        return map;
-//    }
-
 
 }

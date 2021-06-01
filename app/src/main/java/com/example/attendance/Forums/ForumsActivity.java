@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.attendance.APIClient;
@@ -35,6 +36,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -65,6 +67,7 @@ public class ForumsActivity extends AppCompatActivity {
     private RecyclerView coursesRecyclerView;
 
     private SwipeRefreshLayout swipeRefreshLayout;
+    TextView emptyText;
 
     ForumsAPI forumsAPI;
     SessionManager sessionManager;
@@ -74,6 +77,8 @@ public class ForumsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forums_home_page);
         sessionManager = new SessionManager(getApplicationContext());
+
+        emptyText = (TextView) findViewById(R.id.empty_forums_text);
 
         // binding to the swipe layout to refresh the page
         this.swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.forums_swipe_layout);
@@ -285,7 +290,8 @@ public class ForumsActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         postsListAdapter.notifyDataSetChanged();
-//                        onCourseFilterClick(0,"All");
+                        filterPosts();  //todo
+                        setEmptyTextVisibility(Objects.requireNonNull(postsRecyclerView.getAdapter()).getItemCount()==0);
                     }
                 });
             }
@@ -378,6 +384,7 @@ public class ForumsActivity extends AppCompatActivity {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 Toast.makeText(getApplicationContext(), "removed", Toast.LENGTH_SHORT).show();
                 deleteUserPostFromRoom(postId);
+                setEmptyTextVisibility(userPosts.size()==0);
             }
 
             @Override
@@ -413,6 +420,7 @@ public class ForumsActivity extends AppCompatActivity {
         }
         postsRecyclerView.setAdapter(userPostsListAdapter);
         userPostsListAdapter.notifyDataSetChanged();
+        setEmptyTextVisibility(userPosts.size()==0);
     }
     public void filterUserPosts(){
         userPosts.clear();
@@ -436,6 +444,7 @@ public class ForumsActivity extends AppCompatActivity {
             }
         }
         postsListAdapter.notifyDataSetChanged();
+        setEmptyTextVisibility(posts.size()==0);
     }
     public void filterAllPosts(){
         posts.clear();
@@ -459,6 +468,8 @@ public class ForumsActivity extends AppCompatActivity {
         }
         postsRecyclerView.setAdapter(favPostsListAdapter);
         favPostsListAdapter.notifyDataSetChanged();
+
+        setEmptyTextVisibility(favPosts.size()==0);
     }
     public void filterStarredPosts(){
         favPosts.clear();
@@ -472,7 +483,18 @@ public class ForumsActivity extends AppCompatActivity {
         favPostsListAdapter.notifyDataSetChanged();
     }
 
-
+    public void setEmptyTextVisibility(boolean emptyList){
+        Log.i("sss", String.valueOf(emptyList));
+        if(emptyList){
+            postsRecyclerView.setVisibility(View.GONE);
+            emptyText.setVisibility(View.VISIBLE);
+        }
+        else{
+            postsRecyclerView.setVisibility(View.VISIBLE);
+            emptyText.setVisibility(View.GONE);
+        }
+        Log.i("sss", String.valueOf(emptyList));
+    }
     public void onCourseFilterClick(int viewPosition, String course) {
 
 //        All courses are selected and user is trying to select all again.
@@ -483,35 +505,10 @@ public class ForumsActivity extends AppCompatActivity {
                         findViewById(R.id.forums_course_filter_button).setBackgroundResource(R.drawable.course_filter_button_unselected);
             }
 
-            coursesRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf(course)).
-                    findViewById(R.id.forums_course_filter_button).setBackgroundResource(R.drawable.course_filter_button_selected);
-
             selectedCourses.clear();
             selectedCourses.add("All");
         }
 
-//        todo
-//        if user is selecting All courses
-        else if(selectedCourses.size() == courseCodes.size()-2 ){
-            /* if the selected course IS "All"   OR   al courses are selected
-             *  1- set "All" selected
-             *  2- add "All" to selectedCourses
-             *  3- remove all Courses from selectedCourses
-             *  4- set all Courses unselected */
-
-            for(String x: selectedCourses){
-                coursesRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf(x)).
-                        findViewById(R.id.forums_course_filter_button).setBackgroundResource(R.drawable.course_filter_button_unselected);
-            }
-
-            coursesRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf("All")).
-                    findViewById(R.id.forums_course_filter_button).setBackgroundResource(R.drawable.course_filter_button_selected);
-            selectedCourses.clear();
-            selectedCourses.add("All");
-
-        }
-
-//        todo
 //        if user is selecting first course
         else if(selectedCourses.contains("All") && !course.equals("All")){
             /* if the selected course IS NOT "All"
@@ -520,14 +517,7 @@ public class ForumsActivity extends AppCompatActivity {
             *  3- add new Course to selectedCourses
             *  4- set new Course selected */
 
-            for(String x: selectedCourses){
-                Log.i("sss", "index of before");
-                coursesRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf(x)).
-                        findViewById(R.id.forums_course_filter_button).setBackgroundResource(R.drawable.course_filter_button_unselected);
-                Log.i("sss", "index of after");
-            }
-
-            coursesRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf(course)).
+            coursesRecyclerView.getLayoutManager().findViewByPosition(viewPosition).
                     findViewById(R.id.forums_course_filter_button).setBackgroundResource(R.drawable.course_filter_button_selected);
 
             selectedCourses.clear();
@@ -536,10 +526,6 @@ public class ForumsActivity extends AppCompatActivity {
 
 //        if user is un-selecting the selected course
         else if(selectedCourses.contains(course)){
-            Log.i("sss", "selected: course ------ course clicked: course (unselecting)");
-            Log.i("sss", String.valueOf(selectedCourses.size()));
-            Log.i("sss", "rv adapter list size: ");
-            Log.i("sss", String.valueOf(coursesRecyclerView.getAdapter().getItemCount()));
             /* we have 2 cases:
             *   ----- case 1 -----   user un-selecting only ONE selected course
             *       1: select ALL
@@ -549,23 +535,16 @@ public class ForumsActivity extends AppCompatActivity {
             *       1: un-select the course  */
 
             if(selectedCourses.size() == 1){
-                coursesRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf("All")).
-                        findViewById(R.id.forums_course_filter_button).setBackgroundResource(R.drawable.course_filter_button_selected);
                 selectedCourses.add("All");
             }
-            coursesRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf(course)).
+            coursesRecyclerView.getLayoutManager().findViewByPosition(viewPosition).
                     findViewById(R.id.forums_course_filter_button).setBackgroundResource(R.drawable.course_filter_button_unselected);
-            Log.i("sss", "removing");
             selectedCourses.remove(course);
 
         }
 
 //        selecting an additional course
         else {
-            Log.i("sss", "selected: many ------ course clicked: additional");
-            Log.i("sss", String.valueOf(selectedCourses.size()));
-            Log.i("sss", "rv adapter list size: ");
-            Log.i("sss", String.valueOf(coursesRecyclerView.getAdapter().getItemCount()));
             coursesRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf(course)).
                     findViewById(R.id.forums_course_filter_button).setBackgroundResource(R.drawable.course_filter_button_selected);
             selectedCourses.add(course);
@@ -577,6 +556,7 @@ public class ForumsActivity extends AppCompatActivity {
         filterUserPosts();
         filterStarredPosts();
         filterAllPosts();
+        setEmptyTextVisibility(Objects.requireNonNull(postsRecyclerView.getAdapter()).getItemCount()==0);
     }
 
 }

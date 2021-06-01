@@ -20,6 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.attendance.APIClient;
+import com.example.attendance.Absence.AbsenceTab;
+import com.example.attendance.Absence.TAAbsenceTab;
 import com.example.attendance.Announcement.Announcement_Student_Activity;
 import com.example.attendance.Announcement.Announcement_TA_Activity;
 import com.example.attendance.Database.AppDatabase;
@@ -37,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -51,6 +54,7 @@ public class PostActivity extends AppCompatActivity {
     private TextView postDescription;
     private TextView postUsername;
     private TextView postCourseCode;
+    private TextView emptyText;
     private EditText replyArea;
     private Button replyButton;
     public Post post;
@@ -73,7 +77,7 @@ public class PostActivity extends AppCompatActivity {
         this.intent = getIntent();
         this.post_id = intent.getIntExtra("Post_id", 0);
         this.course_code = intent.getStringExtra("course_code");
-
+        this.emptyText = (TextView) findViewById(R.id.empty_replies_text);
         Log.i("TESTPOST", "2- " +post_id);
         getPostbyid();
 
@@ -117,7 +121,6 @@ public class PostActivity extends AppCompatActivity {
                         public void onResponse(Call<Void> call, Response<Void> response) {
                             Toast.makeText(getApplicationContext(), "posted", Toast.LENGTH_SHORT).show();
                             replyArea.getText().clear();
-                            updateData();
                             refreshForums();
                         }
                         @Override
@@ -164,6 +167,11 @@ public class PostActivity extends AppCompatActivity {
                         return true;
 
                     case R.id.action_absence:
+                        if(sessionManager.getType().equals("student")){
+                            startActivity(new Intent(PostActivity.this, AbsenceTab.class));
+                        }else{
+                            startActivity(new Intent(PostActivity.this, TAAbsenceTab.class));
+                        }
                         return true;
                 }
                 return false;
@@ -231,6 +239,7 @@ public class PostActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         repliesListAdapter.notifyDataSetChanged();
+                        setEmptyTextVisibility(replies.size()==0);
                     }
                 });
             }
@@ -273,16 +282,16 @@ public class PostActivity extends AppCompatActivity {
                                 AppDatabase.class, "attendance").build().forumsDao().insertAllReply(reply);
                         System.out.println("here");
                     }
-                    updateData();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (swipeRefreshLayout.isRefreshing()) {
-                                swipeRefreshLayout.setRefreshing(false);
-                            }
-                        }
-                    });
                 }
+                updateData();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (swipeRefreshLayout.isRefreshing()) {
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
+                    }
+                });
             }
         });
     }
@@ -332,4 +341,18 @@ public class PostActivity extends AppCompatActivity {
         });
 
     }
+
+    public void setEmptyTextVisibility(boolean emptyList){
+        Log.i("sss", String.valueOf(emptyList));
+        if(emptyList){
+            repliesRecyclerView.setVisibility(View.GONE);
+            emptyText.setVisibility(View.VISIBLE);
+        }
+        else{
+            repliesRecyclerView.setVisibility(View.VISIBLE);
+            emptyText.setVisibility(View.GONE);
+        }
+        Log.i("sss", String.valueOf(emptyList));
+    }
+
 }

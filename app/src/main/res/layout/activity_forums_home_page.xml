@@ -99,6 +99,18 @@
 
              />
 
+         <TextView
+             android:id="@+id/empty_forums_text"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:gravity="center_horizontal"
+             android:visibility="gone"
+             android:text="No Forums to view"
+             android:layout_margin="8dp"
+             android:layout_below="@+id/posts_recycler_view"
+             />
+
+
  <!--        bottom navigation -->
 
          <com.google.android.material.bottomnavigation.BottomNavigationView

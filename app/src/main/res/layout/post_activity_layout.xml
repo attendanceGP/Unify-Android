@@ -102,6 +102,16 @@
                         android:layout_alignParentLeft="true"
                         android:layout_margin="8dp"
                         android:scrollbars="vertical"/>
+                    <TextView
+                        android:id="@+id/empty_replies_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:visibility="gone"
+                        android:text="No replies yet"
+                        android:layout_margin="8dp"
+                        android:layout_below="@+id/posts_recycler_view"
+                        />
 
                 </LinearLayout>
             </ScrollView>

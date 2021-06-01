@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.attendance.APIClient;
@@ -13,7 +15,6 @@ import com.example.attendance.Announcement.Announcement_Student_Activity;
 import com.example.attendance.Database.AppDatabase;
 import com.example.attendance.Forums.ForumsActivity;
 import com.example.attendance.Home;
-import com.example.attendance.MainActivity;
 import com.example.attendance.R;
 import com.example.attendance.SessionManager;
 import com.example.attendance.TA_home;
@@ -23,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -42,6 +42,9 @@ public class DeadlineStudentActivity extends AppCompatActivity {
 
     private RecyclerView upcomingRecyclerView;
     private RecyclerView doneRecyclerView;
+
+    private TextView emptyViewUpcoming;
+    private TextView emptyViewDone;
 
     private UpcomingListAdapter upcomingListAdapter;
     private DoneListAdapter doneListAdapter;
@@ -70,6 +73,10 @@ public class DeadlineStudentActivity extends AppCompatActivity {
         // binding to the recycler views
         upcomingRecyclerView = (RecyclerView) findViewById(R.id.upcoming_deadlines);
         doneRecyclerView = (RecyclerView) findViewById(R.id.done_deadlines) ;
+
+        // binding the text that displays when rv is empty to its view
+        emptyViewUpcoming = (TextView) findViewById(R.id.empty_view_upcoming);
+        emptyViewDone = (TextView) findViewById(R.id.empty_view_done);
 
         // instantiating new list adapters for upcoming and done
         upcomingListAdapter = new UpcomingListAdapter(upcomingList, this);  // sending context as well
@@ -147,6 +154,23 @@ public class DeadlineStudentActivity extends AppCompatActivity {
                     public void run() {
                         upcomingListAdapter.notifyDataSetChanged();
                         doneListAdapter.notifyDataSetChanged();
+
+                        // if any rv is empty, show a text saying they're empty
+                        if(upcomingList.isEmpty()){
+                            upcomingRecyclerView.setVisibility(View.GONE);
+                            emptyViewUpcoming.setVisibility(View.VISIBLE);
+                        }else{
+                            upcomingRecyclerView.setVisibility(View.VISIBLE);
+                            emptyViewUpcoming.setVisibility(View.GONE);
+                        }
+
+                        if(doneList.isEmpty()){
+                            doneRecyclerView.setVisibility(View.GONE);
+                            emptyViewDone.setVisibility(View.VISIBLE);
+                        }else{
+                            doneRecyclerView.setVisibility(View.VISIBLE);
+                            emptyViewDone.setVisibility(View.GONE);
+                        }
                     }
                 });
             }

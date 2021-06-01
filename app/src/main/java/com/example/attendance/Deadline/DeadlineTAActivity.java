@@ -63,6 +63,8 @@ public class DeadlineTAActivity extends AppCompatActivity {
 
     private RecyclerView deadlineRecyclerView;
 
+    private TextView emptyView;
+
     private DeadlinesTAListAdapter deadlinesTAListAdapter;
 
     private Button addButton;
@@ -94,6 +96,9 @@ public class DeadlineTAActivity extends AppCompatActivity {
 
         // binding to the recycler view
         deadlineRecyclerView = (RecyclerView) findViewById(R.id.deadlines_you_posted);
+
+        // binding the text that displays when rv is empty to its view
+        emptyView = (TextView) findViewById(R.id.empty_view);
 
         // instantiating new list adapter for deadlines
         deadlinesTAListAdapter = new DeadlinesTAListAdapter(deadlinesList, context); // sending context as well
@@ -247,6 +252,8 @@ public class DeadlineTAActivity extends AppCompatActivity {
 
         updateData();
 
+        refreshDeadlines();
+
         /**
          * code for the bottom navigation bar
          */
@@ -335,6 +342,14 @@ public class DeadlineTAActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         deadlinesTAListAdapter.notifyDataSetChanged();
+
+                        if(deadlinesList.isEmpty()){
+                            deadlineRecyclerView.setVisibility(View.GONE);
+                            emptyView.setVisibility(View.VISIBLE);
+                        }else{
+                            deadlineRecyclerView.setVisibility(View.VISIBLE);
+                            emptyView.setVisibility(View.GONE);
+                        }
                     }
                 });
             }

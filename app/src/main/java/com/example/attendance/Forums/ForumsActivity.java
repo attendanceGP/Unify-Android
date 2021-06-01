@@ -11,9 +11,11 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.attendance.APIClient;
@@ -21,6 +23,7 @@ import com.example.attendance.Absence.AbsenceTab;
 import com.example.attendance.Absence.TAAbsenceTab;
 import com.example.attendance.Announcement.Announcement_Student_Activity;
 import com.example.attendance.Announcement.Announcement_TA_Activity;
+import com.example.attendance.Course.Course;
 import com.example.attendance.Database.AppDatabase;
 import com.example.attendance.Deadline.DeadlineStudentActivity;
 import com.example.attendance.Deadline.DeadlineTAActivity;
@@ -33,6 +36,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -63,6 +67,7 @@ public class ForumsActivity extends AppCompatActivity {
     private RecyclerView coursesRecyclerView;
 
     private SwipeRefreshLayout swipeRefreshLayout;
+    TextView emptyText;
 
     ForumsAPI forumsAPI;
     SessionManager sessionManager;
@@ -72,6 +77,8 @@ public class ForumsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forums_home_page);
         sessionManager = new SessionManager(getApplicationContext());
+
+        emptyText = (TextView) findViewById(R.id.empty_forums_text);
 
         // binding to the swipe layout to refresh the page
         this.swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.forums_swipe_layout);
@@ -91,6 +98,7 @@ public class ForumsActivity extends AppCompatActivity {
         coursesRecyclerView.setItemAnimator(new DefaultItemAnimator());
         coursesListAdapter = new CoursesListAdapter(this, courseCodes);
         coursesRecyclerView.setAdapter(coursesListAdapter);
+        updateCourseData();
         getUserCourses();
 
 
@@ -197,6 +205,53 @@ public class ForumsActivity extends AppCompatActivity {
         });
     }
 
+    private void updateCourseData(){
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+
+                courseCodes.clear();
+                courseCodes.add("All");
+                courseCodes.addAll(Room.databaseBuilder(getApplicationContext(),
+                        AppDatabase.class, "attendance").build().courseDAO().getAll());
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        selectedCourses.clear();
+                        selectedCourses.add(courseCodes.get(0));
+                        coursesListAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        });
+    }
+    //drops the current courses room table and inserts all coursecodes that we returned from the api into a list into the room database
+    private void syncCoursesFromAPI(ArrayList<String> courseCodes){
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                Room.databaseBuilder(getApplicationContext(),
+                        AppDatabase.class, "attendance").build().courseDAO().nukeTable();
+
+                ArrayList<Course> courses = new ArrayList<>();
+                for(int i=0;i<courseCodes.size();i++){
+                    Course nc= new Course(i,courseCodes.get(i));
+                    courses.add(nc);
+                }
+                //System.out.println(announcement.getId());
+                // if exists
+                Room.databaseBuilder(getApplicationContext(),
+                        AppDatabase.class, "attendance")
+                        .build().courseDAO().insertAll(courses.toArray(new Course[courses.size()]));
+
+                updateCourseData();
+                if (swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }
+        });
+    }
     private void getUserCourses() {
         UserAPI userAPI = APIClient.getClient().create(UserAPI.class);
         Call<ArrayList<String>> call = userAPI.getTaughtCourses(sessionManager.getId());
@@ -204,19 +259,16 @@ public class ForumsActivity extends AppCompatActivity {
         call.enqueue(new Callback<ArrayList<String>>() {
             @Override
             public void onResponse(Call<ArrayList<String>> call, Response<ArrayList<String>> response) {
+                ArrayList<String> courses= response.body();
                 if(response.code() != 200){
                     Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
                 }
-                else{
-                    courseCodes.add("All");
-                    courseCodes.addAll(response.body());
-                    coursesListAdapter.notifyDataSetChanged();
-                    selectedCourses.add(courseCodes.get(0)); // ALL
-                }
+                syncCoursesFromAPI(courses);
             }
 
             @Override
             public void onFailure(Call<ArrayList<String>> call, Throwable t) {
+                updateCourseData();
                 Toast.makeText(getApplicationContext(), "please check your internet connection", Toast.LENGTH_SHORT).show();
                 System.out.println(t.getMessage());
             }
@@ -238,7 +290,8 @@ public class ForumsActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         postsListAdapter.notifyDataSetChanged();
-//                        onCourseFilterClick(0,"All");
+                        filterPosts();  //todo
+                        setEmptyTextVisibility(Objects.requireNonNull(postsRecyclerView.getAdapter()).getItemCount()==0);
                     }
                 });
             }
@@ -279,16 +332,17 @@ public class ForumsActivity extends AppCompatActivity {
                         Room.databaseBuilder(getApplicationContext(),
                                 AppDatabase.class, "attendance").build().forumsDao().insertAllPosts(post);
                     }
-                    updateData();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (swipeRefreshLayout.isRefreshing()) {
-                                swipeRefreshLayout.setRefreshing(false);
-                            }
-                        }
-                    });
                 }
+
+                updateData();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (swipeRefreshLayout.isRefreshing()) {
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
+                    }
+                });
             }
         });
     }
@@ -330,6 +384,7 @@ public class ForumsActivity extends AppCompatActivity {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 Toast.makeText(getApplicationContext(), "removed", Toast.LENGTH_SHORT).show();
                 deleteUserPostFromRoom(postId);
+                setEmptyTextVisibility(userPosts.size()==0);
             }
 
             @Override
@@ -365,6 +420,7 @@ public class ForumsActivity extends AppCompatActivity {
         }
         postsRecyclerView.setAdapter(userPostsListAdapter);
         userPostsListAdapter.notifyDataSetChanged();
+        setEmptyTextVisibility(userPosts.size()==0);
     }
     public void filterUserPosts(){
         userPosts.clear();
@@ -388,6 +444,7 @@ public class ForumsActivity extends AppCompatActivity {
             }
         }
         postsListAdapter.notifyDataSetChanged();
+        setEmptyTextVisibility(posts.size()==0);
     }
     public void filterAllPosts(){
         posts.clear();
@@ -411,6 +468,8 @@ public class ForumsActivity extends AppCompatActivity {
         }
         postsRecyclerView.setAdapter(favPostsListAdapter);
         favPostsListAdapter.notifyDataSetChanged();
+
+        setEmptyTextVisibility(favPosts.size()==0);
     }
     public void filterStarredPosts(){
         favPosts.clear();
@@ -424,32 +483,28 @@ public class ForumsActivity extends AppCompatActivity {
         favPostsListAdapter.notifyDataSetChanged();
     }
 
-
-    public void onCourseFilterClick(int i, String course) {
+    public void setEmptyTextVisibility(boolean emptyList){
+        Log.i("sss", String.valueOf(emptyList));
+        if(emptyList){
+            postsRecyclerView.setVisibility(View.GONE);
+            emptyText.setVisibility(View.VISIBLE);
+        }
+        else{
+            postsRecyclerView.setVisibility(View.VISIBLE);
+            emptyText.setVisibility(View.GONE);
+        }
+        Log.i("sss", String.valueOf(emptyList));
+    }
+    public void onCourseFilterClick(int viewPosition, String course) {
 
 //        All courses are selected and user is trying to select all again.
-        if(selectedCourses.contains("All") && course.equals("All")){
-            coursesRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf("All")).
-                    findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.course_filter_button_selected);
+        if(course.equals("All")){
 
-        }
-
-//        if user is selecting All courses
-        else if(!selectedCourses.contains("All") && (course.equals("All") ||  (courseCodes.size()-2 == selectedCourses.size()))){
-            /* if the selected course IS "All"   OR   al courses are selected
-             *  1- set "All" selected
-             *  2- add "All" to selectedCourses
-             *  3- remove all Courses from selectedCourses
-             *  4- set all Courses unselected */
-            System.out.println(courseCodes.size()-1);
-            System.out.println(selectedCourses.size());
             for(String x: selectedCourses){
                 coursesRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf(x)).
-                        findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.course_filter_button_unselected);
+                        findViewById(R.id.forums_course_filter_button).setBackgroundResource(R.drawable.course_filter_button_unselected);
             }
 
-            coursesRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf("All")).
-                    findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.course_filter_button_selected);
             selectedCourses.clear();
             selectedCourses.add("All");
         }
@@ -462,12 +517,10 @@ public class ForumsActivity extends AppCompatActivity {
             *  3- add new Course to selectedCourses
             *  4- set new Course selected */
 
-            coursesRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf("All")).
-                    findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.course_filter_button_unselected);
-            selectedCourses.remove("All");
+            coursesRecyclerView.getLayoutManager().findViewByPosition(viewPosition).
+                    findViewById(R.id.forums_course_filter_button).setBackgroundResource(R.drawable.course_filter_button_selected);
 
-            coursesRecyclerView.getLayoutManager().findViewByPosition(i).
-                    findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.course_filter_button_selected);
+            selectedCourses.clear();
             selectedCourses.add(course);
         }
 
@@ -482,19 +535,18 @@ public class ForumsActivity extends AppCompatActivity {
             *       1: un-select the course  */
 
             if(selectedCourses.size() == 1){
-                coursesRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf("All")).
-                        findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.course_filter_button_selected);
                 selectedCourses.add("All");
             }
-            coursesRecyclerView.getLayoutManager().findViewByPosition(i).
-                    findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.course_filter_button_unselected);
+            coursesRecyclerView.getLayoutManager().findViewByPosition(viewPosition).
+                    findViewById(R.id.forums_course_filter_button).setBackgroundResource(R.drawable.course_filter_button_unselected);
             selectedCourses.remove(course);
+
         }
 
 //        selecting an additional course
         else {
-            coursesRecyclerView.getLayoutManager().findViewByPosition(i).
-                    findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.course_filter_button_selected);
+            coursesRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf(course)).
+                    findViewById(R.id.forums_course_filter_button).setBackgroundResource(R.drawable.course_filter_button_selected);
             selectedCourses.add(course);
         }
 
@@ -504,6 +556,7 @@ public class ForumsActivity extends AppCompatActivity {
         filterUserPosts();
         filterStarredPosts();
         filterAllPosts();
+        setEmptyTextVisibility(Objects.requireNonNull(postsRecyclerView.getAdapter()).getItemCount()==0);
     }
 
 }

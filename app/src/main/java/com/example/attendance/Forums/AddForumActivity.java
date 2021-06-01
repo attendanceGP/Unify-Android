@@ -1,8 +1,10 @@
 package com.example.attendance.Forums;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,6 +15,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.attendance.APIClient;
+import com.example.attendance.Course.Course;
+import com.example.attendance.Database.AppDatabase;
 import com.example.attendance.R;
 import com.example.attendance.SessionManager;
 import com.example.attendance.UserAPI;
@@ -32,7 +36,7 @@ public class AddForumActivity extends AppCompatActivity {
     private EditText description;
     private Button postButton;
     private Spinner courseSpinner;
-    ArrayList<String> courses;
+    ArrayList<String> courses = new ArrayList<>();
 
 
     ForumsAPI forumsAPI;
@@ -112,30 +116,65 @@ public class AddForumActivity extends AppCompatActivity {
         result = result + " " + strDate;
         return result;
     }
+    private void updateCourseData(){
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                courses.clear();
+                courses.addAll(Room.databaseBuilder(getApplicationContext(),
+                        AppDatabase.class, "attendance").build().courseDAO().getAll());
+            }
+        });
+    }
+    //drops the current courses room table and inserts all coursecodes that we returned from the api into a list into the room database
+    private void syncCoursesFromAPI(ArrayList<String> courseCodes){
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                Room.databaseBuilder(getApplicationContext(),
+                        AppDatabase.class, "attendance").build().courseDAO().nukeTable();
 
-    void setSpinner(){
-        courses = new ArrayList<>();
+                ArrayList<Course> courses = new ArrayList<>();
+                for(int i=0;i<courseCodes.size();i++){
+                    Course nc= new Course(i,courseCodes.get(i));
+                    courses.add(nc);
+                }
+
+                // if exists
+                Room.databaseBuilder(getApplicationContext(),
+                        AppDatabase.class, "attendance")
+                        .build().courseDAO().insertAll(courses.toArray(new Course[courses.size()]));
+
+                updateCourseData();
+            }
+        });
+    }
+    private void getUserCourses() {
+        UserAPI userAPI = APIClient.getClient().create(UserAPI.class);
         Call<ArrayList<String>> call = userAPI.getTaughtCourses(sessionManager.getId());
+
         call.enqueue(new Callback<ArrayList<String>>() {
             @Override
             public void onResponse(Call<ArrayList<String>> call, Response<ArrayList<String>> response) {
-                if (response.code() != 200) {
+                ArrayList<String> courses= response.body();
+                if(response.code() != 200){
                     Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
                 }
-                else{
-                    for(int i=0; i<response.body().size(); i++){
-                        String courseId = response.body().get(i);
-                        courses.add(courseId);
-                    }
-                }
+                syncCoursesFromAPI(courses);
             }
 
             @Override
             public void onFailure(Call<ArrayList<String>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "please check your connection", Toast.LENGTH_SHORT).show();
+                updateCourseData();
+                Toast.makeText(getApplicationContext(), "please check your internet connection", Toast.LENGTH_SHORT).show();
+                System.out.println(t.getMessage());
             }
-
         });
+    }
+
+    void setSpinner(){
+        courses = new ArrayList<>();
+        getUserCourses();
         courses.add("Courses");
         //Creating the ArrayAdapter instance having the country list
         ArrayAdapter arrayAdapter = new ArrayAdapter(this, R.layout.post_course_spinner_item,courses);

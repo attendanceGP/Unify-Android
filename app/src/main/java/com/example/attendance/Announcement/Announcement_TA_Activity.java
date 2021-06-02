@@ -27,6 +27,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.attendance.APIClient;
@@ -59,6 +60,8 @@ public class Announcement_TA_Activity extends AppCompatActivity {
 
     private RecyclerView announcementRecyclerView;
 
+    private TextView noAnnouncementsTV;
+
     private Context context;
 
     private AnnouncementsTAListAdapter announcementTaListAdapter;
@@ -75,7 +78,7 @@ public class Announcement_TA_Activity extends AppCompatActivity {
         setContentView(R.layout.activity_announcement_ta);
         sessionManager = new SessionManager(getApplicationContext());
         context = this;
-
+        noAnnouncementsTV = (TextView) findViewById(R.id.empty_TA_announcements);
             // binding to the swipe layout to refesh the page
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.ta_announcement_swipe_layout);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -318,6 +321,15 @@ public class Announcement_TA_Activity extends AppCompatActivity {
                     @Override
                     public void run() {
                         announcementTaListAdapter.notifyDataSetChanged();
+
+                        if(announcementList.isEmpty()){
+                            announcementRecyclerView.setVisibility(View.GONE);
+                            noAnnouncementsTV.setVisibility(View.VISIBLE);
+                        }
+                        else{
+                            announcementRecyclerView.setVisibility(View.VISIBLE);
+                            noAnnouncementsTV.setVisibility(View.GONE);
+                        }
                     }
                 });
             }

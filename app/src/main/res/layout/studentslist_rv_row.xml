@@ -16,8 +16,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="10dp"
+        android:text="name"
+        android:layout_toLeftOf="@+id/buttonRow"
         android:textAppearance="@style/student_name"
-        android:gravity="center_horizontal|center_vertical"
+        android:gravity="center"
         />
 
     <!--    Student ID text view-->
@@ -25,9 +29,12 @@
         android:id="@+id/tvStudentID"
         android:layout_width="164dp"
         android:layout_height="22dp"
+        android:text="id"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="10dp"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="24dp"
+        android:layout_below="@+id/tvStudentName"
+        android:layout_toLeftOf="@+id/buttonRow"
         android:textAppearance="@style/some_id"
         android:gravity="center_horizontal|center_vertical"
         />
@@ -37,12 +44,11 @@
         android:layout_width="42dp"
         android:layout_height="42dp"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="20dp"
         android:background="@drawable/ellipse_1"
-        android:drawableLeft="@drawable/vector"
-        android:drawablePadding="5dp"
-        android:paddingLeft="12dp"
-        android:layout_marginRight="20dp" />
+         />
 
 
 </RelativeLayout>

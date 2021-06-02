@@ -14,6 +14,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.attendance.APIClient;
@@ -42,6 +44,8 @@ public class Announcement_Student_Activity extends AppCompatActivity {
 
     private RecyclerView filterRecyclerView;
 
+    private TextView noAnnouncementsTV;
+
     private Context context;
 
     private AnnouncementsStudentListAdapter announcementsStudentListAdapter;
@@ -69,7 +73,7 @@ public class Announcement_Student_Activity extends AppCompatActivity {
 
         context = this;
 
-
+        noAnnouncementsTV = (TextView) findViewById(R.id.empty_student_announcements);
 
         // binding to the swipe layout to refesh the page
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.student_announcement_swipe_layout);
@@ -189,7 +193,17 @@ public class Announcement_Student_Activity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+
                         announcementsStudentListAdapter.notifyDataSetChanged();
+
+                        if(announcementList.isEmpty()){
+                            announcementRecyclerView.setVisibility(View.GONE);
+                            noAnnouncementsTV.setVisibility(View.VISIBLE);
+                        }
+                        else{
+                            announcementRecyclerView.setVisibility(View.VISIBLE);
+                            noAnnouncementsTV.setVisibility(View.GONE);
+                        }
                     }
                 });
             }

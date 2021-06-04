@@ -105,17 +105,33 @@ public class Home extends AppCompatActivity implements LocationListener {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch(item.getItemId()){
                     case R.id.action_absence:
+                        if (lm!=null){
+                            lm.removeUpdates(Home.this);
+                            lm = null;
+                        }
                         startActivity(new Intent(Home.this, AbsenceTab.class));
                         return true;
 
                     case R.id.action_announcements:
+                        if (lm!=null){
+                            lm.removeUpdates(Home.this);
+                            lm = null;
+                        }
                         startActivity(new Intent(Home.this, Announcement_Student_Activity.class));
                         return true;
 
                     case R.id.action_forum:
+                        if (lm!=null){
+                            lm.removeUpdates(Home.this);
+                            lm = null;
+                        }
                         return true;
 
                     case R.id.action_deadlines:
+                        if (lm!=null){
+                            lm.removeUpdates(Home.this);
+                            lm = null;
+                        }
                         startActivity(new Intent(Home.this, DeadlineStudentActivity.class));
                         return true;
                 }
@@ -222,8 +238,8 @@ public class Home extends AppCompatActivity implements LocationListener {
     public void onLocationChanged(@NonNull Location location) {
         latitude = location.getLatitude();
         longitude = location.getLongitude();
-        lm.removeUpdates(this);
-        lm = null;
+        /*lm.removeUpdates(this);
+        lm = null;*/
         if (swipeRefreshLayout.isRefreshing()) {
             callAPIs();
             swipeRefreshLayout.setRefreshing(false);

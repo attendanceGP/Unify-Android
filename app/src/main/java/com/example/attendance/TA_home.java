@@ -53,6 +53,7 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
     ArrayAdapter<String> adapter;
     ArrayList<String> givenCourses = new ArrayList<String>();
     boolean gotLocation = false;
+    private static final int CODE = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +61,11 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
         sessionManager = new SessionManager(getApplicationContext());
         groups = findViewById(R.id.Groups);
         selectCourse = findViewById(R.id.Courses);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, CODE);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 2);
+        }
         UserAPI userAPI = APIClient.getClient().create(UserAPI.class);
         Call<ArrayList<String>> call = userAPI.getTaughtCourses(sessionManager.getId());
         call.enqueue(new Callback<ArrayList<String>>() {
@@ -185,8 +191,6 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
     //function that sets the location ( longitude and latitude)and then calls the APIs and stops the refresh after
     @Override
     public void onLocationChanged(@NonNull Location location) {
-    if (!gotLocation){
-        gotLocation = true;
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
         lm.removeUpdates(this);
@@ -203,7 +207,7 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
                 Toast.makeText(TA_home.this, "error in updating location", Toast.LENGTH_SHORT).show();
             }
         });
-    }
+
     }
 
     @Override

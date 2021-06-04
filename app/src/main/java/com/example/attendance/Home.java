@@ -51,6 +51,11 @@ public class Home extends AppCompatActivity implements LocationListener {
         sessionManager = new SessionManager(getApplicationContext());
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe);
         button = (Button) findViewById(R.id.attend_butt);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, CODE);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 2);
+        }
         // call the get student courses API and store them in courses variable
         Call<String[]> call = APIClient.getClient().create(UserAPI.class).getStudentCourses(sessionManager.getId());
         call.enqueue(new Callback<String[]>() {
@@ -68,10 +73,10 @@ public class Home extends AppCompatActivity implements LocationListener {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-            if (!gotLocation){
+
                 getCurrentLocation();
-                gotLocation=true;
-            }
+
+
             }
         });
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
@@ -80,18 +85,34 @@ public class Home extends AppCompatActivity implements LocationListener {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch(item.getItemId()){
                     case R.id.action_absence:
+                        if (lm!=null){
+                            lm.removeUpdates(Home.this);
+                            lm = null;
+                        }
                         startActivity(new Intent(Home.this, AbsenceTab.class));
                         return true;
 
                     case R.id.action_announcements:
+                        if (lm!=null){
+                            lm.removeUpdates(Home.this);
+                            lm = null;
+                        }
                         startActivity(new Intent(Home.this, Announcement_Student_Activity.class));
                         return true;
 
                     case R.id.action_forum:
+                        if (lm!=null){
+                            lm.removeUpdates(Home.this);
+                            lm = null;
+                        }
                         startActivity(new Intent(Home.this, ForumsActivity.class));
                         return true;
 
                     case R.id.action_deadlines:
+                        if (lm!=null){
+                            lm.removeUpdates(Home.this);
+                            lm = null;
+                        }
                         startActivity(new Intent(Home.this, DeadlineStudentActivity.class));
                         return true;
                 }
@@ -194,8 +215,6 @@ public class Home extends AppCompatActivity implements LocationListener {
     public void onLocationChanged(@NonNull Location location) {
         latitude = location.getLatitude();
         longitude = location.getLongitude();
-        lm.removeUpdates(this);
-        lm = null;
         if (swipeRefreshLayout.isRefreshing()) {
             callAPIs();
             swipeRefreshLayout.setRefreshing(false);

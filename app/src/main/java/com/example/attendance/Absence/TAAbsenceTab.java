@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,11 +31,13 @@ import retrofit2.Response;
 
 public class TAAbsenceTab extends AppCompatActivity {
     SessionManager sessionManager;
+    private TextView emptyView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_t_a_absence_tab);
         sessionManager = new SessionManager(getApplicationContext());
+        emptyView = (TextView)findViewById(R.id.empty_view_ta_recent);
         RecyclerView rv = findViewById(R.id.rv_ta_recent);
 
         AsyncTask.execute(new Runnable() {
@@ -52,6 +56,13 @@ public class TAAbsenceTab extends AppCompatActivity {
                         TaRecentAdapter taRecentAdapter = new TaRecentAdapter(taRecents);
                         rv.setAdapter(taRecentAdapter);
                         rv.setLayoutManager(new LinearLayoutManager(TAAbsenceTab.this));
+                        if(taRecents.length ==0){
+                            rv.setVisibility(View.GONE);
+                            emptyView.setVisibility(View.VISIBLE);
+                        }else{
+                            rv.setVisibility(View.VISIBLE);
+                            emptyView.setVisibility(View.GONE);
+                        }
                     }
                 });
             }
@@ -65,6 +76,14 @@ public class TAAbsenceTab extends AppCompatActivity {
                 TaRecentAdapter taRecentAdapter = new TaRecentAdapter(taRecents);
                 rv.setAdapter(taRecentAdapter);
                 rv.setLayoutManager(new LinearLayoutManager(TAAbsenceTab.this));
+
+                if(taRecents.length ==0){
+                    rv.setVisibility(View.GONE);
+                    emptyView.setVisibility(View.VISIBLE);
+                }else{
+                    rv.setVisibility(View.VISIBLE);
+                    emptyView.setVisibility(View.GONE);
+                }
 
                 TARecentRoom[] taRecentRooms = new TARecentRoom[taRecents.length];
                 for (int i = 0; i <taRecentRooms.length ; i++) {

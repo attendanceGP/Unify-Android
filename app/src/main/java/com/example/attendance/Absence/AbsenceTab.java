@@ -11,6 +11,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.attendance.APIClient;
@@ -31,12 +33,13 @@ import retrofit2.Response;
 
 public class AbsenceTab extends AppCompatActivity {
     private SessionManager sessionManager;
-
+    private TextView emptyView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_absence_tab);
         sessionManager = new SessionManager(getApplicationContext());
+        emptyView = (TextView)findViewById(R.id.empty_view_recent);
         RecyclerView rv =findViewById(R.id.rv_absence);
         RecyclerView rvRecent= findViewById(R.id.rv_recent);
         // get the data from room to the overview and recent and if there is an internet connection they will update instantly
@@ -66,6 +69,13 @@ public class AbsenceTab extends AppCompatActivity {
                         RecentAdapter recentAdapter = new RecentAdapter(recents);
                         rvRecent.setAdapter(recentAdapter);
                         rvRecent.setLayoutManager(new LinearLayoutManager(AbsenceTab.this));
+                        if(recents.length ==0){
+                            rvRecent.setVisibility(View.GONE);
+                            emptyView.setVisibility(View.VISIBLE);
+                        }else{
+                            rvRecent.setVisibility(View.VISIBLE);
+                            emptyView.setVisibility(View.GONE);
+                        }
 
                     }
                 });
@@ -110,11 +120,19 @@ public class AbsenceTab extends AppCompatActivity {
                 RecentAdapter recentAdapter = new RecentAdapter(recents);
                 rvRecent.setAdapter(recentAdapter);
                 rvRecent.setLayoutManager(new LinearLayoutManager(AbsenceTab.this));
+                if(recents.length ==0){
+                    rvRecent.setVisibility(View.GONE);
+                    emptyView.setVisibility(View.VISIBLE);
+                }else{
+                    rvRecent.setVisibility(View.VISIBLE);
+                    emptyView.setVisibility(View.GONE);
+                }
                 RecentRoom[] recentRooms = new RecentRoom[recents.length];
                 for (int i = 0; i <recents.length ; i++) {
                     Recent recent = recents[i];
                     recentRooms[i]=new RecentRoom(recent.getCourseCode(),recent.getTaName(),recent.getDate(),recent.isPen());
                 }
+
                 AsyncTask.execute(new Runnable() {
                     @Override
                     public void run() {

@@ -161,6 +161,8 @@ public class Home extends AppCompatActivity implements LocationListener {
                                             @Override
                                             public void onResponse(Call<Void> call, Response<Void> response) {
                                                 Toast.makeText(Home.this, "Done", Toast.LENGTH_SHORT).show();
+                                                button.setBackground(getResources().getDrawable(R.drawable.attend_button));
+                                                button.setEnabled(false);
                                             }
 
                                             @Override

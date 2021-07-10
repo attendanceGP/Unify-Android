@@ -17,6 +17,7 @@ import androidx.room.Room;
 import com.example.attendance.APIClient;
 import com.example.attendance.Announcement.Announcement_TA_Activity;
 import com.example.attendance.Database.AppDatabase;
+import com.example.attendance.Deadline.DeadlineStudentActivity;
 import com.example.attendance.Deadline.DeadlineTAActivity;
 import com.example.attendance.Forums.ForumsActivity;
 import com.example.attendance.Home;
@@ -129,5 +130,15 @@ public class TAAbsenceTab extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(sessionManager.getType().equals("student")){
+            startActivity(new Intent(TAAbsenceTab.this, Home.class));
+        }else{
+            startActivity(new Intent(TAAbsenceTab.this, TA_home.class));
+        }
+        finish();
     }
 }

@@ -559,4 +559,14 @@ public class ForumsActivity extends AppCompatActivity {
         setEmptyTextVisibility(Objects.requireNonNull(postsRecyclerView.getAdapter()).getItemCount()==0);
     }
 
+    @Override
+    public void onBackPressed() {
+        if(sessionManager.getType().equals("student")){
+            startActivity(new Intent(ForumsActivity.this, Home.class));
+            finish();
+        }else{
+            startActivity(new Intent(ForumsActivity.this, TA_home.class));
+            finish();
+        }
+    }
 }

@@ -36,6 +36,7 @@ import com.example.attendance.Database.AppDatabase;
 import com.example.attendance.Deadline.DeadlineStudentActivity;
 import com.example.attendance.Deadline.DeadlineTAActivity;
 import com.example.attendance.Forums.ForumsActivity;
+import com.example.attendance.Home;
 import com.example.attendance.R;
 import com.example.attendance.SessionManager;
 import com.example.attendance.TA_home;
@@ -355,5 +356,16 @@ public class Announcement_TA_Activity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(sessionManager.getType().equals("student")){
+            startActivity(new Intent(Announcement_TA_Activity.this, Home.class));
+            finish();
+        }else{
+            startActivity(new Intent(Announcement_TA_Activity.this, TA_home.class));
+            finish();
+        }
     }
 }

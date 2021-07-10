@@ -436,4 +436,15 @@ public class DeadlineTAActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        if(sessionManager.getType().equals("student")){
+            startActivity(new Intent(DeadlineTAActivity.this, Home.class));
+            finish();
+        }else{
+            startActivity(new Intent(DeadlineTAActivity.this, TA_home.class));
+            finish();
+        }
+    }
 }

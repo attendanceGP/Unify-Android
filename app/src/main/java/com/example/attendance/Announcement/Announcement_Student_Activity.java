@@ -27,6 +27,7 @@ import com.example.attendance.Forums.ForumsActivity;
 import com.example.attendance.Home;
 import com.example.attendance.R;
 import com.example.attendance.SessionManager;
+import com.example.attendance.TA_home;
 import com.example.attendance.UserAPI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -376,6 +377,17 @@ public class Announcement_Student_Activity extends AppCompatActivity {
             announcementList.addAll(undeletedAnnouncements);
 
             announcementsStudentListAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(sessionManager.getType().equals("student")){
+            startActivity(new Intent(Announcement_Student_Activity.this, Home.class));
+            finish();
+        }else{
+            startActivity(new Intent(Announcement_Student_Activity.this, TA_home.class));
+            finish();
         }
     }
 }

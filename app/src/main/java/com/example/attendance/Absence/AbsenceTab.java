@@ -175,4 +175,15 @@ public class AbsenceTab extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        if(sessionManager.getType().equals("student")){
+            startActivity(new Intent(AbsenceTab.this, Home.class));
+            finish();
+        }else{
+            startActivity(new Intent(AbsenceTab.this, TA_home.class));
+            finish();
+        }
+    }
 }

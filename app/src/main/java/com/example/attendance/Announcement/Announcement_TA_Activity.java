@@ -120,6 +120,7 @@ public class Announcement_TA_Activity extends AppCompatActivity {
 
                 final EditText title = (EditText) dialogView.findViewById(R.id.announcement_title_in_popup);
                 EditText description = (EditText) dialogView.findViewById(R.id.announcement_description_in_pop_up);
+                EditText groups = (EditText) dialogView.findViewById(R.id.announcement_groups_in_popup);
 
                 //course spinner-----------------------------------------------------------------------------
                 Spinner selectCourse = (Spinner) dialogView.findViewById(R.id.announcement_course_in_pop_up);
@@ -183,6 +184,7 @@ public class Announcement_TA_Activity extends AppCompatActivity {
                         String postTitle = title.getText().toString();
                         String courseCode =selectCourse.getSelectedItem().toString();
                         String postDescription = description.getText().toString();
+                        String postGroups = groups.getText().toString();
 
                         if(postTitle.equals("")){
                             Toast.makeText(context, "announcement title name cannot be empty", Toast.LENGTH_SHORT).show();
@@ -190,9 +192,11 @@ public class Announcement_TA_Activity extends AppCompatActivity {
                             Toast.makeText(context, "please select a course", Toast.LENGTH_SHORT).show();
                         }else if(postDescription.equals("")){
                             Toast.makeText(getApplicationContext(), "announcement description can't be empty", Toast.LENGTH_SHORT).show();
+                        }else if(postGroups.equals("")){
+                            Toast.makeText(getApplicationContext(), "announcement groups can't be empty", Toast.LENGTH_SHORT).show();
                         }else{
                             java.util.Date date = new java.util.Date();
-                            postAnnouncement(sessionManager.getId(), courseCode, date, postTitle, postDescription);
+                            postAnnouncement(sessionManager.getId(), courseCode, date, postTitle,postGroups, postDescription);
                             dialogBuilder.dismiss();
                         }
                     }
@@ -234,12 +238,13 @@ public class Announcement_TA_Activity extends AppCompatActivity {
     }
 
     //-------------------------------------------------------------------------------------------------------------------------------
-    private void postAnnouncement(int userId, String courseId, Date postedDate, String title, String post) {
+    private void postAnnouncement(int userId, String courseId, Date postedDate, String title,
+                                  String announcementGroups, String post) {
         AnnouncementAPI announcementAPI = APIClient.getClient().create(AnnouncementAPI.class);
 
         Call<Integer> call = announcementAPI.postAnnouncement(userId, courseId,
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(postedDate),
-                title, post);
+                title,announcementGroups, post);
 
         call.enqueue(new Callback<Integer>() {
             @Override

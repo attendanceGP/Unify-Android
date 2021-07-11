@@ -12,7 +12,7 @@ public interface AnnouncementAPI {
     @POST("announcement/postannouncement")
     Call<Integer> postAnnouncement(@Query("userId") int userId, @Query("courseId") String courseId,
                                    @Query("postedDate") String postedDate, @Query("title") String title,
-                                   @Query("post") String post);
+                                   @Query("announcementGroups") String announcementGroups,@Query("post") String post);
 
     @DELETE("announcement/deletePostedAnnouncement")
     Call<Integer> deleteAnnouncement(@Query("id") int id);

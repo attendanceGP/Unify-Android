@@ -65,13 +65,27 @@
         />
 
     <TextView
+        android:id="@+id/student_announcement_groups"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="16dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="84dp"
+        android:text="G1,G2,G3"
+        android:textAppearance="@style/announcement_tvs"
+        android:gravity="center_vertical"
+        />
+
+    <TextView
         android:id="@+id/student_announcement_description"
         android:layout_width="334dp"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="15dp"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="94dp"
+        android:layout_marginTop="110dp"
         android:layout_marginBottom="14dp"
         android:text="There won’t be any lecture on Monday. Lectures will be resumed normally after."
         android:textAppearance="@style/announcement_tvs"

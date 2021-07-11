@@ -31,6 +31,7 @@ public class AnnouncementsTAListAdapter extends RecyclerView.Adapter<Announcemen
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         public TextView title_tv;
+        public TextView group_tv;
         public TextView courseId_tv;
         public TextView postedDate_tv;
         public TextView postedBy_tv;
@@ -42,6 +43,7 @@ public class AnnouncementsTAListAdapter extends RecyclerView.Adapter<Announcemen
         public ViewHolder(View view){
             super(view);
             title_tv = (TextView) view.findViewById(R.id.ta_announcement_title);
+            group_tv = (TextView) view.findViewById(R.id.ta_announcement_groups);
             courseId_tv = (TextView) view.findViewById(R.id.ta_announcement_course_code);
             postedDate_tv = (TextView) view.findViewById(R.id.ta_posted_date);
             postedBy_tv = (TextView) view.findViewById(R.id.ta_posted_by);
@@ -70,6 +72,7 @@ public class AnnouncementsTAListAdapter extends RecyclerView.Adapter<Announcemen
     public void onBindViewHolder(@NonNull AnnouncementsTAListAdapter.ViewHolder holder, int position) {
         Announcement announcement = announcements.get(position);
         holder.title_tv.setText(announcement.getTitle());
+        holder.group_tv.setText(announcement.getAnnouncementGroups());
         holder.courseId_tv.setText(announcement.getCourseId());
         holder.postedDate_tv.setText(getPostedDateStringFromDate(announcement.getPostedDate()));
         holder.postedBy_tv.setText(announcement.getPostedBy());

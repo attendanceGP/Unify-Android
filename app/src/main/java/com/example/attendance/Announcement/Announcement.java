@@ -18,6 +18,9 @@ public class Announcement {
     @ColumnInfo(name = "title")
     private String title;
 
+    @ColumnInfo(name = "announcementGroups")
+    private String announcementGroups;
+
     @ColumnInfo(name = "courseId")
     private String courseId;
 
@@ -30,9 +33,10 @@ public class Announcement {
     @ColumnInfo(name = "description")
     private String description;
 
-    public Announcement(int id, String title, String courseId, Date postedDate, String postedBy, String description) {
+    public Announcement(int id, String title,String announcementGroups, String courseId, Date postedDate, String postedBy, String description) {
         this.id = id;
         this.title = title;
+        this.announcementGroups = announcementGroups;
         this.courseId = courseId;
         this.postedDate = postedDate;
         this.postedBy = postedBy;
@@ -55,6 +59,14 @@ public class Announcement {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getAnnouncementGroups() {
+        return announcementGroups;
+    }
+
+    public void setAnnouncementGroups(String announcementGroups) {
+        this.announcementGroups = announcementGroups;
     }
 
     public String getCourseId() {

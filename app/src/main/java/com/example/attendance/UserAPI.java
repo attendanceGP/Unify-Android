@@ -73,4 +73,9 @@ public interface UserAPI {
     Call<Void> confirmList(@Query("courseID") String courseID, @Query("group") String Group,
                                  @Query("date") String date);
 
+    //getting already recorded groups for attendance for a certain day and course
+    @GET("ta/getExistingAttendanceGroups")
+    Call<ArrayList<String>> getExistingAttendanceGroups(@Query("date") String date,@Query("userGroup") String userGroup,
+                                                   @Query("courseId") String courseId, @Query("userId") Integer userId);
+
 }

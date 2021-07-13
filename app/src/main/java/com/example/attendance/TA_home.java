@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -31,6 +32,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,10 +52,14 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
     EditText groups;
     Button recordAttendance;
     Spinner selectCourse;
+
     ArrayAdapter<String> adapter;
     ArrayList<String> givenCourses = new ArrayList<String>();
+    ArrayList<String> existingGroups = new ArrayList<String>();
+
     boolean gotLocation = false;
     private static final int CODE = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,14 +67,17 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
         sessionManager = new SessionManager(getApplicationContext());
         groups = findViewById(R.id.Groups);
         selectCourse = findViewById(R.id.Courses);
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, CODE);
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 2);
         }
+
         UserAPI userAPI = APIClient.getClient().create(UserAPI.class);
         Call<ArrayList<String>> call = userAPI.getTaughtCourses(sessionManager.getId());
         call.enqueue(new Callback<ArrayList<String>>() {
+
             @Override
             public void onResponse(Call<ArrayList<String>> call, Response<ArrayList<String>> response) {
                 if (response.code() != 200) {
@@ -89,7 +98,7 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
         });
 
         givenCourses.add("None");
-
+        Log.d("courses",givenCourses.size()+"");
         // use default spinner item to show options in spinner
         adapter = new ArrayAdapter<>(this, R.layout.course_spinner_item, givenCourses);
         selectCourse.setAdapter(adapter);
@@ -110,30 +119,12 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
                     Toast.makeText(getApplicationContext(), "you chose None for courses please change your choice", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    UserAPI userAPI = APIClient.getClient().create(UserAPI.class);
                     java.util.Date date = new java.util.Date();
                     String currDate = new SimpleDateFormat("dd-MM-yyyy").format(date);
                     String group = groups.getText().toString();
-                    Call<Void> call = userAPI.taStartAttendance(currDate, group, courseCode, sessionManager.getId());
-                    call.enqueue(new Callback<Void>() {
-                        @Override
-                        public void onResponse(Call<Void> call, Response<Void> response) {
-                            if (response.code() != 200) {
-                                Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Intent ta_page_2 = new Intent(TA_home.this, TA_closes_attendance.class);
-                                ta_page_2.putExtra("currDate", currDate);
-                                ta_page_2.putExtra("courseCode", courseCode);
-                                ta_page_2.putExtra("group", group);
-                                startActivity(ta_page_2);
-                            }
-                        }
 
-                        @Override
-                        public void onFailure(Call<Void> call, Throwable t) {
-                            Toast.makeText(getApplicationContext(), "please check your internet connection", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    //getting the already existing groups for said course in said day
+                    startAttendance(currDate, group, courseCode, sessionManager.getId());
                 }
     }
         });
@@ -224,6 +215,57 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
     @Override
     public void onStatusChanged(String s, int i, Bundle bundle) {
 
+    }
+
+    public void startAttendance(String currDate,String groups,String courseCode,Integer userId){
+        UserAPI userAPI = APIClient.getClient().create(UserAPI.class);
+        Call<ArrayList<String>> call = userAPI.getExistingAttendanceGroups(currDate,groups,
+                courseCode,userId);
+        call.enqueue(new Callback<ArrayList<String>>() {
+            @Override
+            public void onResponse(Call<ArrayList<String>> call, Response<ArrayList<String>> response) {
+                if (response.code() != 200) {
+                    Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    existingGroups = response.body();
+                    if (existingGroups.isEmpty()){
+                        Call<Void> call2 = userAPI.taStartAttendance(currDate, groups, courseCode, sessionManager.getId());
+                        call2.enqueue(new Callback<Void>() {
+                            @Override
+                            public void onResponse(Call<Void> call2, Response<Void> response) {
+                                if (response.code() != 200) {
+                                    Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Intent ta_page_2 = new Intent(TA_home.this, TA_closes_attendance.class);
+                                    ta_page_2.putExtra("currDate", currDate);
+                                    ta_page_2.putExtra("courseCode", courseCode);
+                                    ta_page_2.putExtra("group", groups);
+                                    startActivity(ta_page_2);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<Void> call2, Throwable t) {
+                                Toast.makeText(getApplicationContext(), "please check your internet connection", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                    else{
+                        String groups ="";
+                        for(int i=0; i<existingGroups.size(); i++){
+                            groups += (existingGroups.get(i)+" ");
+                        }
+                        Toast.makeText(getApplicationContext(), "the following groups " + groups +
+                                "already have attendance recorded for them today in this course", Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<String>> call, Throwable t) {
+                }
+            });
     }
 
 }

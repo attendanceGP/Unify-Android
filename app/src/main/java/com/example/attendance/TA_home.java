@@ -223,7 +223,7 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
     public void startAttendance(String currDate,String groups,String courseCode,Integer userId){
         UserAPI userAPI = APIClient.getClient().create(UserAPI.class);
         Call<ArrayList<String>> call = userAPI.getExistingAttendanceGroups(currDate,groups,
-                courseCode,userId);
+                courseCode);
         call.enqueue(new Callback<ArrayList<String>>() {
             @Override
             public void onResponse(Call<ArrayList<String>> call, Response<ArrayList<String>> response) {

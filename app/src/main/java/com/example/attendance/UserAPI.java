@@ -76,6 +76,6 @@ public interface UserAPI {
     //getting already recorded groups for attendance for a certain day and course
     @GET("ta/getExistingAttendanceGroups")
     Call<ArrayList<String>> getExistingAttendanceGroups(@Query("date") String date,@Query("userGroup") String userGroup,
-                                                   @Query("courseId") String courseId, @Query("userId") Integer userId);
+                                                   @Query("courseId") String courseId);
 
 }

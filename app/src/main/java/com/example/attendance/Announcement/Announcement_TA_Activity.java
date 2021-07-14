@@ -162,8 +162,6 @@ public class Announcement_TA_Activity extends AppCompatActivity {
                 selectCourse.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        String text = parent.getItemAtPosition(position).toString();
-//                        Toast.makeText(parent.getContext(), "selected: " + text, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -349,7 +347,6 @@ public class Announcement_TA_Activity extends AppCompatActivity {
                 Room.databaseBuilder(getApplicationContext(),
                         AppDatabase.class, "attendance").build().announcementDao().nukeTable();
 
-                //System.out.println(announcement.getId());
                 // if exists
                 Room.databaseBuilder(getApplicationContext(),
                         AppDatabase.class, "attendance")

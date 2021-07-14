@@ -36,7 +36,6 @@ public class AnnouncementsTAListAdapter extends RecyclerView.Adapter<Announcemen
         public TextView postedDate_tv;
         public TextView postedBy_tv;
         public TextView description_tv;
-        public Button delete_announcement;
 
         public Announcement announcement;
 

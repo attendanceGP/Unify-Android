@@ -21,9 +21,6 @@ public interface AnnouncementDao {
     @Delete
     void delete(Announcement announcement);
 
-    @Query("SELECT COUNT(*) FROM Announcement")
-    int getCount();
-
     @Query("DELETE FROM announcement")
     void nukeTable();
 

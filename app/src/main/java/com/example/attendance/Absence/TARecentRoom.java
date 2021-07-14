@@ -20,23 +20,27 @@ public class TARecentRoom {
     Integer attended;
     @ColumnInfo(name = "absent")
     Integer absent;
+    @ColumnInfo(name = "group")
+    String groupNumber;
 
     public TARecentRoom() {
     }
 
-    public TARecentRoom(String courseCode, String date, Integer attended, Integer absent) {
+    public TARecentRoom(String courseCode, String date, Integer attended, Integer absent, String groupNumber) {
         this.courseCode = courseCode;
         this.date = date;
         this.attended = attended;
         this.absent = absent;
+        this.groupNumber = groupNumber;
     }
 
-    public TARecentRoom(Integer id, String courseCode, String date, Integer attended, Integer absent) {
+    public TARecentRoom(Integer id, String courseCode, String date, Integer attended, Integer absent,String groupNumber) {
         this.id = id;
         this.courseCode = courseCode;
         this.date = date;
         this.attended = attended;
         this.absent = absent;
+        this.groupNumber = groupNumber;
     }
 
     public Integer getId() {
@@ -78,4 +82,8 @@ public class TARecentRoom {
     public void setAbsent(Integer absent) {
         this.absent = absent;
     }
+
+    public String getGroupNumber() { return groupNumber; }
+
+    public void setGroupNumber(String groupNumber) { this.groupNumber = groupNumber; }
 }

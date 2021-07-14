@@ -34,10 +34,11 @@ public class TaRecentAdapter extends RecyclerView.Adapter<TaRecentAdapter.ViewHo
         TextView courseCode = holder.courseCodeText;
         TextView date = holder.dateText;
         TextView totalAttended = holder.totalAttendedText;
-
+        TextView groupNumber = holder.groupNumber;
         courseCode.setText(tarecent.getCourseCode());
         date.setText("Recorded on "+tarecent.getDate());
         totalAttended.setText(Integer.toString(tarecent.getAttended())+" attended, "+ Integer.toString(tarecent.getAbsent())+" were absent");
+        groupNumber.setText(tarecent.getGroupNumber());
     }
 
     @Override
@@ -46,12 +47,13 @@ public class TaRecentAdapter extends RecyclerView.Adapter<TaRecentAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        TextView courseCodeText,dateText,totalAttendedText;
+        TextView courseCodeText,dateText,totalAttendedText,groupNumber;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             courseCodeText = itemView.findViewById(R.id.ta_recent_course);
             dateText = itemView.findViewById(R.id.ta_recorded_on);
             totalAttendedText = itemView.findViewById(R.id.ta_num_of_attendance);
+            groupNumber = itemView.findViewById(R.id.group_number);
 
         }
     }

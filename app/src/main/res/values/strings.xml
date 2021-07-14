@@ -90,6 +90,7 @@ Done
 Add a new deadline
 </string>
 
+    <string name="group_number">G1</string>
 
     <string name="button_confirm_text">Confirm</string>
     <string name="button_add_text">Add</string>

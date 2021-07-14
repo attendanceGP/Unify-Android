@@ -37,7 +37,7 @@ public class RecentAdapter extends RecyclerView.Adapter<RecentAdapter.ViewHolder
     TextView ta = holder.TAText;
     TextView pen = holder.penText;
     courseCode.setText(recent.getCourseCode());
-    date.setText("recorded on " +recent.getDate());
+    date.setText("Recorded on " +recent.getDate());
     ta.setText("TA "+recent.getTaName());
     if (recent.isPen())pen.setVisibility(View.VISIBLE);
     else pen.setVisibility(View.INVISIBLE);

@@ -44,16 +44,18 @@ public class TAAbsenceTab extends AppCompatActivity {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
+                // get the Recent from room database and add them to taRecents
                 TARecentRoom[] taRecentRooms =Room.databaseBuilder(getApplicationContext(), AppDatabase.class,"TARecent").build().absenceDAO().readAllTARecent();
                 TaRecent[]taRecents = new TaRecent[taRecentRooms.length];
                 for (int i = 0; i <taRecentRooms.length ; i++) {
                     TARecentRoom taRecentRoom = taRecentRooms[i];
-                    taRecents[i] = new TaRecent(taRecentRoom.getCourseCode(),taRecentRoom.getDate(),taRecentRoom.getAttended(),taRecentRoom.getAbsent());
+                    taRecents[i] = new TaRecent(taRecentRoom.getCourseCode(),taRecentRoom.getDate(),taRecentRoom.getAttended(),taRecentRoom.getAbsent(),taRecentRoom.getGroupNumber());
                 }
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        //add the data from room to the recyclerView
                         TaRecentAdapter taRecentAdapter = new TaRecentAdapter(taRecents);
                         rv.setAdapter(taRecentAdapter);
                         rv.setLayoutManager(new LinearLayoutManager(TAAbsenceTab.this));
@@ -64,47 +66,49 @@ public class TAAbsenceTab extends AppCompatActivity {
                             rv.setVisibility(View.VISIBLE);
                             emptyView.setVisibility(View.GONE);
                         }
+                        // call the api to get the new Recent and it will overwrite on the recylcerView if on response
+                        Call<TaRecent[]>getRecentTA = APIClient.getClient().create(AbsenceAPIs.class).getRecentTA(sessionManager.getId());
+                        getRecentTA.enqueue(new Callback<TaRecent[]>() {
+                            @Override
+                            public void onResponse(Call<TaRecent[]> call, Response<TaRecent[]> response) {
+                                TaRecent[] taRecents = response.body();
+                                TaRecentAdapter taRecentAdapter = new TaRecentAdapter(taRecents);
+                                rv.setAdapter(taRecentAdapter);
+                                rv.setLayoutManager(new LinearLayoutManager(TAAbsenceTab.this));
+
+                                if(taRecents.length ==0){
+                                    rv.setVisibility(View.GONE);
+                                    emptyView.setVisibility(View.VISIBLE);
+                                }else{
+                                    rv.setVisibility(View.VISIBLE);
+                                    emptyView.setVisibility(View.GONE);
+                                }
+
+                                TARecentRoom[] taRecentRooms = new TARecentRoom[taRecents.length];
+                                for (int i = 0; i <taRecentRooms.length ; i++) {
+                                    TaRecent taRecent = taRecents[i];
+                                    taRecentRooms[i] = new TARecentRoom(taRecent.getCourseCode(),taRecent.getDate(),taRecent.getAttended(),taRecent.getAbsent(),taRecent.getGroupNumber());
+                                }
+                                AsyncTask.execute(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Room.databaseBuilder(getApplicationContext(), AppDatabase.class,"TARecent").build().absenceDAO().deleteTARecent();
+                                        Room.databaseBuilder(getApplicationContext(), AppDatabase.class,"TARecent").build().absenceDAO().insertAllToTARecent(taRecentRooms);
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onFailure(Call<TaRecent[]> call, Throwable t) {
+
+                            }
+                        });
+
                     }
                 });
             }
         });
 
-        Call<TaRecent[]>getRecentTA = APIClient.getClient().create(AbsenceAPIs.class).getRecentTA(sessionManager.getId());
-        getRecentTA.enqueue(new Callback<TaRecent[]>() {
-            @Override
-            public void onResponse(Call<TaRecent[]> call, Response<TaRecent[]> response) {
-                TaRecent[] taRecents = response.body();
-                TaRecentAdapter taRecentAdapter = new TaRecentAdapter(taRecents);
-                rv.setAdapter(taRecentAdapter);
-                rv.setLayoutManager(new LinearLayoutManager(TAAbsenceTab.this));
-
-                if(taRecents.length ==0){
-                    rv.setVisibility(View.GONE);
-                    emptyView.setVisibility(View.VISIBLE);
-                }else{
-                    rv.setVisibility(View.VISIBLE);
-                    emptyView.setVisibility(View.GONE);
-                }
-
-                TARecentRoom[] taRecentRooms = new TARecentRoom[taRecents.length];
-                for (int i = 0; i <taRecentRooms.length ; i++) {
-                    TaRecent taRecent = taRecents[i];
-                    taRecentRooms[i] = new TARecentRoom(taRecent.getCourseCode(),taRecent.getDate(),taRecent.getAttended(),taRecent.getAbsent());
-                }
-                AsyncTask.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        Room.databaseBuilder(getApplicationContext(), AppDatabase.class,"TARecent").build().absenceDAO().deleteTARecent();
-                        Room.databaseBuilder(getApplicationContext(), AppDatabase.class,"TARecent").build().absenceDAO().insertAllToTARecent(taRecentRooms);
-                    }
-                });
-            }
-
-            @Override
-            public void onFailure(Call<TaRecent[]> call, Throwable t) {
-
-            }
-        });
         //for the bottom navigation
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {

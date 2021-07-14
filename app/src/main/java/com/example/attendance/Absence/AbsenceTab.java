@@ -40,6 +40,7 @@ public class AbsenceTab extends AppCompatActivity {
         setContentView(R.layout.activity_absence_tab);
         sessionManager = new SessionManager(getApplicationContext());
         emptyView = (TextView)findViewById(R.id.empty_view_recent);
+
         RecyclerView rv =findViewById(R.id.rv_absence);
         RecyclerView rvRecent= findViewById(R.id.rv_recent);
         // get the data from room to the overview and recent and if there is an internet connection they will update instantly
@@ -63,6 +64,7 @@ public class AbsenceTab extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        // add the data from room to the recyclerView
                         AbsenceAdapter absenceAdapter = new AbsenceAdapter(absences);
                         rv.setAdapter(absenceAdapter);
                         rv.setLayoutManager(new LinearLayoutManager(AbsenceTab.this));
@@ -76,75 +78,77 @@ public class AbsenceTab extends AppCompatActivity {
                             rvRecent.setVisibility(View.VISIBLE);
                             emptyView.setVisibility(View.GONE);
                         }
+                        //call the Api that gets the overview and overwrite on the recyclerView if on response
+                        Call<Absence[]>getAbsence = APIClient.getClient().create(AbsenceAPIs.class).getAbsence(sessionManager.getId());
+                        getAbsence.enqueue(new Callback<Absence[]>() {
+                            @Override
+                            public void onResponse(Call<Absence[]> call, Response<Absence[]> response) {
+                                Absence[] absences=response.body();
+                                AbsenceAdapter absenceAdapter = new AbsenceAdapter(absences);
+                                rv.setAdapter(absenceAdapter);
+                                rv.setLayoutManager(new LinearLayoutManager(AbsenceTab.this));
+                                //update the room data base with
+                                AsyncTask.execute(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        AbsenceRoom[] absenceRooms= new AbsenceRoom[absences.length];
+                                        for (int i = 0; i <absences.length ; i++) {
+                                            Absence absence = absences[i];
+                                            absenceRooms[i]=new AbsenceRoom(absence.getCourseCode(),absence.getAbsenceCounter(),absence.getPenCounter());
+                                        }
+                                        Room.databaseBuilder(getApplicationContext(), AppDatabase.class,"Absence").build().absenceDAO().deleteAbsence();
+                                        Room.databaseBuilder(getApplicationContext(), AppDatabase.class,"Absence").build().absenceDAO().insertAllToAbsence(absenceRooms);
+
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onFailure(Call<Absence[]> call, Throwable t) {
+
+                            }
+                        });
+                        // call the api that gets the recent and overwrite on the recyclerView if on response
+                        Call<Recent[]>getRecent=APIClient.getClient().create(AbsenceAPIs.class).getRecent(sessionManager.getId());
+                        getRecent.enqueue(new Callback<Recent[]>() {
+                            @Override
+                            public void onResponse(Call<Recent[]> call, Response<Recent[]> response) {
+                                Recent[] recents = response.body();
+                                RecentAdapter recentAdapter = new RecentAdapter(recents);
+                                rvRecent.setAdapter(recentAdapter);
+                                rvRecent.setLayoutManager(new LinearLayoutManager(AbsenceTab.this));
+                                if(recents.length ==0){
+                                    rvRecent.setVisibility(View.GONE);
+                                    emptyView.setVisibility(View.VISIBLE);
+                                }else{
+                                    rvRecent.setVisibility(View.VISIBLE);
+                                    emptyView.setVisibility(View.GONE);
+                                }
+                                RecentRoom[] recentRooms = new RecentRoom[recents.length];
+                                for (int i = 0; i <recents.length ; i++) {
+                                    Recent recent = recents[i];
+                                    recentRooms[i]=new RecentRoom(recent.getCourseCode(),recent.getTaName(),recent.getDate(),recent.isPen());
+                                }
+
+                                AsyncTask.execute(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Room.databaseBuilder(getApplicationContext(),AppDatabase.class,"Recent").build().absenceDAO().deleteRecent();
+                                        Room.databaseBuilder(getApplicationContext(),AppDatabase.class,"Recent").build().absenceDAO().insertAllToRecent(recentRooms);
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onFailure(Call<Recent[]> call, Throwable t) {
+
+                            }
+                        });
+
+
 
                     }
                 });
-            }
-        });
-
-        Call<Absence[]>getAbsence = APIClient.getClient().create(AbsenceAPIs.class).getAbsence(sessionManager.getId());
-        getAbsence.enqueue(new Callback<Absence[]>() {
-            @Override
-            public void onResponse(Call<Absence[]> call, Response<Absence[]> response) {
-                Absence[] absences=response.body();
-                AbsenceAdapter absenceAdapter = new AbsenceAdapter(absences);
-                rv.setAdapter(absenceAdapter);
-                rv.setLayoutManager(new LinearLayoutManager(AbsenceTab.this));
-                //update the room data base with
-                AsyncTask.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        AbsenceRoom[] absenceRooms= new AbsenceRoom[absences.length];
-                        for (int i = 0; i <absences.length ; i++) {
-                            Absence absence = absences[i];
-                            absenceRooms[i]=new AbsenceRoom(absence.getCourseCode(),absence.getAbsenceCounter(),absence.getPenCounter());
-                        }
-                        Room.databaseBuilder(getApplicationContext(), AppDatabase.class,"Absence").build().absenceDAO().deleteAbsence();
-                        Room.databaseBuilder(getApplicationContext(), AppDatabase.class,"Absence").build().absenceDAO().insertAllToAbsence(absenceRooms);
-
-                    }
-                });
-            }
-
-            @Override
-            public void onFailure(Call<Absence[]> call, Throwable t) {
-
-            }
-        });
-
-        Call<Recent[]>getRecent=APIClient.getClient().create(AbsenceAPIs.class).getRecent(sessionManager.getId());
-        getRecent.enqueue(new Callback<Recent[]>() {
-            @Override
-            public void onResponse(Call<Recent[]> call, Response<Recent[]> response) {
-            Recent[] recents = response.body();
-                RecentAdapter recentAdapter = new RecentAdapter(recents);
-                rvRecent.setAdapter(recentAdapter);
-                rvRecent.setLayoutManager(new LinearLayoutManager(AbsenceTab.this));
-                if(recents.length ==0){
-                    rvRecent.setVisibility(View.GONE);
-                    emptyView.setVisibility(View.VISIBLE);
-                }else{
-                    rvRecent.setVisibility(View.VISIBLE);
-                    emptyView.setVisibility(View.GONE);
-                }
-                RecentRoom[] recentRooms = new RecentRoom[recents.length];
-                for (int i = 0; i <recents.length ; i++) {
-                    Recent recent = recents[i];
-                    recentRooms[i]=new RecentRoom(recent.getCourseCode(),recent.getTaName(),recent.getDate(),recent.isPen());
-                }
-
-                AsyncTask.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        Room.databaseBuilder(getApplicationContext(),AppDatabase.class,"Recent").build().absenceDAO().deleteRecent();
-                        Room.databaseBuilder(getApplicationContext(),AppDatabase.class,"Recent").build().absenceDAO().insertAllToRecent(recentRooms);
-                    }
-                });
-            }
-
-            @Override
-            public void onFailure(Call<Recent[]> call, Throwable t) {
-
             }
         });
 

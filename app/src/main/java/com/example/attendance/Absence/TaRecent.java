@@ -4,15 +4,17 @@ public class TaRecent {
     String courseCode;
     String date;
     int attended,absent;
+    String groupNumber;
 
     public TaRecent() {
     }
 
-    public TaRecent(String courseCode, String date, int attended,int absent) {
+    public TaRecent(String courseCode, String date, int attended,int absent,String groupNumber) {
         this.courseCode = courseCode;
         this.date = date;
         this.absent = absent;
         this.attended = attended;
+        this.groupNumber = groupNumber;
     }
 
     public String getCourseCode() {
@@ -46,4 +48,8 @@ public class TaRecent {
     public void setAttended(int attended) {
         this.attended = attended;
     }
+
+    public String getGroupNumber() { return groupNumber; }
+
+    public void setGroupNumber(String groupNumber) { this.groupNumber = groupNumber; }
 }

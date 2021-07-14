@@ -64,6 +64,7 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ta_home);
+
         sessionManager = new SessionManager(getApplicationContext());
         groups = findViewById(R.id.Groups);
         selectCourse = findViewById(R.id.Courses);
@@ -74,6 +75,8 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 2);
         }
 
+        //this api call gets all the courses the user is teaching as they are enrolled in them
+        //just like students are
         UserAPI userAPI = APIClient.getClient().create(UserAPI.class);
         Call<ArrayList<String>> call = userAPI.getTaughtCourses(sessionManager.getId());
         call.enqueue(new Callback<ArrayList<String>>() {
@@ -86,6 +89,7 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
                 else{
                     for(int i=0; i<response.body().size(); i++){
                         String courseId = response.body().get(i);
+                        //we put what we get inside the array in order to use it to fill our spinner
                         givenCourses.add(courseId);
                     }
                 }
@@ -98,8 +102,7 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
         });
 
         givenCourses.add("None");
-        Log.d("courses",givenCourses.size()+"");
-        // use default spinner item to show options in spinner
+        // use default spinner item to show options in spinner and fill it with givenCourses
         adapter = new ArrayAdapter<>(this, R.layout.course_spinner_item, givenCourses);
         selectCourse.setAdapter(adapter);
         adapter.setDropDownViewResource(R.layout.course_dropdown_item);
@@ -123,8 +126,8 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
                     String currDate = new SimpleDateFormat("dd-MM-yyyy").format(date);
                     String group = groups.getText().toString();
 
-                    //getting the already existing groups for said course in said day
-                    startAttendance(currDate, group, courseCode, sessionManager.getId());
+                    //starting the attendance process
+                    startAttendance(currDate, group, courseCode);
                 }
     }
         });
@@ -220,10 +223,37 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
 
     }
 
-    public void startAttendance(String currDate,String groups,String courseCode,Integer userId){
+    /**
+     *
+     * void startAttendance(String currDate,String groups,String courseCode)
+     *
+     * Summary of the Sort function:
+     *
+     *    this function starts the attendance process if the attendance for the groups provided
+     *    hasn't already been recorded.
+     *
+     * Parameters   : currDate: the current date
+     *                groups: the groups attendance is being recorded for
+     *                courseCode: the course code of the course this attendance is being recorded for
+     *
+     * Return Value : Nothing -- Note: adds attendance records to the database.
+     *
+     * Description:
+     *
+     *    This function start the attendance recording process if the groups provided with the current date
+     *    and the given course haven't had attendance recorded for them before in that course in that date
+     *    already, if so, we show a toast with all the groups that already have associated attendance records
+     *    for the course and date we gave, if that doesn't happen the attendance process starts and records
+     *    are added to the database
+     *
+     */
+    public void startAttendance(String currDate,String groups,String courseCode){
         UserAPI userAPI = APIClient.getClient().create(UserAPI.class);
+
+        //first api call to get the groups that already have attendance
         Call<ArrayList<String>> call = userAPI.getExistingAttendanceGroups(currDate,groups,
                 courseCode);
+
         call.enqueue(new Callback<ArrayList<String>>() {
             @Override
             public void onResponse(Call<ArrayList<String>> call, Response<ArrayList<String>> response) {
@@ -231,8 +261,13 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
                     Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
                 }
                 else {
+
                     existingGroups = response.body();
+                    //if there are no groups that already have attendance recorded for them in the course and
+                    //date we provided
                     if (existingGroups.isEmpty()){
+
+                        //start the attendance process and add the records to the database
                         Call<Void> call2 = userAPI.taStartAttendance(currDate, groups, courseCode, sessionManager.getId());
                         call2.enqueue(new Callback<Void>() {
                             @Override
@@ -240,6 +275,7 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
                                 if (response.code() != 200) {
                                     Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
                                 } else {
+                                    //got to the next required activity and pass the needed values
                                     Intent ta_page_2 = new Intent(TA_home.this, TA_closes_attendance.class);
                                     ta_page_2.putExtra("currDate", currDate);
                                     ta_page_2.putExtra("courseCode", courseCode);
@@ -254,6 +290,8 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
                             }
                         });
                     }
+                    //if there are groups that already have attendance recorded for them in the date and course
+                    //we provided
                     else{
                         String groups ="";
                         for(int i=0; i<existingGroups.size(); i++){

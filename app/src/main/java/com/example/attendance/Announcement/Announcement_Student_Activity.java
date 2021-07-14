@@ -94,9 +94,10 @@ public class Announcement_Student_Activity extends AppCompatActivity {
                 activeFilters.clear();
             }
         });
+
         //-----------------------------------------------------------------------------------------------------------------------------------
+
         //setting up recycler view for course filter-----------------------------------------------------------------------------------------
-        //getFilterCourses();
 
         filterRecyclerView =(RecyclerView) findViewById(R.id.course_filters_rv);
         announcementFilterListAdapter = new AnnouncementFilterListAdapter(courseCodes,context);
@@ -105,7 +106,9 @@ public class Announcement_Student_Activity extends AppCompatActivity {
         filterRecyclerView.setAdapter(announcementFilterListAdapter);
         updateCourseData();
         getFilterCourses();
+
         //----------------------------------------------------------------------------------------------------------
+
         //setting up the recycler view for student announcements-----------------------------------------------------------------------------
         announcementRecyclerView = (RecyclerView) findViewById(R.id.student_announcements);
 
@@ -118,7 +121,9 @@ public class Announcement_Student_Activity extends AppCompatActivity {
         announcementRecyclerView.setAdapter(announcementsStudentListAdapter);
         updateData();
         refreshAnnouncements();
+
         //------------------------------------------------------------------------------------------------------------------------------
+
         //nav bar-----------------------------------------------------------------------------------------------------------------------
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -152,8 +157,26 @@ public class Announcement_Student_Activity extends AppCompatActivity {
     }
 
     ////////////////////////////////////ROOM ANNOUNCEMENT FUNCTIONS/////////////////////////////////////////////////////////////////////////////////
-    //gets all announcements in all the courses in which the current user is registered and uses syncAnnouncements to fill the room database and the announcement
-    //arrayList we have which populates the announcements recyclerView
+    /**
+     *
+     * void refreshAnnouncements()
+     *
+     * Summary of the refreshAnnouncements function:
+     *
+     *    updates the announcementList from the database.
+     *
+     * Parameters   : none.
+
+     * Return Value : Nothing .
+     *
+     * Description:
+     *
+     *
+     *
+     *    This function is used to get all the announcements from the database for
+     *    the courses and the groups in which the current user is registered and uses syncAnnouncements to
+     *    fill the room database and the announcementList we have which populates the announcements recyclerView
+     */
     private void refreshAnnouncements(){
         AnnouncementAPI announcementAPI = APIClient.getClient().create(AnnouncementAPI.class);
         Call<List<Announcement>> call = announcementAPI.getStudentAnnouncements(sessionManager.getId());
@@ -181,7 +204,24 @@ public class Announcement_Student_Activity extends AppCompatActivity {
         });
     }
 
-    //fills the announcementList used for the list adapter with all the announcements we have in our room database in descending order according to date
+    /**
+     *
+     * void updateData()
+     *
+     * Summary of the updateData function:
+     *
+     *    updates the announcementList data.
+     *
+     * Parameters   : none.
+
+     * Return Value : Nothing .
+     *
+     * Description:
+     *
+     *    This function is used to update the data in the announcementList by clearing the list
+     *    and adding all the announcements from the room database to it.
+     *
+     */
     private void updateData(){
         AsyncTask.execute(new Runnable() {
             @Override
@@ -215,7 +255,26 @@ public class Announcement_Student_Activity extends AppCompatActivity {
         });
     }
 
-    //drops the current announcement room table and inserts all announcements that we returned from the api into a list into the room database
+    /**
+     *
+     * void syncAnnouncementsFromAPI(List<Announcement> announcements)
+     *
+     * Summary of the syncAnnouncementsFromAPI function:
+     *
+     *    updates the room database.
+     *
+     * Parameters   : announcements: a list of the announcements retrieved from the api call
+     *                  in refreshAnnouncements.
+
+     * Return Value : Nothing .
+     *
+     * Description:
+     *
+     *    This function is used to update the data in the room database for the announcements
+     *    by dropping all announcements already present in the room database and putting in
+     *    the new announcements retrieved from the api.
+     *
+     */
     private void syncAnnouncementsFromAPI(List<Announcement> announcements){
         AsyncTask.execute(new Runnable() {
             @Override
@@ -239,19 +298,43 @@ public class Announcement_Student_Activity extends AppCompatActivity {
 
 
     ////////////////////////////////////ROOM COURSE FUNCTIONS/////////////////////////////////////////////////////////////////////////////////
-    //this function is used to get all the courses a user is registered in to fill the arraylist we use to populate the filters recyclerView
+    /**
+     *
+     * void getFilterCourses()
+     *
+     * Summary of the getFilterCourses function:
+     *
+     *    updates the room database.
+     *
+     * Parameters   : none.
+
+     * Return Value : Nothing .
+     *
+     * Description:
+     *
+     *     this function is used to get all the courses a user is
+     *     registered in to fill the arraylist we use to populate the filters recyclerView
+     *     calling syncCoursesFromAPI and giving it the course codes returned from the api
+     *     call
+     *
+     *
+     */
     private void getFilterCourses(){
 
         UserAPI userAPI = APIClient.getClient().create(UserAPI.class);
+        //return all course codes where the user is enrolled
         Call<ArrayList<String>> call = userAPI.getTaughtCourses(sessionManager.getId());
 
         call.enqueue(new Callback<ArrayList<String>>() {
             @Override
             public void onResponse(Call<ArrayList<String>> call, Response<ArrayList<String>> response) {
                 ArrayList<String> courses= response.body();
+
                 if(response.code() != 200){
                     Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
                 }
+
+                //used to fill room database table for courses with the courses we got from the api
                 syncCoursesFromAPI(courses);
             }
 
@@ -265,6 +348,24 @@ public class Announcement_Student_Activity extends AppCompatActivity {
     }
 
     //fills the courseCodes List used for the list adapter with all the courses we have in our room database
+    /**
+     *
+     * void updateCourseData()
+     *
+     * Summary of the updateCourseData function:
+     *
+     *    updates the courseCodes data.
+     *
+     * Parameters   : none.
+
+     * Return Value : Nothing .
+     *
+     * Description:
+     *
+     *    This function is used to update the data in the courseList by clearing the list
+     *    and adding all the course codes from the room database to it.
+     *
+     */
     private void updateCourseData(){
         AsyncTask.execute(new Runnable() {
             @Override
@@ -272,6 +373,7 @@ public class Announcement_Student_Activity extends AppCompatActivity {
 
                 courseCodes.clear();
                 courseCodes.add("All");
+                //adding all the course codes for the user from the room database
                 courseCodes.addAll(Room.databaseBuilder(getApplicationContext(),
                         AppDatabase.class, "attendance").build().courseDAO().getAll());
 
@@ -285,20 +387,42 @@ public class Announcement_Student_Activity extends AppCompatActivity {
         });
     }
 
-    //drops the current courses room table and inserts all coursecodes that we returned from the api into a list into the room database
+    /**
+     *
+     * void syncCoursesFromAPI(ArrayList<String> courseCodes)
+     *
+     * Summary of the syncCoursesFromAPI function:
+     *
+     *    updates the room course database table.
+     *
+     * Parameters   : courseCodes: a list of the courseCodes retrieved from the api call
+     *                  in getFilterCourses.
+
+     * Return Value : Nothing .
+     *
+     * Description:
+     *
+     *    This function is used to update the data in the room database for the courses
+     *    by dropping all courses already present in the room database and putting in
+     *    the new courses retrieved from the api.
+     *
+     */
     private void syncCoursesFromAPI(ArrayList<String> courseCodes){
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
+                //clearing the room database
                 Room.databaseBuilder(getApplicationContext(),
                         AppDatabase.class, "attendance").build().courseDAO().nukeTable();
 
                 ArrayList<Course> courses = new ArrayList<>();
+                //making an arraylist of courses used to populate room
                 for(int i=0;i<courseCodes.size();i++){
                     Course nc= new Course(i,courseCodes.get(i));
                     courses.add(nc);
                 }
-                //System.out.println(announcement.getId());
+
+                //adding the new courses to the room database
                 // if exists
                 Room.databaseBuilder(getApplicationContext(),
                         AppDatabase.class, "attendance")
@@ -314,8 +438,37 @@ public class Announcement_Student_Activity extends AppCompatActivity {
 
 
     //filters all announcements according to selected filter in the filter recycler view
+    /**
+     *
+     * void filter(String courseId)
+     *
+     * Summary of the filter function:
+     *
+     *    filters all announcements according to selected course code in the filter recycler view.
+     *
+     * Parameters   : courseId: the course code which we will filter using.
+
+     * Return Value : Nothing .
+     *
+     * Description:
+     *
+     *    This function is used to filter the announcements in our recycler view according to the courses
+     *    clicked from the filter recycler view, if all is chosen, all filters are reset and we see all
+     *    announcements.
+     *
+     *    if a filter is already chosen and is present in the filter list, the filter
+     *    the highlight on the filter is removed from the
+     *    activeFilters arrayList and the announcements are shown without that filter being applied
+     *    while applying all the others in the activeFilters arraylist.
+     *
+     *    if a filter is not highlighted meaning it's not chosen, we add it to the filters list, highlight its
+     *    button in the filter recycler view and show all the announcements with that filter applied along with
+     *    all the others in the activeFilters arraylist.
+     *
+     */
     public void filter(String courseId) {
         ArrayList<Announcement> undeletedAnnouncements = new ArrayList<>();
+
         if (courseId.equals("All")) {
             //resets all button colors to show that they have been unselected
             for(int i=0;i<courseCodes.size();i++) {
@@ -328,15 +481,16 @@ public class Announcement_Student_Activity extends AppCompatActivity {
             updateData();
         }
 
+        //this is used for when a filter is applied and we want to remove it and apply the remaining filters in the filter array if any,
+        //if none exist we get all the announcements with no filters
         else if(activeFilters.contains(courseId)) {
-            //this is used for when a filter is applied and we want to remove it and apply the remaining filters in the filter array if any,
-            //if none exist we get all the announcements with no filters
 
             filterRecyclerView.getLayoutManager().findViewByPosition(courseCodes.indexOf(courseId)).
                     findViewById(R.id.course_filter_button).setBackgroundResource(R.drawable.announcement_filter_button_unselected);
 
             activeFilters.remove(courseId);
 
+            //this is the case where no filters are applied so we show all announcements unfiltered
             if(activeFilters.size() == 0){
                 updateData();
             }
@@ -347,6 +501,8 @@ public class Announcement_Student_Activity extends AppCompatActivity {
 
                 announcementList.addAll(unchangedAnnouncementList);
 
+                //here we add only the announcements in which the filter is applicable to the
+                //undeletedAnnouncements List
                 for (int i = 0; i < announcementList.size(); i++) {
                     if (activeFilters.contains(announcementList.get(i).getCourseId())) {
                         undeletedAnnouncements.add(announcementList.get(i));

@@ -18,6 +18,7 @@ public class TA_closes_attendance extends AppCompatActivity {
 
     Button showAttendeesList;
     SessionManager sessionManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,10 +33,14 @@ public class TA_closes_attendance extends AppCompatActivity {
             public void onClick(View view) {
                 UserAPI userAPI = APIClient.getClient().create(UserAPI.class);
                 Intent intent = getIntent();
+
                 String currDate = intent.getStringExtra("currDate");
                 String group = intent.getStringExtra("group");
                 String courseCode = intent.getStringExtra("courseCode");
 
+                //when this call occurs, the attendance record of the TA is updated and the absent boolean
+                //is set to true, which disables any students from trying to attend and takes us to the next
+                //activity which shows a list of students that attended
                 Call<Void> call = userAPI.closeTAattendance(currDate,group,courseCode,sessionManager.getId());
                 call.enqueue(new Callback<Void>() {
                     @Override
@@ -44,12 +49,16 @@ public class TA_closes_attendance extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
                         }
                         else{
-                            /// todo put in the appropriate activity
                             Intent dataIntent = getIntent();
+
+                            //going to the next required activity to see the list of attendees
                             Intent intent = new Intent(TA_closes_attendance.this, ta_attendanceConfirmationList.class);
+
+                            //passing the required data to the next activity
                             intent.putExtra("CoureID_Key", dataIntent.getStringExtra("courseCode"));
                             intent.putExtra("Group_Key", dataIntent.getStringExtra("group"));
                             intent.putExtra("Date_Key", dataIntent.getStringExtra("currDate"));
+
                             startActivity(intent);
                         }
                     }

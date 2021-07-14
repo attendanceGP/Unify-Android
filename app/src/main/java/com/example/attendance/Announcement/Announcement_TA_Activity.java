@@ -69,6 +69,7 @@ public class Announcement_TA_Activity extends AppCompatActivity {
 
     SessionManager sessionManager;
 
+    //global array to store announcements
     List<Announcement> announcementList = new ArrayList<>();
 
 
@@ -77,11 +78,16 @@ public class Announcement_TA_Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_announcement_ta);
+
         sessionManager = new SessionManager(getApplicationContext());
         context = this;
+
+        //used for when the announcementList is empty
         noAnnouncementsTV = (TextView) findViewById(R.id.empty_TA_announcements);
-            // binding to the swipe layout to refesh the page
+
+        // binding to the swipe layout to refresh the page
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.ta_announcement_swipe_layout);
+
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -105,6 +111,7 @@ public class Announcement_TA_Activity extends AppCompatActivity {
         //----------------------------------------------------------------------------------------------------------
         // inflating the popup when clicked
         addButton = (Button) findViewById(R.id.add_button);
+
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -118,6 +125,7 @@ public class Announcement_TA_Activity extends AppCompatActivity {
                 // to add animation
                 dialogBuilder.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
 
+                //required for using text inside the EditText
                 final EditText title = (EditText) dialogView.findViewById(R.id.announcement_title_in_popup);
                 EditText description = (EditText) dialogView.findViewById(R.id.announcement_description_in_pop_up);
                 EditText groups = (EditText) dialogView.findViewById(R.id.announcement_groups_in_popup);
@@ -130,6 +138,7 @@ public class Announcement_TA_Activity extends AppCompatActivity {
 
                 UserAPI userAPI = APIClient.getClient().create(UserAPI.class);
 
+                //this call gets all the courses the TA teaches
                 Call<ArrayList<String>> call = userAPI.getTaughtCourses(sessionManager.getId());
                 call.enqueue(new Callback<ArrayList<String>>() {
                     @Override
@@ -139,6 +148,7 @@ public class Announcement_TA_Activity extends AppCompatActivity {
                         }
                         else{
                             for(int i=0; i<response.body().size(); i++){
+                                //filling the array which will be used to populate the spinner
                                 String courseId = response.body().get(i);
                                 givenCourses.add(courseId);
                             }
@@ -154,10 +164,11 @@ public class Announcement_TA_Activity extends AppCompatActivity {
 
                 givenCourses.add("None");
 
-                // use default spinner item to show options in spinner
+                // use default spinner item to show options in spinner amd populating the spinner
                 adapter = new ArrayAdapter<>(context, R.layout.course_spinner_item, givenCourses);
                 selectCourse.setAdapter(adapter);
                 adapter.setDropDownViewResource(R.layout.course_dropdown_item);
+
                 selectCourse.setPrompt("Courses");
                 selectCourse.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
@@ -204,6 +215,8 @@ public class Announcement_TA_Activity extends AppCompatActivity {
                 dialogBuilder.show();
             }
         });
+
+        //updating our lists with data from our room database and the server database
         updateData();
         refreshAnnouncements();
         //------------------------------------------------------------------------------------------------------------------------------
@@ -240,10 +253,36 @@ public class Announcement_TA_Activity extends AppCompatActivity {
     }
 
     //-------------------------------------------------------------------------------------------------------------------------------
+    /**
+     *
+     * void postAnnouncement(int userId, String courseId, Date postedDate, String title,
+     *                                   String announcementGroups, String post)
+     *
+     * Summary of the postAnnouncement function:
+     *
+     *    this function adds an announcement to the database
+     *
+     * Parameters   : userId: the current date
+     *                courseId: the course this announcement is for
+     *                postedDate: the date at which the announcement was made
+     *                title: the title of the announcement
+     *                announcementGroups: the groups which this announcement is for
+     *                post: the details of the announcement
+     *
+     * Return Value : Nothing -- Note: adds announcement to the database.
+     *
+     * Description:
+     *
+     *    This function takes the announcement info from the user and adds it to the server database
+     *    while also updating the announcementList here using the refresh function in order to see
+     *    all the announcements including the one the user just added
+     *
+     */
     private void postAnnouncement(int userId, String courseId, Date postedDate, String title,
                                   String announcementGroups, String post) {
         AnnouncementAPI announcementAPI = APIClient.getClient().create(AnnouncementAPI.class);
 
+        //if this call is successful the announcement is added to the server database
         Call<Integer> call = announcementAPI.postAnnouncement(userId, courseId,
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(postedDate),
                 title,announcementGroups, post);
@@ -251,12 +290,11 @@ public class Announcement_TA_Activity extends AppCompatActivity {
         call.enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {
-                Integer integer = response.body();
 
                 if (response.code() != 200) {
                     Toast.makeText(getApplicationContext(), "your announcement couldn't be added", Toast.LENGTH_SHORT).show();
                 }
-
+                //gets the announcements from the server database directly
                 refreshAnnouncements();
             }
 
@@ -267,6 +305,26 @@ public class Announcement_TA_Activity extends AppCompatActivity {
         });
     }
 
+
+    /**
+     *
+     * void deleteAnnouncement(int id)
+     *
+     * Summary of the deleteAnnouncement function:
+     *
+     *    deletes an announcement from the database
+     *
+     * Parameters   : id: announcement id.
+
+     * Return Value : Nothing -- Note: deletes announcement from the database the database.
+     *
+     * Description:
+     *
+     *    This function is used in the list adapter to delete the announcement when the delete button in its
+     *    view is clicked, after deleting the announcement from the database, refreshAnnouncements is called
+     *    to update the announcementList after the deletion occurred
+     *
+     */
     void deleteAnnouncement(int id) {
         AnnouncementAPI announcementAPI = APIClient.getClient().create(AnnouncementAPI.class);
 
@@ -275,7 +333,6 @@ public class Announcement_TA_Activity extends AppCompatActivity {
         call.enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {
-                Integer integer = response.body();
 
                 if (response.code() == 200) {
                     Toast.makeText(getApplicationContext(), "announcement deleted", Toast.LENGTH_SHORT).show();
@@ -291,6 +348,25 @@ public class Announcement_TA_Activity extends AppCompatActivity {
         });
     }
 
+    /**
+     *
+     * void refreshAnnouncements()
+     *
+     * Summary of the refreshAnnouncements function:
+     *
+     *    updates the announcementList from the database.
+     *
+     * Parameters   : none.
+
+     * Return Value : Nothing .
+     *
+     * Description:
+     *
+     *    This function is used to get all the announcements from the database and then call
+     *    syncAnnouncementsFromAPI to set the announcementList to the new list that was returned
+     *    from the api call and update the room database.
+     *
+     */
     public void refreshAnnouncements(){
         AnnouncementAPI announcementAPI = APIClient.getClient().create(AnnouncementAPI.class);
 
@@ -303,6 +379,7 @@ public class Announcement_TA_Activity extends AppCompatActivity {
                 if(response.code() != 200){
                     Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
                 }
+                //updates the announcementList
                 syncAnnouncementsFromAPI(announcements);
             }
 
@@ -317,6 +394,24 @@ public class Announcement_TA_Activity extends AppCompatActivity {
         });
     }
 
+    /**
+     *
+     * void updateData()
+     *
+     * Summary of the updateData function:
+     *
+     *    updates the announcementList data.
+     *
+     * Parameters   : none.
+
+     * Return Value : Nothing .
+     *
+     * Description:
+     *
+     *    This function is used to update the data in the announcementList by clearing the list
+     *    and adding all the announcements from the room database to it.
+     *
+     */
     private void updateData(){
         AsyncTask.execute(new Runnable() {
             @Override
@@ -344,10 +439,32 @@ public class Announcement_TA_Activity extends AppCompatActivity {
         });
     }
 
+
+    /**
+     *
+     * void syncAnnouncementsFromAPI(List<Announcement> announcements)
+     *
+     * Summary of the postAnnouncement function:
+     *
+     *    updates the room database.
+     *
+     * Parameters   : announcements: a list of the announcements retrieved from the api call
+     *                  in refreshAnnouncements.
+
+     * Return Value : Nothing .
+     *
+     * Description:
+     *
+     *    This function is used to update the data in the room database for the announcements
+     *    by dropping all announcements already present in the room database and putting in
+     *    the new announcements retrieved from the api.
+     *
+     */
     private void syncAnnouncementsFromAPI(List<Announcement> announcements){
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
+                //clear the room database announcements
                 Room.databaseBuilder(getApplicationContext(),
                         AppDatabase.class, "attendance").build().announcementDao().nukeTable();
 
@@ -356,6 +473,7 @@ public class Announcement_TA_Activity extends AppCompatActivity {
                         AppDatabase.class, "attendance")
                         .build().announcementDao().insertAll(announcements.toArray(new Announcement[announcements.size()]));
 
+                //called to update the announcementList from the room database we just filled with announcements
                 updateData();
                 if (swipeRefreshLayout.isRefreshing()) {
                     swipeRefreshLayout.setRefreshing(false);

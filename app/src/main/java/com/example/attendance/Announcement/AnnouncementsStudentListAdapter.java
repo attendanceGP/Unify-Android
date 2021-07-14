@@ -73,6 +73,25 @@ public class AnnouncementsStudentListAdapter extends RecyclerView.Adapter<Announ
         return announcements.size();
     }
 
+    /**
+     *
+     * String getPostedDateStringFromDate(Date date)
+     *
+     * Summary of the getPostedDateStringFromDate function:
+     *
+     *    gets the string form of the given date.
+     *
+     * Parameters   : date:the date of the announcement.
+
+     * Return Value : the modified string containing the date in our wanted format.
+     *
+     * Description:
+     *
+     *    This function is used change the date into a string and then split it up to pieces that are used to
+     *    form another string to have the format"posted dd-MM-YY at hh:mm a" which is used in the postedDate
+     *    TextView.
+     *
+     */
     private String getPostedDateStringFromDate(Date date){
         String result = "";
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");

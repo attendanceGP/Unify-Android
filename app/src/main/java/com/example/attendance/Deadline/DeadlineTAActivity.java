@@ -266,25 +266,31 @@ public class DeadlineTAActivity extends AppCompatActivity {
                     case R.id.action_home:
                         if(sessionManager.getType().equals("student")){
                             startActivity(new Intent(DeadlineTAActivity.this, Home.class));
+                            finish();
                         }else{
                             startActivity(new Intent(DeadlineTAActivity.this, TA_home.class));
+                            finish();
                         }
                         return true;
 
                     case R.id.action_announcements:
                         if(sessionManager.getType().equals("student")){
                             startActivity(new Intent(DeadlineTAActivity.this, Announcement_Student_Activity.class));
+                            finish();
                         }else{
                             startActivity(new Intent(DeadlineTAActivity.this, Announcement_TA_Activity.class));
+                            finish();
                         }
                         return true;
 
                     case R.id.action_forum:
                         startActivity(new Intent(DeadlineTAActivity.this, ForumsActivity.class));
+                        finish();
                         return true;
 
                     case R.id.action_absence:
                         startActivity(new Intent(DeadlineTAActivity.this, TAAbsenceTab.class));
+                        finish();
                         return true;
                 }
                 return false;

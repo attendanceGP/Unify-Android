@@ -111,21 +111,26 @@ public class DeadlineStudentActivity extends AppCompatActivity {
                     case R.id.action_home:
                         if(sessionManager.getType().equals("student")){
                             startActivity(new Intent(DeadlineStudentActivity.this, Home.class));
+                            finish();
                         }else{
                             startActivity(new Intent(DeadlineStudentActivity.this, TA_home.class));
+                            finish();
                         }
                         return true;
 
                     case R.id.action_announcements:
                         startActivity(new Intent(DeadlineStudentActivity.this, Announcement_Student_Activity.class));
+                        finish();
                         return true;
 
                     case R.id.action_forum:
                         startActivity(new Intent(DeadlineStudentActivity.this, ForumsActivity.class));
+                        finish();
                         return true;
 
                     case R.id.action_absence:
                         startActivity(new Intent(DeadlineStudentActivity.this, AbsenceTab.class));
+                        finish();
                         return true;
                 }
                 return false;

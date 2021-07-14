@@ -136,18 +136,22 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
                 switch(item.getItemId()){
                     case R.id.action_deadlines:
                         startActivity(new Intent(TA_home.this, DeadlineTAActivity.class));
+                        finish();
                         return true;
 
                     case R.id.action_announcements:
                         startActivity(new Intent(TA_home.this, Announcement_TA_Activity.class));
+                        finish();
                         return true;
 
                     case R.id.action_forum:
                         startActivity(new Intent(TA_home.this, ForumsActivity.class));
+                        finish();
                         return true;
 
                     case R.id.action_absence:
                         startActivity(new Intent(TA_home.this, TAAbsenceTab.class));
+                        finish();
                         return true;
                 }
                 return false;

@@ -215,19 +215,23 @@ public class Announcement_TA_Activity extends AppCompatActivity {
                 switch(item.getItemId()){
                     case R.id.action_deadlines:
                         startActivity(new Intent(Announcement_TA_Activity.this, DeadlineTAActivity.class));
+                        finish();
                         return true;
 
                     case R.id.action_home:
 
                         startActivity(new Intent(Announcement_TA_Activity.this, TA_home.class));
+                        finish();
                         return true;
 
                     case R.id.action_forum:
                         startActivity(new Intent(Announcement_TA_Activity.this, ForumsActivity.class));
+                        finish();
                         return true;
 
                     case R.id.action_absence:
                         startActivity(new Intent(Announcement_TA_Activity.this, TAAbsenceTab.class));
+                        finish();
                         return true;
                 }
                 return false;

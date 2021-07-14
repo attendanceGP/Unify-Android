@@ -113,18 +113,22 @@ public class TAAbsenceTab extends AppCompatActivity {
                 switch(item.getItemId()){
                     case R.id.action_home:
                             startActivity(new Intent(TAAbsenceTab.this, TA_home.class));
+                        finish();
                         return true;
 
                     case R.id.action_announcements:
                         startActivity(new Intent(TAAbsenceTab.this, Announcement_TA_Activity.class));
+                        finish();
                         return true;
 
                     case R.id.action_forum:
                         startActivity(new Intent(TAAbsenceTab.this, ForumsActivity.class));
+                        finish();
                         return true;
 
                     case R.id.action_deadlines:
                         startActivity(new Intent(TAAbsenceTab.this, DeadlineTAActivity.class));
+                        finish();
                         return true;
                 }
                 return false;

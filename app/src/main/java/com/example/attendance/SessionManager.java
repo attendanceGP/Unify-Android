@@ -5,10 +5,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.example.attendance.Course.CourseGroup;
+import com.example.attendance.Course.CourseGroupAPI;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -60,24 +64,32 @@ public class SessionManager {
 
     // subscribe to topics: id, courses and all
     private void subscribeToTopics(){
-        UserAPI userAPI = APIClient.getClient().create(UserAPI.class);
+        CourseGroupAPI courseGroupAPI = APIClient.getClient().create(CourseGroupAPI.class);
 
-        Call<ArrayList<String>> call = userAPI.getTaughtCourses(getId());
+        Call<List<CourseGroup>> call = courseGroupAPI.getUserCoursesAndGroups(getId());
 
-        call.enqueue(new Callback<ArrayList<String>>() {
+        call.enqueue(new Callback<List<CourseGroup>>() {
             @Override
-            public void onResponse(Call<ArrayList<String >> call, Response<ArrayList<String>> response) {
+            public void onResponse(Call<List<CourseGroup>> call, Response<List<CourseGroup>> response) {
+                Log.i("yest", "" + response.body().size());
+
+                if(response.code() != 200){
+                    Toast.makeText(context, "an error occurred", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 for(int i =0; i<response.body().size(); i++){
-                    FirebaseMessaging.getInstance().subscribeToTopic(response.body().get(i)) ;
+                    FirebaseMessaging.getInstance().subscribeToTopic(response.body().get(i).getCourseCode());
+                    FirebaseMessaging.getInstance().subscribeToTopic(
+                            response.body().get(i).getCourseCode() + "-" + response.body().get(i).getUserGroup());
                 }
 
                 FirebaseMessaging.getInstance().subscribeToTopic("all");
                 FirebaseMessaging.getInstance().subscribeToTopic(getId().toString());
-                Log.i("usertest", getId().toString());
             }
 
             @Override
-            public void onFailure(Call<ArrayList<String >> call, Throwable t) {
+            public void onFailure(Call<List<CourseGroup>> call, Throwable t) {
 
             }
         });

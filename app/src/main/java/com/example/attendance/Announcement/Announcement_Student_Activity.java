@@ -127,18 +127,22 @@ public class Announcement_Student_Activity extends AppCompatActivity {
                 switch(item.getItemId()){
                     case R.id.action_deadlines:
                         startActivity(new Intent(Announcement_Student_Activity.this, DeadlineStudentActivity.class));
+                        finish();
                         return true;
 
                     case R.id.action_home:
                         startActivity(new Intent(Announcement_Student_Activity.this, Home.class));
+                        finish();
                         return true;
 
                     case R.id.action_forum:
                         startActivity(new Intent(Announcement_Student_Activity.this, ForumsActivity.class));
+                        finish();
                         return true;
 
                     case R.id.action_absence:
                         startActivity(new Intent(Announcement_Student_Activity.this, AbsenceTab.class));
+                        finish();
                         return true;
                 }
                 return false;

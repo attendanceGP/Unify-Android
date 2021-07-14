@@ -171,32 +171,40 @@ public class ForumsActivity extends AppCompatActivity {
                     case R.id.action_home:
                         if(sessionManager.getType().equals("student")){
                             startActivity(new Intent(ForumsActivity.this, Home.class));
+                            finish();
                         }else{
                             startActivity(new Intent(ForumsActivity.this, TA_home.class));
+                            finish();
                         }
                         return true;
 
                     case R.id.action_announcements:
                         if(sessionManager.getType().equals("student")){
                             startActivity(new Intent(ForumsActivity.this, Announcement_Student_Activity.class));
+                            finish();
                         }else{
                             startActivity(new Intent(ForumsActivity.this, Announcement_TA_Activity.class));
+                            finish();
                         }
                         return true;
 
                     case R.id.action_deadlines:
                         if(sessionManager.getType().equals("student")){
                             startActivity(new Intent(ForumsActivity.this, DeadlineStudentActivity.class));
+                            finish();
                         }else{
                             startActivity(new Intent(ForumsActivity.this, DeadlineTAActivity.class));
+                            finish();
                         }
                         return true;
 
                     case R.id.action_absence:
                         if(sessionManager.getType().equals("student")){
                             startActivity(new Intent(ForumsActivity.this, AbsenceTab.class));
+                            finish();
                         }else{
                             startActivity(new Intent(ForumsActivity.this, TAAbsenceTab.class));
+                            finish();
                         }
                         return true;
                 }

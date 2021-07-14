@@ -90,6 +90,7 @@ public class Home extends AppCompatActivity implements LocationListener {
                             lm = null;
                         }
                         startActivity(new Intent(Home.this, AbsenceTab.class));
+                        finish();
                         return true;
 
                     case R.id.action_announcements:
@@ -98,6 +99,7 @@ public class Home extends AppCompatActivity implements LocationListener {
                             lm = null;
                         }
                         startActivity(new Intent(Home.this, Announcement_Student_Activity.class));
+                        finish();
                         return true;
 
                     case R.id.action_forum:
@@ -106,6 +108,7 @@ public class Home extends AppCompatActivity implements LocationListener {
                             lm = null;
                         }
                         startActivity(new Intent(Home.this, ForumsActivity.class));
+                        finish();
                         return true;
 
                     case R.id.action_deadlines:
@@ -114,6 +117,7 @@ public class Home extends AppCompatActivity implements LocationListener {
                             lm = null;
                         }
                         startActivity(new Intent(Home.this, DeadlineStudentActivity.class));
+                        finish();
                         return true;
                 }
                 return false;

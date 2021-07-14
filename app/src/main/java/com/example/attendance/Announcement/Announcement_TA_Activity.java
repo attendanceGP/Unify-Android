@@ -191,7 +191,7 @@ public class Announcement_TA_Activity extends AppCompatActivity {
                         }else if(postDescription.equals("")){
                             Toast.makeText(getApplicationContext(), "announcement description can't be empty", Toast.LENGTH_SHORT).show();
                         }else if(postGroups.equals("")){
-                            Toast.makeText(getApplicationContext(), "announcement groups can't be empty", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "announcement groups can't be empty enter all if you want to send to all groups", Toast.LENGTH_SHORT).show();
                         }else{
                             java.util.Date date = new java.util.Date();
                             postAnnouncement(sessionManager.getId(), courseCode, date, postTitle,postGroups, postDescription);

@@ -333,11 +333,31 @@ public class ForumsActivity extends AppCompatActivity {
         });
     }
 
+    private boolean findInPosts(int postId, List<Post> posts){
+        for(int i=0; i<posts.size(); i++){
+            if(posts.get(i).getId().equals(postId)) return true;
+
+
+        }
+        return false;
+    }
+
     // syncs the retrieved deadlines with the ones that already exist in the Room db
     private void syncForumsFromAPI(List<Post> _posts){
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
+                List<Post> allPostsFromDB = Room.databaseBuilder(getApplicationContext(),
+                        AppDatabase.class, "attendance").build().forumsDao().getAllPosts();
+
+                for(Post post: allPostsFromDB){
+                    // if the db contains a post that isn't on the server, delete from db
+                    if(!findInPosts(post.getId(), _posts)){
+                        Room.databaseBuilder(getApplicationContext(),
+                                AppDatabase.class, "attendance").build().forumsDao().deletePostById(post.getId());
+                    }
+                }
+
                 for(Post post: _posts) {
                     // if not exists
                     if (!Room.databaseBuilder(getApplicationContext(),

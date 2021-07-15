@@ -49,6 +49,8 @@ public interface ForumsDao {
     @Query("UPDATE Post SET is_starred = 0 WHERE id = :id")
     void changeToUnStarred(Integer id);
 
+    @Query("DELETE FROM Post")
+    void nukeTable();
 
 //    Replies
     @Query("SELECT * FROM Reply")

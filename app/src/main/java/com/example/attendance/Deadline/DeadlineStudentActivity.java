@@ -203,9 +203,15 @@ public class DeadlineStudentActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<Deadline>> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "please check your internet connection", Toast.LENGTH_SHORT).show();
-                if (swipeRefreshLayout.isRefreshing()) {
-                    swipeRefreshLayout.setRefreshing(false);
-                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (swipeRefreshLayout.isRefreshing()) {
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
+                    }
+                });
+
             }
         });
     }
@@ -235,9 +241,14 @@ public class DeadlineStudentActivity extends AppCompatActivity {
 
                 Log.d("test", "sss");
 
-                if (swipeRefreshLayout.isRefreshing()) {
-                    swipeRefreshLayout.setRefreshing(false);
-                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (swipeRefreshLayout.isRefreshing()) {
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
+                    }
+                });
             }
         });
     }

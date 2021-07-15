@@ -275,7 +275,7 @@ public class PostActivity extends AppCompatActivity {
             public void run() {
                 for(Reply reply: _replies) {
                     System.out.println(reply.getId());
-                    // if exists
+                    // if not exists
                     if (!Room.databaseBuilder(getApplicationContext(),
                             AppDatabase.class, "attendance").build().forumsDao().isExistsReply(reply.getId())) {
                         Room.databaseBuilder(getApplicationContext(),

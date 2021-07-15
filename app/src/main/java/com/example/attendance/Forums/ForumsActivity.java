@@ -321,9 +321,14 @@ public class ForumsActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<Post>> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "please check your internet connection", Toast.LENGTH_SHORT).show();
-                if (swipeRefreshLayout.isRefreshing()) {
-                    swipeRefreshLayout.setRefreshing(false);
-                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (swipeRefreshLayout.isRefreshing()) {
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
+                    }
+                });
             }
         });
     }
@@ -334,7 +339,7 @@ public class ForumsActivity extends AppCompatActivity {
             @Override
             public void run() {
                 for(Post post: _posts) {
-                    // if exists
+                    // if not exists
                     if (!Room.databaseBuilder(getApplicationContext(),
                             AppDatabase.class, "attendance").build().forumsDao().isExistsPosts(post.getId())) {
                         Room.databaseBuilder(getApplicationContext(),

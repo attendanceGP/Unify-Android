@@ -5,7 +5,7 @@
     android:layout_alignParentTop="true"
     android:layout_marginTop="8dp"
     android:layout_centerHorizontal="true"
-    android:background="@drawable/upcoming_holder">
+    android:background="@drawable/announcement_holder">
 
     <TextView
         android:id="@+id/student_announcement_title"

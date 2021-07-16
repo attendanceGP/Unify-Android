@@ -66,7 +66,6 @@ public class AddForumActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
             }
         });
 
@@ -81,7 +80,7 @@ public class AddForumActivity extends AppCompatActivity {
                 else if(str_description.equals("")){
                     Toast.makeText(getApplicationContext(), "description cannot be empty", Toast.LENGTH_SHORT).show();
                 }
-                else if(courseSpinner.getSelectedItem().toString()=="Courses"){
+                else if(courseSpinner.getSelectedItem().toString().equals("Courses")){
                     Toast.makeText(getApplicationContext(), "Course cannot be empty", Toast.LENGTH_SHORT).show();
                 }
                 else{
@@ -121,6 +120,7 @@ public class AddForumActivity extends AppCompatActivity {
             @Override
             public void run() {
                 courses.clear();
+                courses.add("Courses");
                 courses.addAll(Room.databaseBuilder(getApplicationContext(),
                         AppDatabase.class, "attendance").build().courseDAO().getAll());
             }

@@ -9,29 +9,26 @@ import androidx.room.Room;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.attendance.APIClient;
+import com.example.attendance.API.APIClient;
 import com.example.attendance.Announcement.Announcement_Student_Activity;
 import com.example.attendance.Database.AppDatabase;
 import com.example.attendance.Deadline.DeadlineStudentActivity;
 import com.example.attendance.Forums.ForumsActivity;
-import com.example.attendance.Home;
+import com.example.attendance.Home.HomeStudentActivity;
 import com.example.attendance.R;
 import com.example.attendance.SessionManager;
-import com.example.attendance.TA_home;
-import com.example.attendance.UserAPI;
+import com.example.attendance.Home.HomeTAActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AbsenceTab extends AppCompatActivity {
+public class AbsenceStudentActivity extends AppCompatActivity {
     private SessionManager sessionManager;
     private TextView emptyView;
     @Override
@@ -67,10 +64,10 @@ public class AbsenceTab extends AppCompatActivity {
                         // add the data from room to the recyclerView
                         AbsenceAdapter absenceAdapter = new AbsenceAdapter(absences);
                         rv.setAdapter(absenceAdapter);
-                        rv.setLayoutManager(new LinearLayoutManager(AbsenceTab.this));
+                        rv.setLayoutManager(new LinearLayoutManager(AbsenceStudentActivity.this));
                         RecentAdapter recentAdapter = new RecentAdapter(recents);
                         rvRecent.setAdapter(recentAdapter);
-                        rvRecent.setLayoutManager(new LinearLayoutManager(AbsenceTab.this));
+                        rvRecent.setLayoutManager(new LinearLayoutManager(AbsenceStudentActivity.this));
                         if(recents.length ==0){
                             rvRecent.setVisibility(View.GONE);
                             emptyView.setVisibility(View.VISIBLE);
@@ -86,7 +83,7 @@ public class AbsenceTab extends AppCompatActivity {
                                 Absence[] absences=response.body();
                                 AbsenceAdapter absenceAdapter = new AbsenceAdapter(absences);
                                 rv.setAdapter(absenceAdapter);
-                                rv.setLayoutManager(new LinearLayoutManager(AbsenceTab.this));
+                                rv.setLayoutManager(new LinearLayoutManager(AbsenceStudentActivity.this));
                                 //update the room data base with
                                 AsyncTask.execute(new Runnable() {
                                     @Override
@@ -116,7 +113,7 @@ public class AbsenceTab extends AppCompatActivity {
                                 Recent[] recents = response.body();
                                 RecentAdapter recentAdapter = new RecentAdapter(recents);
                                 rvRecent.setAdapter(recentAdapter);
-                                rvRecent.setLayoutManager(new LinearLayoutManager(AbsenceTab.this));
+                                rvRecent.setLayoutManager(new LinearLayoutManager(AbsenceStudentActivity.this));
                                 if(recents.length ==0){
                                     rvRecent.setVisibility(View.GONE);
                                     emptyView.setVisibility(View.VISIBLE);
@@ -159,23 +156,23 @@ public class AbsenceTab extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch(item.getItemId()){
                     case R.id.action_home:
-                            startActivity(new Intent(AbsenceTab.this, Home.class));
+                            startActivity(new Intent(AbsenceStudentActivity.this, HomeStudentActivity.class));
                         finish();
 
                         return true;
 
                     case R.id.action_announcements:
-                        startActivity(new Intent(AbsenceTab.this, Announcement_Student_Activity.class));
+                        startActivity(new Intent(AbsenceStudentActivity.this, Announcement_Student_Activity.class));
                         finish();
                         return true;
 
                     case R.id.action_forum:
-                        startActivity(new Intent(AbsenceTab.this, ForumsActivity.class));
+                        startActivity(new Intent(AbsenceStudentActivity.this, ForumsActivity.class));
                         finish();
                         return true;
 
                     case R.id.action_deadlines:
-                        startActivity(new Intent(AbsenceTab.this, DeadlineStudentActivity.class));
+                        startActivity(new Intent(AbsenceStudentActivity.this, DeadlineStudentActivity.class));
                         finish();
                         return true;
                 }
@@ -187,10 +184,10 @@ public class AbsenceTab extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if(sessionManager.getType().equals("student")){
-            startActivity(new Intent(AbsenceTab.this, Home.class));
+            startActivity(new Intent(AbsenceStudentActivity.this, HomeStudentActivity.class));
             finish();
         }else{
-            startActivity(new Intent(AbsenceTab.this, TA_home.class));
+            startActivity(new Intent(AbsenceStudentActivity.this, HomeTAActivity.class));
             finish();
         }
     }

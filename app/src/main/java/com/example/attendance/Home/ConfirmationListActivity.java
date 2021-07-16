@@ -1,4 +1,4 @@
-package com.example.attendance;
+package com.example.attendance.Home;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,25 +13,25 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
+import com.example.attendance.API.APIClient;
+import com.example.attendance.R;
+
 import java.util.List;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 // https://guides.codepath.com/android/using-the-recyclerview
 
-public class ta_attendanceConfirmationList extends AppCompatActivity {
+public class ConfirmationListActivity extends AppCompatActivity {
 //    private TextView attendanceDetails; // name of course, group
     private TextView attendanceCount; // total attendees, total registrants, total absent
     private EditText et_inputID;
     private Button buttonConfirm;
     private Button buttonAdd;
     private RecyclerView rv_studentsList;
-    private recyclerView_studentsList_adapter rv_adapter;
+    private ConfirmationListAdapter rv_adapter;
     private List<Attendance> List_Attendance;
 
     private Intent intent;
@@ -68,7 +67,7 @@ public class ta_attendanceConfirmationList extends AppCompatActivity {
                     List_Attendance = std_List;
                     System.out.println(std_List.size());
                     rv_studentsList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                    rv_adapter = new recyclerView_studentsList_adapter(getApplicationContext(), List_Attendance, str_date);
+                    rv_adapter = new ConfirmationListAdapter(getApplicationContext(), List_Attendance, str_date);
                     rv_studentsList.setAdapter(rv_adapter);
 
                     setAttendanceCount();
@@ -91,7 +90,7 @@ public class ta_attendanceConfirmationList extends AppCompatActivity {
                                 @Override
                                 public void onResponse(Call<Void> call, Response<Void> response) {
                                     Toast.makeText(getApplicationContext(), "confirmed", Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(ta_attendanceConfirmationList.this, TA_home.class));
+                                    startActivity(new Intent(ConfirmationListActivity.this, HomeTAActivity.class));
                                 }
 
                                 @Override

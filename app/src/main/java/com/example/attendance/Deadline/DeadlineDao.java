@@ -1,7 +1,5 @@
 package com.example.attendance.Deadline;
 
-import com.example.attendance.User;
-
 import java.util.Date;
 import java.util.List;
 

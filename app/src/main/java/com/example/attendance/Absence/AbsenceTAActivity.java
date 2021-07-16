@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,23 +13,22 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
-import com.example.attendance.APIClient;
+import com.example.attendance.API.APIClient;
 import com.example.attendance.Announcement.Announcement_TA_Activity;
 import com.example.attendance.Database.AppDatabase;
-import com.example.attendance.Deadline.DeadlineStudentActivity;
 import com.example.attendance.Deadline.DeadlineTAActivity;
 import com.example.attendance.Forums.ForumsActivity;
-import com.example.attendance.Home;
+import com.example.attendance.Home.HomeStudentActivity;
 import com.example.attendance.R;
 import com.example.attendance.SessionManager;
-import com.example.attendance.TA_home;
+import com.example.attendance.Home.HomeTAActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class TAAbsenceTab extends AppCompatActivity {
+public class AbsenceTAActivity extends AppCompatActivity {
     SessionManager sessionManager;
     private TextView emptyView;
     @Override
@@ -45,7 +43,7 @@ public class TAAbsenceTab extends AppCompatActivity {
             @Override
             public void run() {
                 // get the Recent from room database and add them to taRecents
-                TARecentRoom[] taRecentRooms =Room.databaseBuilder(getApplicationContext(), AppDatabase.class,"TARecent").build().absenceDAO().readAllTARecent();
+                TARecentRoom[] taRecentRooms = Room.databaseBuilder(getApplicationContext(), AppDatabase.class,"TARecent").build().absenceDAO().readAllTARecent();
                 TaRecent[]taRecents = new TaRecent[taRecentRooms.length];
                 for (int i = 0; i <taRecentRooms.length ; i++) {
                     TARecentRoom taRecentRoom = taRecentRooms[i];
@@ -58,7 +56,7 @@ public class TAAbsenceTab extends AppCompatActivity {
                         //add the data from room to the recyclerView
                         TaRecentAdapter taRecentAdapter = new TaRecentAdapter(taRecents);
                         rv.setAdapter(taRecentAdapter);
-                        rv.setLayoutManager(new LinearLayoutManager(TAAbsenceTab.this));
+                        rv.setLayoutManager(new LinearLayoutManager(AbsenceTAActivity.this));
                         if(taRecents.length ==0){
                             rv.setVisibility(View.GONE);
                             emptyView.setVisibility(View.VISIBLE);
@@ -74,7 +72,7 @@ public class TAAbsenceTab extends AppCompatActivity {
                                 TaRecent[] taRecents = response.body();
                                 TaRecentAdapter taRecentAdapter = new TaRecentAdapter(taRecents);
                                 rv.setAdapter(taRecentAdapter);
-                                rv.setLayoutManager(new LinearLayoutManager(TAAbsenceTab.this));
+                                rv.setLayoutManager(new LinearLayoutManager(AbsenceTAActivity.this));
 
                                 if(taRecents.length ==0){
                                     rv.setVisibility(View.GONE);
@@ -116,22 +114,22 @@ public class TAAbsenceTab extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch(item.getItemId()){
                     case R.id.action_home:
-                            startActivity(new Intent(TAAbsenceTab.this, TA_home.class));
+                            startActivity(new Intent(AbsenceTAActivity.this, HomeTAActivity.class));
                         finish();
                         return true;
 
                     case R.id.action_announcements:
-                        startActivity(new Intent(TAAbsenceTab.this, Announcement_TA_Activity.class));
+                        startActivity(new Intent(AbsenceTAActivity.this, Announcement_TA_Activity.class));
                         finish();
                         return true;
 
                     case R.id.action_forum:
-                        startActivity(new Intent(TAAbsenceTab.this, ForumsActivity.class));
+                        startActivity(new Intent(AbsenceTAActivity.this, ForumsActivity.class));
                         finish();
                         return true;
 
                     case R.id.action_deadlines:
-                        startActivity(new Intent(TAAbsenceTab.this, DeadlineTAActivity.class));
+                        startActivity(new Intent(AbsenceTAActivity.this, DeadlineTAActivity.class));
                         finish();
                         return true;
                 }
@@ -143,9 +141,9 @@ public class TAAbsenceTab extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if(sessionManager.getType().equals("student")){
-            startActivity(new Intent(TAAbsenceTab.this, Home.class));
+            startActivity(new Intent(AbsenceTAActivity.this, HomeStudentActivity.class));
         }else{
-            startActivity(new Intent(TAAbsenceTab.this, TA_home.class));
+            startActivity(new Intent(AbsenceTAActivity.this, HomeTAActivity.class));
         }
         finish();
     }

@@ -12,15 +12,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import com.example.attendance.Deadline.DeadlineStudentActivity;
-import com.example.attendance.Deadline.DeadlineTAActivity;
 
-import com.example.attendance.Forums.ForumsActivity;
-
-import com.example.attendance.Announcement.Announcement_Student_Activity;
-
-
-import com.example.attendance.Absence.TAAbsenceTab;
+import com.example.attendance.API.APIClient;
+import com.example.attendance.Home.HomeStudentActivity;
+import com.example.attendance.Home.HomeTAActivity;
+import com.example.attendance.Home.User;
+import com.example.attendance.Home.UserAPI;
 
 public class MainActivity extends AppCompatActivity {
     SessionManager sessionManager;
@@ -28,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
     private EditText username;
     private EditText password;
     private Button login;
-    private String queryUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +35,10 @@ public class MainActivity extends AppCompatActivity {
 
         if (sessionManager.isLoggedIn()) {
             if(sessionManager.getType().equals("student")) {
-                startActivity(new Intent(MainActivity.this, Home.class));
+                startActivity(new Intent(MainActivity.this, HomeStudentActivity.class));
                 finish();
             }else{
-                startActivity(new Intent(MainActivity.this, TA_home.class));
+                startActivity(new Intent(MainActivity.this, HomeTAActivity.class));
                 finish();
             }
         }
@@ -79,11 +75,11 @@ public class MainActivity extends AppCompatActivity {
                             sessionManager.login(test);
 
                             if(sessionManager.getType().equals("student")) {
-                                startActivity(new Intent(MainActivity.this, Home.class));
+                                startActivity(new Intent(MainActivity.this, HomeStudentActivity.class));
                                 finish();
                             }
                             else{
-                                startActivity(new Intent(MainActivity.this, TA_home.class));
+                                startActivity(new Intent(MainActivity.this, HomeTAActivity.class));
                                 finish();
                             }
                         }
@@ -96,6 +92,5 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         });
-        //setContentView(R.layout.activity_ta_attendance);
     }
 }

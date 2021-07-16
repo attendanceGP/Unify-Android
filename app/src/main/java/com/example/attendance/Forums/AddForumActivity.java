@@ -14,12 +14,12 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.attendance.APIClient;
+import com.example.attendance.API.APIClient;
 import com.example.attendance.Course.Course;
 import com.example.attendance.Database.AppDatabase;
 import com.example.attendance.R;
 import com.example.attendance.SessionManager;
-import com.example.attendance.UserAPI;
+import com.example.attendance.Home.UserAPI;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -115,6 +115,7 @@ public class AddForumActivity extends AppCompatActivity {
         result = result + " " + strDate;
         return result;
     }
+
     private void updateCourseData(){
         AsyncTask.execute(new Runnable() {
             @Override

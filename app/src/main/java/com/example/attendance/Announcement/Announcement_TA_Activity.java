@@ -6,10 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.DatabaseConfiguration;
-import androidx.room.InvalidationTracker;
 import androidx.room.Room;
-import androidx.sqlite.db.SupportSQLiteOpenHelper;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
@@ -30,17 +27,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.attendance.APIClient;
-import com.example.attendance.Absence.TAAbsenceTab;
+import com.example.attendance.API.APIClient;
+import com.example.attendance.Absence.AbsenceTAActivity;
 import com.example.attendance.Database.AppDatabase;
-import com.example.attendance.Deadline.DeadlineStudentActivity;
 import com.example.attendance.Deadline.DeadlineTAActivity;
 import com.example.attendance.Forums.ForumsActivity;
-import com.example.attendance.Home;
+import com.example.attendance.Home.HomeStudentActivity;
 import com.example.attendance.R;
 import com.example.attendance.SessionManager;
-import com.example.attendance.TA_home;
-import com.example.attendance.UserAPI;
+import com.example.attendance.Home.HomeTAActivity;
+import com.example.attendance.Home.UserAPI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.SimpleDateFormat;
@@ -233,7 +229,7 @@ public class Announcement_TA_Activity extends AppCompatActivity {
 
                     case R.id.action_home:
 
-                        startActivity(new Intent(Announcement_TA_Activity.this, TA_home.class));
+                        startActivity(new Intent(Announcement_TA_Activity.this, HomeTAActivity.class));
                         finish();
                         return true;
 
@@ -243,7 +239,7 @@ public class Announcement_TA_Activity extends AppCompatActivity {
                         return true;
 
                     case R.id.action_absence:
-                        startActivity(new Intent(Announcement_TA_Activity.this, TAAbsenceTab.class));
+                        startActivity(new Intent(Announcement_TA_Activity.this, AbsenceTAActivity.class));
                         finish();
                         return true;
                 }
@@ -485,10 +481,10 @@ public class Announcement_TA_Activity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if(sessionManager.getType().equals("student")){
-            startActivity(new Intent(Announcement_TA_Activity.this, Home.class));
+            startActivity(new Intent(Announcement_TA_Activity.this, HomeStudentActivity.class));
             finish();
         }else{
-            startActivity(new Intent(Announcement_TA_Activity.this, TA_home.class));
+            startActivity(new Intent(Announcement_TA_Activity.this, HomeTAActivity.class));
             finish();
         }
     }

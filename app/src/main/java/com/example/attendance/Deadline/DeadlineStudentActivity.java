@@ -9,15 +9,15 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.attendance.APIClient;
-import com.example.attendance.Absence.AbsenceTab;
+import com.example.attendance.API.APIClient;
+import com.example.attendance.Absence.AbsenceStudentActivity;
 import com.example.attendance.Announcement.Announcement_Student_Activity;
 import com.example.attendance.Database.AppDatabase;
 import com.example.attendance.Forums.ForumsActivity;
-import com.example.attendance.Home;
+import com.example.attendance.Home.HomeStudentActivity;
 import com.example.attendance.R;
 import com.example.attendance.SessionManager;
-import com.example.attendance.TA_home;
+import com.example.attendance.Home.HomeTAActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -110,10 +110,10 @@ public class DeadlineStudentActivity extends AppCompatActivity {
                 switch(item.getItemId()){
                     case R.id.action_home:
                         if(sessionManager.getType().equals("student")){
-                            startActivity(new Intent(DeadlineStudentActivity.this, Home.class));
+                            startActivity(new Intent(DeadlineStudentActivity.this, HomeStudentActivity.class));
                             finish();
                         }else{
-                            startActivity(new Intent(DeadlineStudentActivity.this, TA_home.class));
+                            startActivity(new Intent(DeadlineStudentActivity.this, HomeTAActivity.class));
                             finish();
                         }
                         return true;
@@ -129,7 +129,7 @@ public class DeadlineStudentActivity extends AppCompatActivity {
                         return true;
 
                     case R.id.action_absence:
-                        startActivity(new Intent(DeadlineStudentActivity.this, AbsenceTab.class));
+                        startActivity(new Intent(DeadlineStudentActivity.this, AbsenceStudentActivity.class));
                         finish();
                         return true;
                 }
@@ -268,10 +268,10 @@ public class DeadlineStudentActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if(sessionManager.getType().equals("student")){
-            startActivity(new Intent(DeadlineStudentActivity.this, Home.class));
+            startActivity(new Intent(DeadlineStudentActivity.this, HomeStudentActivity.class));
             finish();
         }else{
-            startActivity(new Intent(DeadlineStudentActivity.this, TA_home.class));
+            startActivity(new Intent(DeadlineStudentActivity.this, HomeTAActivity.class));
             finish();
         }
     }

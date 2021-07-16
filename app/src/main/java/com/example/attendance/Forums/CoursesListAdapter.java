@@ -1,7 +1,6 @@
 package com.example.attendance.Forums;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +9,9 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.attendance.Announcement.Announcement_Student_Activity;
 import com.example.attendance.R;
 import com.example.attendance.SessionManager;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.ViewHolder> {

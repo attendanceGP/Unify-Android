@@ -1,10 +1,6 @@
 package com.example.attendance.Database;
 
 
-import androidx.room.Database;
-import androidx.room.RoomDatabase;
-import androidx.room.TypeConverters;
-
 import com.example.attendance.Absence.AbsenceDAO;
 import com.example.attendance.Absence.AbsenceRoom;
 import com.example.attendance.Absence.RecentRoom;
@@ -13,21 +9,12 @@ import com.example.attendance.Absence.TARecentRoom;
 
 import com.example.attendance.Course.Course;
 import com.example.attendance.Course.CourseDAO;
-import com.example.attendance.Deadline.Deadline;
-import com.example.attendance.Deadline.DeadlineDao;
 import com.example.attendance.Forums.ForumsDao;
 import com.example.attendance.Forums.Post;
 import com.example.attendance.Forums.Reply;
-import com.example.attendance.Announcement.Announcement;
-import com.example.attendance.Announcement.AnnouncementDao;
-import com.example.attendance.Deadline.Deadline;
-import com.example.attendance.Deadline.DeadlineDao;
-
-import android.content.Context;
 
 
 import androidx.room.Database;
-import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 

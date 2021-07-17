@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.attendance.R;
 
 
-public class RecentAdapter extends RecyclerView.Adapter<RecentAdapter.ViewHolder>{
+public class RecentAdapter extends RecyclerView.Adapter<RecentAdapter.ViewHolder> {
     Recent[] mrecent;
 
     public RecentAdapter(Recent[] mrecent) {
@@ -24,23 +24,23 @@ public class RecentAdapter extends RecyclerView.Adapter<RecentAdapter.ViewHolder
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.recent_items,parent,false);
+        View view = inflater.inflate(R.layout.recent_items, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-    Recent recent = mrecent[position];
-    TextView courseCode = holder.courseCodeText;
-    TextView date = holder.dateText;
-    TextView ta = holder.TAText;
-    TextView pen = holder.penText;
-    courseCode.setText(recent.getCourseCode());
-    date.setText("Recorded on " +recent.getDate());
-    ta.setText("TA "+recent.getTaName());
-    if (recent.isPen())pen.setVisibility(View.VISIBLE);
-    else pen.setVisibility(View.INVISIBLE);
+        Recent recent = mrecent[position];
+        TextView courseCode = holder.courseCodeText;
+        TextView date = holder.dateText;
+        TextView ta = holder.TAText;
+        TextView pen = holder.penText;
+        courseCode.setText(recent.getCourseCode());
+        date.setText("Recorded on " + recent.getDate());
+        ta.setText("TA " + recent.getTaName());
+        if (recent.isPen()) pen.setVisibility(View.VISIBLE);
+        else pen.setVisibility(View.INVISIBLE);
     }
 
 
@@ -49,8 +49,9 @@ public class RecentAdapter extends RecyclerView.Adapter<RecentAdapter.ViewHolder
         return mrecent.length;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
-        TextView courseCodeText,TAText,dateText,penText;
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        TextView courseCodeText, TAText, dateText, penText;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             courseCodeText = itemView.findViewById(R.id.recent_course);

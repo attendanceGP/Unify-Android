@@ -31,23 +31,29 @@ import retrofit2.Response;
 public class AbsenceTAActivity extends AppCompatActivity {
     SessionManager sessionManager;
     private TextView emptyView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_t_a_absence_tab);
         sessionManager = new SessionManager(getApplicationContext());
-        emptyView = (TextView)findViewById(R.id.empty_view_ta_recent);
+        emptyView = (TextView) findViewById(R.id.empty_view_ta_recent);
         RecyclerView rv = findViewById(R.id.rv_ta_recent);
 
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
                 // get the Recent from room database and add them to taRecents
-                TARecentRoom[] taRecentRooms = Room.databaseBuilder(getApplicationContext(), AppDatabase.class,"TARecent").build().absenceDAO().readAllTARecent();
-                TaRecent[]taRecents = new TaRecent[taRecentRooms.length];
-                for (int i = 0; i <taRecentRooms.length ; i++) {
+                TARecentRoom[] taRecentRooms = Room.databaseBuilder(getApplicationContext(),
+                        AppDatabase.class, "TARecent").build().absenceDAO().readAllTARecent();
+
+                TaRecent[] taRecents = new TaRecent[taRecentRooms.length];
+
+                for (int i = 0; i < taRecentRooms.length; i++) {
                     TARecentRoom taRecentRoom = taRecentRooms[i];
-                    taRecents[i] = new TaRecent(taRecentRoom.getCourseCode(),taRecentRoom.getDate(),taRecentRoom.getAttended(),taRecentRoom.getAbsent(),taRecentRoom.getGroupNumber());
+
+                    taRecents[i] = new TaRecent(taRecentRoom.getCourseCode(), taRecentRoom.getDate(),
+                            taRecentRoom.getAttended(), taRecentRoom.getAbsent(), taRecentRoom.getGroupNumber());
                 }
 
                 runOnUiThread(new Runnable() {
@@ -55,43 +61,53 @@ public class AbsenceTAActivity extends AppCompatActivity {
                     public void run() {
                         //add the data from room to the recyclerView
                         TaRecentAdapter taRecentAdapter = new TaRecentAdapter(taRecents);
+
                         rv.setAdapter(taRecentAdapter);
                         rv.setLayoutManager(new LinearLayoutManager(AbsenceTAActivity.this));
-                        if(taRecents.length ==0){
+
+                        if (taRecents.length == 0) {
                             rv.setVisibility(View.GONE);
                             emptyView.setVisibility(View.VISIBLE);
-                        }else{
+                        } else {
                             rv.setVisibility(View.VISIBLE);
                             emptyView.setVisibility(View.GONE);
                         }
                         // call the api to get the new Recent and it will overwrite on the recylcerView if on response
-                        Call<TaRecent[]>getRecentTA = APIClient.getClient().create(AbsenceAPIs.class).getRecentTA(sessionManager.getId());
+                        Call<TaRecent[]> getRecentTA = APIClient.getClient().create(AbsenceAPIs.class)
+                                .getRecentTA(sessionManager.getId());
+
                         getRecentTA.enqueue(new Callback<TaRecent[]>() {
                             @Override
                             public void onResponse(Call<TaRecent[]> call, Response<TaRecent[]> response) {
+
                                 TaRecent[] taRecents = response.body();
                                 TaRecentAdapter taRecentAdapter = new TaRecentAdapter(taRecents);
+
                                 rv.setAdapter(taRecentAdapter);
                                 rv.setLayoutManager(new LinearLayoutManager(AbsenceTAActivity.this));
 
-                                if(taRecents.length ==0){
+                                if (taRecents.length == 0) {
                                     rv.setVisibility(View.GONE);
                                     emptyView.setVisibility(View.VISIBLE);
-                                }else{
+                                } else {
                                     rv.setVisibility(View.VISIBLE);
                                     emptyView.setVisibility(View.GONE);
                                 }
 
                                 TARecentRoom[] taRecentRooms = new TARecentRoom[taRecents.length];
-                                for (int i = 0; i <taRecentRooms.length ; i++) {
+                                for (int i = 0; i < taRecentRooms.length; i++) {
                                     TaRecent taRecent = taRecents[i];
-                                    taRecentRooms[i] = new TARecentRoom(taRecent.getCourseCode(),taRecent.getDate(),taRecent.getAttended(),taRecent.getAbsent(),taRecent.getGroupNumber());
+                                    taRecentRooms[i] = new TARecentRoom(taRecent.getCourseCode(), taRecent.getDate(),
+                                            taRecent.getAttended(), taRecent.getAbsent(), taRecent.getGroupNumber());
                                 }
                                 AsyncTask.execute(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Room.databaseBuilder(getApplicationContext(), AppDatabase.class,"TARecent").build().absenceDAO().deleteTARecent();
-                                        Room.databaseBuilder(getApplicationContext(), AppDatabase.class,"TARecent").build().absenceDAO().insertAllToTARecent(taRecentRooms);
+                                        Room.databaseBuilder(getApplicationContext(), AppDatabase.class,
+                                                "TARecent").build().absenceDAO().deleteTARecent();
+
+                                        Room.databaseBuilder(getApplicationContext(), AppDatabase.class,
+                                                "TARecent").build().absenceDAO().insertAllToTARecent(taRecentRooms);
                                     }
                                 });
                             }
@@ -112,9 +128,9 @@ public class AbsenceTAActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch(item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.action_home:
-                            startActivity(new Intent(AbsenceTAActivity.this, HomeTAActivity.class));
+                        startActivity(new Intent(AbsenceTAActivity.this, HomeTAActivity.class));
                         finish();
                         return true;
 
@@ -140,9 +156,9 @@ public class AbsenceTAActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(sessionManager.getType().equals("student")){
+        if (sessionManager.getType().equals("student")) {
             startActivity(new Intent(AbsenceTAActivity.this, HomeStudentActivity.class));
-        }else{
+        } else {
             startActivity(new Intent(AbsenceTAActivity.this, HomeTAActivity.class));
         }
         finish();

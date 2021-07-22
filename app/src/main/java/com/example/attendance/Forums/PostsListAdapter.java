@@ -58,7 +58,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.View
                 Post post = posts.get(position);
                 ((ForumsActivity) applicationContext).onForumClick(position, post);
 
-                Log.i("TESTPOST", "" + post.getId());
             }
         }
     }

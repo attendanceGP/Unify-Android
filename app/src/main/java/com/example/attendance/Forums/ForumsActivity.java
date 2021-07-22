@@ -112,8 +112,7 @@ public class ForumsActivity extends AppCompatActivity {
         postsRecyclerView.setLayoutManager(
                 new NPALinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         );
-//        postsRecyclerView.setLayoutManager(
-//                new LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false));
+
         postsRecyclerView.setItemAnimator(new DefaultItemAnimator());
         postsRecyclerView.setAdapter(postsListAdapter);
 
@@ -162,7 +161,6 @@ public class ForumsActivity extends AppCompatActivity {
         });
 
 
-        //TODO add the rest of the activities to the bottom nav view when done
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -247,16 +245,22 @@ public class ForumsActivity extends AppCompatActivity {
                     Course nc= new Course(i,courseCodes.get(i));
                     courses.add(nc);
                 }
-                //System.out.println(announcement.getId());
+
                 // if exists
                 Room.databaseBuilder(getApplicationContext(),
                         AppDatabase.class, "attendance")
                         .build().courseDAO().insertAll(courses.toArray(new Course[courses.size()]));
 
                 updateCourseData();
-                if (swipeRefreshLayout.isRefreshing()) {
-                    swipeRefreshLayout.setRefreshing(false);
-                }
+                runOnUiThread(new Runnable(){
+                    @Override
+                    public void run() {
+                        if (swipeRefreshLayout.isRefreshing()) {
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
+                    }
+                });
+
             }
         });
     }
@@ -278,7 +282,6 @@ public class ForumsActivity extends AppCompatActivity {
             public void onFailure(Call<ArrayList<String>> call, Throwable t) {
                 updateCourseData();
                 Toast.makeText(getApplicationContext(), "please check your internet connection", Toast.LENGTH_SHORT).show();
-                System.out.println(t.getMessage());
             }
         });
     }
@@ -298,7 +301,7 @@ public class ForumsActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         postsListAdapter.notifyDataSetChanged();
-                        filterPosts();  //todo
+                        filterPosts();
                         setEmptyTextVisibility(Objects.requireNonNull(postsRecyclerView.getAdapter()).getItemCount()==0);
                     }
                 });
@@ -336,8 +339,6 @@ public class ForumsActivity extends AppCompatActivity {
     private boolean findInPosts(int postId, List<Post> posts){
         for(int i=0; i<posts.size(); i++){
             if(posts.get(i).getId().equals(postId)) return true;
-
-
         }
         return false;
     }
@@ -517,7 +518,6 @@ public class ForumsActivity extends AppCompatActivity {
     }
 
     public void setEmptyTextVisibility(boolean emptyList){
-        Log.i("sss", String.valueOf(emptyList));
         if(emptyList){
             postsRecyclerView.setVisibility(View.GONE);
             emptyText.setVisibility(View.VISIBLE);
@@ -526,7 +526,6 @@ public class ForumsActivity extends AppCompatActivity {
             postsRecyclerView.setVisibility(View.VISIBLE);
             emptyText.setVisibility(View.GONE);
         }
-        Log.i("sss", String.valueOf(emptyList));
     }
     public void onCourseFilterClick(int viewPosition, String course) {
 

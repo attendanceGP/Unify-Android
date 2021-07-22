@@ -66,7 +66,6 @@ public class ta_attendanceConfirmationList extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
                 }else {
                     List_Attendance = std_List;
-                    System.out.println(std_List.size());
                     rv_studentsList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                     rv_adapter = new recyclerView_studentsList_adapter(getApplicationContext(), List_Attendance, str_date);
                     rv_studentsList.setAdapter(rv_adapter);
@@ -96,7 +95,7 @@ public class ta_attendanceConfirmationList extends AppCompatActivity {
 
                                 @Override
                                 public void onFailure(Call<Void> call, Throwable t) {
-                                    Toast.makeText(getApplicationContext(), "an error occured", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
@@ -144,7 +143,6 @@ public class ta_attendanceConfirmationList extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<Attendance>> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "wrong data provided", Toast.LENGTH_SHORT).show();
-                System.out.println(t.getCause());
             }
         });
 

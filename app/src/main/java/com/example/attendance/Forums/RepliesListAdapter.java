@@ -80,12 +80,15 @@ public class RepliesListAdapter extends RecyclerView.Adapter<RepliesListAdapter.
         if(reply.getUserId().equals(sessionManager.getId())){
             deleteButton.setVisibility(View.VISIBLE);
         }
+        else{
+            deleteButton.setVisibility(View.INVISIBLE);
+        }
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (applicationContext instanceof PostActivity) {
                     ((PostActivity) applicationContext).deleteReply(holder.reply.getId());
-                    removeItem(position);
+//                    removeItem(position);
                 }
             }
         });

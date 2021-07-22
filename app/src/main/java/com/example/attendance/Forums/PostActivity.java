@@ -78,11 +78,11 @@ public class PostActivity extends AppCompatActivity {
         this.post_id = intent.getIntExtra("Post_id", 0);
         this.course_code = intent.getStringExtra("course_code");
         this.emptyText = (TextView) findViewById(R.id.empty_replies_text);
-        Log.i("TESTPOST", "2- " +post_id);
+
         getPostbyid();
 
         // binding to the swipe layout to refresh the page
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.post_swipe_refresh);
+        this.swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.post_swipe_refresh);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -92,7 +92,6 @@ public class PostActivity extends AppCompatActivity {
 
         forumsAPI = APIClient.getClient().create(ForumsAPI.class);
 
-//        setPost();
 
         repliesRecyclerView = (RecyclerView) findViewById(R.id.posts_recycler_view);
         repliesListAdapter = new RepliesListAdapter(replies, this);
@@ -119,9 +118,14 @@ public class PostActivity extends AppCompatActivity {
                     call.enqueue(new Callback<Void>() {
                         @Override
                         public void onResponse(Call<Void> call, Response<Void> response) {
-                            Toast.makeText(getApplicationContext(), "posted", Toast.LENGTH_SHORT).show();
-                            replyArea.getText().clear();
-                            refreshForums();
+                            if (response.code() != 200) {
+                                Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                Toast.makeText(getApplicationContext(), "posted", Toast.LENGTH_SHORT).show();
+                                replyArea.getText().clear();
+                                refreshForums();
+                            }
                         }
                         @Override
                         public void onFailure(Call<Void> call, Throwable t) {
@@ -133,7 +137,6 @@ public class PostActivity extends AppCompatActivity {
         });
 
 
-        //TODO add the rest of the activities to the bottom nav view when done
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -199,18 +202,10 @@ public class PostActivity extends AppCompatActivity {
     }
 
     private String getDateStringForCurrentDate(){
-        String result = "";
-        Date currentTime = Calendar.getInstance().getTime();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String strDate = dateFormat.format(currentTime);
 
-        result = "" + strDate;
-
-        dateFormat = new SimpleDateFormat("hh:mm:ss");
-        strDate = dateFormat.format(currentTime);
-
-        result = result + " " + strDate;
-        return result;
+        java.util.Date date = new java.util.Date();
+        String strDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
+        return strDate;
     }
 
     private String getDateStringFromDate(Date date){
@@ -261,9 +256,15 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<Reply>> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "please check your internet connection", Toast.LENGTH_SHORT).show();
-                if (swipeRefreshLayout.isRefreshing()) {
-                    swipeRefreshLayout.setRefreshing(false);
-                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (swipeRefreshLayout.isRefreshing()) {
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
+                    }
+                });
+
             }
         });
     }
@@ -273,16 +274,12 @@ public class PostActivity extends AppCompatActivity {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                for(Reply reply: _replies) {
-                    System.out.println(reply.getId());
-                    // if not exists
-                    if (!Room.databaseBuilder(getApplicationContext(),
-                            AppDatabase.class, "attendance").build().forumsDao().isExistsReply(reply.getId())) {
-                        Room.databaseBuilder(getApplicationContext(),
-                                AppDatabase.class, "attendance").build().forumsDao().insertAllReply(reply);
-                        System.out.println("here");
-                    }
-                }
+                Room.databaseBuilder(getApplicationContext(),
+                        AppDatabase.class, "attendance").build().forumsDao().deleteRepliesByPostId(post_id);
+
+                Room.databaseBuilder(getApplicationContext(),
+                        AppDatabase.class, "attendance")
+                        .build().forumsDao().insertAllReply(_replies.toArray(new Reply[_replies.size()]));
                 updateData();
                 runOnUiThread(new Runnable() {
                     @Override
@@ -302,8 +299,8 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 Toast.makeText(getApplicationContext(), "removed", Toast.LENGTH_SHORT).show();
-                Log.d("test", "removed from API");
                 deleteReplyFromRoom(replyId);
+                setEmptyTextVisibility(replies.size()==0);
             }
 
             @Override
@@ -318,7 +315,6 @@ public class PostActivity extends AppCompatActivity {
             public void run() {
                 Room.databaseBuilder(getApplicationContext(),
                         AppDatabase.class, "attendance").build().forumsDao().deleteReplyById(replyId);
-                Log.d("test", "deleted from room");
                 updateData();
                 refreshForums();
             }
@@ -334,16 +330,12 @@ public class PostActivity extends AppCompatActivity {
                         AppDatabase.class, "attendance").build().forumsDao().loadPostById(post_id);
 
                setPost();
-
-                Log.i("TESTPOST", "3- " + post.getId());
-                System.out.println("post title  " + post.getTitle());
             }
         });
 
     }
 
     public void setEmptyTextVisibility(boolean emptyList){
-        Log.i("sss", String.valueOf(emptyList));
         if(emptyList){
             repliesRecyclerView.setVisibility(View.GONE);
             emptyText.setVisibility(View.VISIBLE);
@@ -352,7 +344,6 @@ public class PostActivity extends AppCompatActivity {
             repliesRecyclerView.setVisibility(View.VISIBLE);
             emptyText.setVisibility(View.GONE);
         }
-        Log.i("sss", String.valueOf(emptyList));
     }
 
 }

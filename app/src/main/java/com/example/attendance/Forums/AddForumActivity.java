@@ -49,6 +49,7 @@ public class AddForumActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_forum);
         this.sessionManager = new SessionManager(getApplicationContext());
+
         forumsAPI = APIClient.getClient().create(ForumsAPI.class);
         userAPI = APIClient.getClient().create(UserAPI.class);
 
@@ -103,19 +104,12 @@ public class AddForumActivity extends AppCompatActivity {
     }
 
     private String getDateStringForCurrentDate(){
-        String result = "";
-        Date currentTime = Calendar.getInstance().getTime();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String strDate = dateFormat.format(currentTime);
 
-        result = "" + strDate;
-
-        dateFormat = new SimpleDateFormat("hh:mm:ss");
-        strDate = dateFormat.format(currentTime);
-
-        result = result + " " + strDate;
-        return result;
+        java.util.Date date = new java.util.Date();
+        String strDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
+        return strDate;
     }
+
     private void updateCourseData(){
         AsyncTask.execute(new Runnable() {
             @Override
@@ -167,7 +161,6 @@ public class AddForumActivity extends AppCompatActivity {
             public void onFailure(Call<ArrayList<String>> call, Throwable t) {
                 updateCourseData();
                 Toast.makeText(getApplicationContext(), "please check your internet connection", Toast.LENGTH_SHORT).show();
-                System.out.println(t.getMessage());
             }
         });
     }

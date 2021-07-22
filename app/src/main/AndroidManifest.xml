@@ -24,8 +24,8 @@
         android:usesCleartextTraffic="true">
 
 
-        <activity android:name=".Absence.TAAbsenceTab"/>
-        <activity android:name=".Absence.AbsenceTab"/>
+        <activity android:name=".Absence.AbsenceTAActivity"/>
+        <activity android:name=".Absence.AbsenceStudentActivity"/>
 
         <activity android:name=".Forums.AddForumActivity"></activity>
         <activity android:name=".Forums.PostActivity" />
@@ -36,10 +36,10 @@
         <activity android:name=".Announcement.Announcement_TA_Activity"></activity>
         <activity android:name=".Announcement.Announcement_Student_Activity" />
 
-        <activity android:name=".TA_closes_attendance" />
-        <activity android:name=".TA_home" />
-        <activity android:name=".ta_attendanceConfirmationList" />
-        <activity android:name=".Home" />
+        <activity android:name=".Home.AttendanceEndingActivity" />
+        <activity android:name=".Home.HomeTAActivity" />
+        <activity android:name=".Home.ConfirmationListActivity" />
+        <activity android:name=".Home.HomeStudentActivity" />
 
         <activity android:name=".Deadline.DeadlineStudentActivity" />
 

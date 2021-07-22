@@ -1,4 +1,4 @@
-package com.example.attendance;
+package com.example.attendance.Home;
 
 public class User {
     private Integer id;

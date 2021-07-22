@@ -1,4 +1,4 @@
-package com.example.attendance;
+package com.example.attendance.Home;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,12 +8,10 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,16 +21,16 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.attendance.Announcement.Announcement_Student_Activity;
+import com.example.attendance.API.APIClient;
 import com.example.attendance.Announcement.Announcement_TA_Activity;
-import com.example.attendance.Deadline.DeadlineStudentActivity;
 import com.example.attendance.Deadline.DeadlineTAActivity;
 import com.example.attendance.Forums.ForumsActivity;
+import com.example.attendance.R;
+import com.example.attendance.SessionManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,9 +41,9 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 
-import com.example.attendance.Absence.TAAbsenceTab;
+import com.example.attendance.Absence.AbsenceTAActivity;
 
-public class TA_home extends AppCompatActivity implements AdapterView.OnItemSelectedListener, LocationListener {
+public class HomeTAActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, LocationListener {
     LocationManager lm;
     LocationListener locationListener;
     SessionManager sessionManager;
@@ -138,22 +136,22 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch(item.getItemId()){
                     case R.id.action_deadlines:
-                        startActivity(new Intent(TA_home.this, DeadlineTAActivity.class));
+                        startActivity(new Intent(HomeTAActivity.this, DeadlineTAActivity.class));
                         finish();
                         return true;
 
                     case R.id.action_announcements:
-                        startActivity(new Intent(TA_home.this, Announcement_TA_Activity.class));
+                        startActivity(new Intent(HomeTAActivity.this, Announcement_TA_Activity.class));
                         finish();
                         return true;
 
                     case R.id.action_forum:
-                        startActivity(new Intent(TA_home.this, ForumsActivity.class));
+                        startActivity(new Intent(HomeTAActivity.this, ForumsActivity.class));
                         finish();
                         return true;
 
                     case R.id.action_absence:
-                        startActivity(new Intent(TA_home.this, TAAbsenceTab.class));
+                        startActivity(new Intent(HomeTAActivity.this, AbsenceTAActivity.class));
                         finish();
                         return true;
                 }
@@ -196,12 +194,12 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
         TALocation.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                Toast.makeText(TA_home.this, "location updated", Toast.LENGTH_SHORT).show();
+                Toast.makeText(HomeTAActivity.this, "location updated", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(TA_home.this, "error in updating location", Toast.LENGTH_SHORT).show();
+                Toast.makeText(HomeTAActivity.this, "error in updating location", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -276,7 +274,7 @@ public class TA_home extends AppCompatActivity implements AdapterView.OnItemSele
                                     Toast.makeText(getApplicationContext(), "an error occurred", Toast.LENGTH_SHORT).show();
                                 } else {
                                     //got to the next required activity and pass the needed values
-                                    Intent ta_page_2 = new Intent(TA_home.this, TA_closes_attendance.class);
+                                    Intent ta_page_2 = new Intent(HomeTAActivity.this, AttendanceEndingActivity.class);
                                     ta_page_2.putExtra("currDate", currDate);
                                     ta_page_2.putExtra("courseCode", courseCode);
                                     ta_page_2.putExtra("group", groups);

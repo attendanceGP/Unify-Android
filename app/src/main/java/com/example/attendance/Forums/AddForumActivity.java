@@ -14,12 +14,12 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.attendance.APIClient;
+import com.example.attendance.API.APIClient;
 import com.example.attendance.Course.Course;
 import com.example.attendance.Database.AppDatabase;
 import com.example.attendance.R;
 import com.example.attendance.SessionManager;
-import com.example.attendance.UserAPI;
+import com.example.attendance.Home.UserAPI;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -67,7 +67,6 @@ public class AddForumActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
             }
         });
 
@@ -82,7 +81,7 @@ public class AddForumActivity extends AppCompatActivity {
                 else if(str_description.equals("")){
                     Toast.makeText(getApplicationContext(), "description cannot be empty", Toast.LENGTH_SHORT).show();
                 }
-                else if(courseSpinner.getSelectedItem().toString()=="Courses"){
+                else if(courseSpinner.getSelectedItem().toString().equals("None")){
                     Toast.makeText(getApplicationContext(), "Course cannot be empty", Toast.LENGTH_SHORT).show();
                 }
                 else{
@@ -115,6 +114,7 @@ public class AddForumActivity extends AppCompatActivity {
             @Override
             public void run() {
                 courses.clear();
+                courses.add("None");
                 courses.addAll(Room.databaseBuilder(getApplicationContext(),
                         AppDatabase.class, "attendance").build().courseDAO().getAll());
             }

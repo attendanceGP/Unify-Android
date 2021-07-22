@@ -1,4 +1,4 @@
-package com.example.attendance;
+package com.example.attendance.Home;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,13 +8,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
+import com.example.attendance.API.APIClient;
+import com.example.attendance.R;
+import com.example.attendance.SessionManager;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class TA_closes_attendance extends AppCompatActivity {
+public class AttendanceEndingActivity extends AppCompatActivity {
 
     Button showAttendeesList;
     SessionManager sessionManager;
@@ -52,7 +54,7 @@ public class TA_closes_attendance extends AppCompatActivity {
                             Intent dataIntent = getIntent();
 
                             //going to the next required activity to see the list of attendees
-                            Intent intent = new Intent(TA_closes_attendance.this, ta_attendanceConfirmationList.class);
+                            Intent intent = new Intent(AttendanceEndingActivity.this, ConfirmationListActivity.class);
 
                             //passing the required data to the next activity
                             intent.putExtra("CoureID_Key", dataIntent.getStringExtra("courseCode"));

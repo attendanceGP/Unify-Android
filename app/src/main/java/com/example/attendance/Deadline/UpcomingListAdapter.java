@@ -84,7 +84,6 @@ public class UpcomingListAdapter extends RecyclerView.Adapter<UpcomingListAdapte
         Date currentDate = new Date();
         long diff = dueDate.getTime() - currentDate.getTime();
 
-        long diffSeconds = diff / 1000 % 60;
         long diffMinutes = diff / (60 * 1000) % 60;
         long diffHours = diff / (60 * 60 * 1000);
         long diffDays = (int) (diff / (24 * 60 * 60 * 1000));

@@ -19,18 +19,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.attendance.APIClient;
-import com.example.attendance.Absence.AbsenceTab;
-import com.example.attendance.Absence.TAAbsenceTab;
+import com.example.attendance.API.APIClient;
+import com.example.attendance.Absence.AbsenceStudentActivity;
+import com.example.attendance.Absence.AbsenceTAActivity;
 import com.example.attendance.Announcement.Announcement_Student_Activity;
 import com.example.attendance.Announcement.Announcement_TA_Activity;
 import com.example.attendance.Database.AppDatabase;
 import com.example.attendance.Deadline.DeadlineStudentActivity;
 import com.example.attendance.Deadline.DeadlineTAActivity;
-import com.example.attendance.Home;
+import com.example.attendance.Home.HomeStudentActivity;
 import com.example.attendance.R;
 import com.example.attendance.SessionManager;
-import com.example.attendance.TA_home;
+import com.example.attendance.Home.HomeTAActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.DateFormat;
@@ -39,7 +39,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -144,9 +143,9 @@ public class PostActivity extends AppCompatActivity {
                 switch(item.getItemId()){
                     case R.id.action_home:
                         if(sessionManager.getType().equals("student")){
-                            startActivity(new Intent(PostActivity.this, Home.class));
+                            startActivity(new Intent(PostActivity.this, HomeStudentActivity.class));
                         }else{
-                            startActivity(new Intent(PostActivity.this, TA_home.class));
+                            startActivity(new Intent(PostActivity.this, HomeTAActivity.class));
                         }
                         return true;
 
@@ -171,9 +170,9 @@ public class PostActivity extends AppCompatActivity {
 
                     case R.id.action_absence:
                         if(sessionManager.getType().equals("student")){
-                            startActivity(new Intent(PostActivity.this, AbsenceTab.class));
+                            startActivity(new Intent(PostActivity.this, AbsenceStudentActivity.class));
                         }else{
-                            startActivity(new Intent(PostActivity.this, TAAbsenceTab.class));
+                            startActivity(new Intent(PostActivity.this, AbsenceTAActivity.class));
                         }
                         return true;
                 }

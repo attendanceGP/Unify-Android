@@ -1,10 +1,7 @@
-package com.example.attendance;
+package com.example.attendance.Home;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
-import android.database.DataSetObserver;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,15 +11,16 @@ import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.IOException;
+import com.example.attendance.API.APIClient;
+import com.example.attendance.R;
+
 import java.util.List;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class recyclerView_studentsList_adapter extends RecyclerView.Adapter<recyclerView_studentsList_adapter.ViewHolder> {
+public class ConfirmationListAdapter extends RecyclerView.Adapter<ConfirmationListAdapter.ViewHolder> {
     private List<Attendance> attendeesData;
     private Context applicationContext;
     private LayoutInflater mInflater;
@@ -45,7 +43,7 @@ public class recyclerView_studentsList_adapter extends RecyclerView.Adapter<recy
 
 
     // data is passed into the constructor
-    recyclerView_studentsList_adapter(Context context, List<Attendance> data, String date) {
+    ConfirmationListAdapter(Context context, List<Attendance> data, String date) {
         this.mInflater = LayoutInflater.from(context);
         this.applicationContext = context;
         this.date = date;

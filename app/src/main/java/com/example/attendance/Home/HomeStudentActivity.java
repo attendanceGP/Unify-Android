@@ -1,4 +1,4 @@
-package com.example.attendance;
+package com.example.attendance.Home;
 
 import android.Manifest;
 import android.content.Context;
@@ -18,10 +18,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.attendance.Absence.AbsenceTab;
+import com.example.attendance.API.APIClient;
+import com.example.attendance.Absence.AbsenceStudentActivity;
 import com.example.attendance.Announcement.Announcement_Student_Activity;
 import com.example.attendance.Deadline.DeadlineStudentActivity;
 import com.example.attendance.Forums.ForumsActivity;
+import com.example.attendance.R;
+import com.example.attendance.SessionManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.SimpleDateFormat;
@@ -31,7 +34,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Home extends AppCompatActivity implements LocationListener {
+public class HomeStudentActivity extends AppCompatActivity implements LocationListener {
     LocationManager lm;
     Button button;
     double longitude, latitude, geoDistance;
@@ -66,7 +69,7 @@ public class Home extends AppCompatActivity implements LocationListener {
 
             @Override
             public void onFailure(Call<String[]> call, Throwable t) {
-                Toast.makeText(Home.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(HomeStudentActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -86,37 +89,37 @@ public class Home extends AppCompatActivity implements LocationListener {
                 switch(item.getItemId()){
                     case R.id.action_absence:
                         if (lm!=null){
-                            lm.removeUpdates(Home.this);
+                            lm.removeUpdates(HomeStudentActivity.this);
                             lm = null;
                         }
-                        startActivity(new Intent(Home.this, AbsenceTab.class));
+                        startActivity(new Intent(HomeStudentActivity.this, AbsenceStudentActivity.class));
                         finish();
                         return true;
 
                     case R.id.action_announcements:
                         if (lm!=null){
-                            lm.removeUpdates(Home.this);
+                            lm.removeUpdates(HomeStudentActivity.this);
                             lm = null;
                         }
-                        startActivity(new Intent(Home.this, Announcement_Student_Activity.class));
+                        startActivity(new Intent(HomeStudentActivity.this, Announcement_Student_Activity.class));
                         finish();
                         return true;
 
                     case R.id.action_forum:
                         if (lm!=null){
-                            lm.removeUpdates(Home.this);
+                            lm.removeUpdates(HomeStudentActivity.this);
                             lm = null;
                         }
-                        startActivity(new Intent(Home.this, ForumsActivity.class));
+                        startActivity(new Intent(HomeStudentActivity.this, ForumsActivity.class));
                         finish();
                         return true;
 
                     case R.id.action_deadlines:
                         if (lm!=null){
-                            lm.removeUpdates(Home.this);
+                            lm.removeUpdates(HomeStudentActivity.this);
                             lm = null;
                         }
-                        startActivity(new Intent(Home.this, DeadlineStudentActivity.class));
+                        startActivity(new Intent(HomeStudentActivity.this, DeadlineStudentActivity.class));
                         finish();
                         return true;
                 }
@@ -164,14 +167,14 @@ public class Home extends AppCompatActivity implements LocationListener {
                                         call3.enqueue(new Callback<Void>() {
                                             @Override
                                             public void onResponse(Call<Void> call, Response<Void> response) {
-                                                Toast.makeText(Home.this, "Done", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(HomeStudentActivity.this, "Done", Toast.LENGTH_SHORT).show();
                                                 button.setBackground(getResources().getDrawable(R.drawable.attend_button));
                                                 button.setEnabled(false);
                                             }
 
                                             @Override
                                             public void onFailure(Call<Void> call, Throwable t) {
-                                                Toast.makeText(Home.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(HomeStudentActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
                                             }
                                         });
                                     }
@@ -194,7 +197,7 @@ public class Home extends AppCompatActivity implements LocationListener {
 
             @Override
             public void onFailure(Call<Attendance> call, Throwable t) {
-                Toast.makeText(Home.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(HomeStudentActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

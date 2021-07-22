@@ -18,17 +18,17 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.attendance.APIClient;
-import com.example.attendance.Absence.AbsenceTab;
+import com.example.attendance.API.APIClient;
+import com.example.attendance.Absence.AbsenceStudentActivity;
 import com.example.attendance.Course.Course;
 import com.example.attendance.Database.AppDatabase;
 import com.example.attendance.Deadline.DeadlineStudentActivity;
 import com.example.attendance.Forums.ForumsActivity;
-import com.example.attendance.Home;
+import com.example.attendance.Home.HomeStudentActivity;
 import com.example.attendance.R;
 import com.example.attendance.SessionManager;
-import com.example.attendance.TA_home;
-import com.example.attendance.UserAPI;
+import com.example.attendance.Home.HomeTAActivity;
+import com.example.attendance.Home.UserAPI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -136,7 +136,7 @@ public class Announcement_Student_Activity extends AppCompatActivity {
                         return true;
 
                     case R.id.action_home:
-                        startActivity(new Intent(Announcement_Student_Activity.this, Home.class));
+                        startActivity(new Intent(Announcement_Student_Activity.this, HomeStudentActivity.class));
                         finish();
                         return true;
 
@@ -146,7 +146,7 @@ public class Announcement_Student_Activity extends AppCompatActivity {
                         return true;
 
                     case R.id.action_absence:
-                        startActivity(new Intent(Announcement_Student_Activity.this, AbsenceTab.class));
+                        startActivity(new Intent(Announcement_Student_Activity.this, AbsenceStudentActivity.class));
                         finish();
                         return true;
                 }
@@ -543,10 +543,10 @@ public class Announcement_Student_Activity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if(sessionManager.getType().equals("student")){
-            startActivity(new Intent(Announcement_Student_Activity.this, Home.class));
+            startActivity(new Intent(Announcement_Student_Activity.this, HomeStudentActivity.class));
             finish();
         }else{
-            startActivity(new Intent(Announcement_Student_Activity.this, TA_home.class));
+            startActivity(new Intent(Announcement_Student_Activity.this, HomeTAActivity.class));
             finish();
         }
     }

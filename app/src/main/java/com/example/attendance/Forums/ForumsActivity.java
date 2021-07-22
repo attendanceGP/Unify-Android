@@ -18,20 +18,20 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.attendance.APIClient;
-import com.example.attendance.Absence.AbsenceTab;
-import com.example.attendance.Absence.TAAbsenceTab;
+import com.example.attendance.API.APIClient;
+import com.example.attendance.Absence.AbsenceStudentActivity;
+import com.example.attendance.Absence.AbsenceTAActivity;
 import com.example.attendance.Announcement.Announcement_Student_Activity;
 import com.example.attendance.Announcement.Announcement_TA_Activity;
 import com.example.attendance.Course.Course;
 import com.example.attendance.Database.AppDatabase;
 import com.example.attendance.Deadline.DeadlineStudentActivity;
 import com.example.attendance.Deadline.DeadlineTAActivity;
-import com.example.attendance.Home;
+import com.example.attendance.Home.HomeStudentActivity;
 import com.example.attendance.R;
 import com.example.attendance.SessionManager;
-import com.example.attendance.TA_home;
-import com.example.attendance.UserAPI;
+import com.example.attendance.Home.HomeTAActivity;
+import com.example.attendance.Home.UserAPI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -168,10 +168,10 @@ public class ForumsActivity extends AppCompatActivity {
                 switch(item.getItemId()){
                     case R.id.action_home:
                         if(sessionManager.getType().equals("student")){
-                            startActivity(new Intent(ForumsActivity.this, Home.class));
+                            startActivity(new Intent(ForumsActivity.this, HomeStudentActivity.class));
                             finish();
                         }else{
-                            startActivity(new Intent(ForumsActivity.this, TA_home.class));
+                            startActivity(new Intent(ForumsActivity.this, HomeTAActivity.class));
                             finish();
                         }
                         return true;
@@ -198,10 +198,10 @@ public class ForumsActivity extends AppCompatActivity {
 
                     case R.id.action_absence:
                         if(sessionManager.getType().equals("student")){
-                            startActivity(new Intent(ForumsActivity.this, AbsenceTab.class));
+                            startActivity(new Intent(ForumsActivity.this, AbsenceStudentActivity.class));
                             finish();
                         }else{
-                            startActivity(new Intent(ForumsActivity.this, TAAbsenceTab.class));
+                            startActivity(new Intent(ForumsActivity.this, AbsenceTAActivity.class));
                             finish();
                         }
                         return true;
@@ -594,10 +594,10 @@ public class ForumsActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if(sessionManager.getType().equals("student")){
-            startActivity(new Intent(ForumsActivity.this, Home.class));
+            startActivity(new Intent(ForumsActivity.this, HomeStudentActivity.class));
             finish();
         }else{
-            startActivity(new Intent(ForumsActivity.this, TA_home.class));
+            startActivity(new Intent(ForumsActivity.this, HomeTAActivity.class));
             finish();
         }
     }

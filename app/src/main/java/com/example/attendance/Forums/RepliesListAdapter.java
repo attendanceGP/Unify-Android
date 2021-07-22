@@ -6,26 +6,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.attendance.APIClient;
 import com.example.attendance.R;
 import com.example.attendance.SessionManager;
-import com.example.attendance.UserAPI;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class RepliesListAdapter extends RecyclerView.Adapter<RepliesListAdapter.ViewHolder>{
     private List<Reply> replies;

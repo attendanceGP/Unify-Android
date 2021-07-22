@@ -7,11 +7,12 @@ import android.content.SharedPreferences.Editor;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.attendance.API.APIClient;
 import com.example.attendance.Course.CourseGroup;
 import com.example.attendance.Course.CourseGroupAPI;
+import com.example.attendance.Home.User;
 import com.google.firebase.messaging.FirebaseMessaging;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;

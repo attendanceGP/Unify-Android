@@ -34,17 +34,17 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.example.attendance.APIClient;
-import com.example.attendance.Absence.TAAbsenceTab;
+import com.example.attendance.API.APIClient;
+import com.example.attendance.Absence.AbsenceTAActivity;
 import com.example.attendance.Announcement.Announcement_Student_Activity;
 import com.example.attendance.Announcement.Announcement_TA_Activity;
 import com.example.attendance.Database.AppDatabase;
 import com.example.attendance.Forums.ForumsActivity;
-import com.example.attendance.Home;
+import com.example.attendance.Home.HomeStudentActivity;
 import com.example.attendance.R;
 import com.example.attendance.SessionManager;
-import com.example.attendance.TA_home;
-import com.example.attendance.UserAPI;
+import com.example.attendance.Home.HomeTAActivity;
+import com.example.attendance.Home.UserAPI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.DateFormat;
@@ -53,7 +53,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 public class DeadlineTAActivity extends AppCompatActivity {
@@ -265,10 +264,10 @@ public class DeadlineTAActivity extends AppCompatActivity {
                 switch(item.getItemId()){
                     case R.id.action_home:
                         if(sessionManager.getType().equals("student")){
-                            startActivity(new Intent(DeadlineTAActivity.this, Home.class));
+                            startActivity(new Intent(DeadlineTAActivity.this, HomeStudentActivity.class));
                             finish();
                         }else{
-                            startActivity(new Intent(DeadlineTAActivity.this, TA_home.class));
+                            startActivity(new Intent(DeadlineTAActivity.this, HomeTAActivity.class));
                             finish();
                         }
                         return true;
@@ -289,7 +288,7 @@ public class DeadlineTAActivity extends AppCompatActivity {
                         return true;
 
                     case R.id.action_absence:
-                        startActivity(new Intent(DeadlineTAActivity.this, TAAbsenceTab.class));
+                        startActivity(new Intent(DeadlineTAActivity.this, AbsenceTAActivity.class));
                         finish();
                         return true;
                 }
@@ -446,10 +445,10 @@ public class DeadlineTAActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if(sessionManager.getType().equals("student")){
-            startActivity(new Intent(DeadlineTAActivity.this, Home.class));
+            startActivity(new Intent(DeadlineTAActivity.this, HomeStudentActivity.class));
             finish();
         }else{
-            startActivity(new Intent(DeadlineTAActivity.this, TA_home.class));
+            startActivity(new Intent(DeadlineTAActivity.this, HomeTAActivity.class));
             finish();
         }
     }

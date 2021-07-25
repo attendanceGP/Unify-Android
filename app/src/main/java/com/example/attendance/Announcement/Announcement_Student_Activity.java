@@ -512,7 +512,13 @@ public class Announcement_Student_Activity extends AppCompatActivity {
                 announcementList.clear();
                 announcementList.addAll(undeletedAnnouncements);
 
-                announcementsStudentListAdapter.notifyDataSetChanged();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        announcementsStudentListAdapter.notifyDataSetChanged();
+                    }
+                });
+
             }
         }
         else{
@@ -536,7 +542,13 @@ public class Announcement_Student_Activity extends AppCompatActivity {
             announcementList.clear();
             announcementList.addAll(undeletedAnnouncements);
 
-            announcementsStudentListAdapter.notifyDataSetChanged();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    announcementsStudentListAdapter.notifyDataSetChanged();
+                }
+            });
+
         }
     }
 

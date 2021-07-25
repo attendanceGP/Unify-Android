@@ -453,7 +453,13 @@ public class ForumsActivity extends AppCompatActivity {
             }
         }
         postsRecyclerView.setAdapter(userPostsListAdapter);
-        userPostsListAdapter.notifyDataSetChanged();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                userPostsListAdapter.notifyDataSetChanged();
+            }
+        });
+
         setEmptyTextVisibility(userPosts.size()==0);
     }
     public void filterUserPosts(){
@@ -465,7 +471,13 @@ public class ForumsActivity extends AppCompatActivity {
                 }
             }
         }
-        userPostsListAdapter.notifyDataSetChanged();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                userPostsListAdapter.notifyDataSetChanged();
+            }
+        });
+
     }
 
 //    show all forums (with no filter)
@@ -477,7 +489,13 @@ public class ForumsActivity extends AppCompatActivity {
                 posts.add(d);
             }
         }
-        postsListAdapter.notifyDataSetChanged();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                postsListAdapter.notifyDataSetChanged();
+            }
+        });
+
         setEmptyTextVisibility(posts.size()==0);
     }
     public void filterAllPosts(){
@@ -487,7 +505,13 @@ public class ForumsActivity extends AppCompatActivity {
                 posts.add(d);
             }
         }
-        postsListAdapter.notifyDataSetChanged();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                postsListAdapter.notifyDataSetChanged();
+            }
+        });
+
     }
 
 //    show starred posts
@@ -501,7 +525,13 @@ public class ForumsActivity extends AppCompatActivity {
             }
         }
         postsRecyclerView.setAdapter(favPostsListAdapter);
-        favPostsListAdapter.notifyDataSetChanged();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                favPostsListAdapter.notifyDataSetChanged();
+            }
+        });
+
 
         setEmptyTextVisibility(favPosts.size()==0);
     }
@@ -514,7 +544,13 @@ public class ForumsActivity extends AppCompatActivity {
                 }
             }
         }
-        favPostsListAdapter.notifyDataSetChanged();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                favPostsListAdapter.notifyDataSetChanged();
+            }
+        });
+
     }
 
     public void setEmptyTextVisibility(boolean emptyList){
